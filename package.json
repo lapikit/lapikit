@@ -8,15 +8,14 @@
 	"homepage": "https://lapikit.dev",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Nycolaide/lapikit.git",
-		"directory": "packages/lapikit"
+		"url": "git+https://github.com/lapikit/lapikit.git"
 	},
 	"author": {
 		"name": "Nycolaide",
 		"email": "contact@lapikit.dev"
 	},
 	"funding": "https://buymeacoffee.com/nycolaide",
-	"bugs": "https://github.com/Nycolaide/lapikit/issues",
+	"bugs": "https://github.com/lapikit/lapikit/issues",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
