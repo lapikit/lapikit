@@ -34,7 +34,7 @@ jobs:
       - name: check if version exists on npm
         id: check
         run: |
-          if npm view ${{ env.PACKAGE_NAME }}@$PACKAGE_VERSION version > /dev/null 2>&1; then
+          if npm view ${{ env.lapikit/lapikit }}@$PACKAGE_VERSION version > /dev/null 2>&1; then
             echo "Version $PACKAGE_VERSION already exists on NPM."
             echo "should_publish=false" >> $GITHUB_OUTPUT
           else
