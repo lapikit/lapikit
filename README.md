@@ -8,10 +8,10 @@
 [![][subscribe-to-instagram]](https://www.instagram.com/lapikit/)
 [![][join-discord-lapikit]](https://discord.gg/gn9ZGtDtK4)
 
-[![][version]](https://github.com/nycolaide/lapikit/releases?q=lapikit&expanded=true)
+[![][version]](https://github.com/lapikit/lapikit/releases?q=lapikit&expanded=true)
 [![][installs]](https://www.npmjs.com/package/lapikit)
 [![][installs-this-month]](https://www.npmjs.com/package/lapikit)
-[![][license]](https://github.com/nycolaide/lapikit/blob/main/LICENSE)
+[![][license]](https://github.com/lapikit/lapikit/blob/main/LICENSE)
 [![][discord]](https://discord.gg/gn9ZGtDtK4)
 
 Lapikit is a comprehensive Svelte components library that provides developers with a wide range of pre-built, customizable UI components to streamline the development process. Whether you're building a simple website or a complex web application, Lapikit has the tools you need to create beautiful and functional user interfaces with ease.
@@ -71,7 +71,7 @@ Lapikit has created to help Svelte developers save time and effort when building
 
 ## 💖Community
 
-Join our growing community on [Discord](https://discord.gg/gn9ZGtDtK4) and [GitHub Discussions](https://github.com/nycolaide/lapikit/discussions) where we discuss and collaborate on all things Lapikit. Don't be shy, jump right in and be part of the discussion!
+Join our growing community on [Discord](https://discord.gg/gn9ZGtDtK4) and [GitHub Discussions](https://github.com/lapikit/lapikit/discussions) where we discuss and collaborate on all things Lapikit. Don't be shy, jump right in and be part of the discussion!
 
 ## 💁‍♂️Contributing
 
@@ -84,7 +84,7 @@ Be part of the next revolution in code editing by contributing to the project. T
 
 ## 📄License
 
-Licensed under the [MIT license](https://github.com/nycolaide/lapikit/blob/main/LICENSE).
+Licensed under the [MIT license](https://github.com/lapikit/lapikit/blob/main/LICENSE).
 
 Copyright © 2025 Nycolaide
 
@@ -111,7 +111,7 @@ We are proud supporters of the open-source community and contribute to several p
 [join-discord-lapikit]: https://img.shields.io/badge/Join%20the%20community-black.svg?style=for-the-badge&logo=Discord
 [subscribe-to-instagram]: https://img.shields.io/badge/Follow%20@Lapikit-black.svg?style=for-the-badge&logo=Instagram
 [version]: https://img.shields.io/npm/v/lapikit.svg?label=Version&color=f58142
-[license]: https://badgen.net/github/license/nycolaide/lapikit?label=License&color=cc5640
+[license]: https://badgen.net/github/license/lapikit/lapikit?label=License&color=cc5640
 [installs]: https://badgen.net/npm/dt/lapikit?label=NPM%20installs&color=40ba12
 [installs-this-month]: https://badgen.net/npm/dm/lapikit?label=NPM%20installs&color=40ba12
 [discord]: https://img.shields.io/discord/1383879204671721492?color=5865F2&label=Discord&logo=discord&logoColor=white
