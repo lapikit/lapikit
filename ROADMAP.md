@@ -64,15 +64,15 @@ Improvement of internal tools for greater consistency and maintainability:
 <p style="font-weight: bold; font-size: 1.2em; margin-top: 1em; display: block;">Continuous development</p>
 
 Other features may be added during the year.
-Ideas, suggestions, and contributions are welcome. Suggest a feature, start a discussion, or contribute directly on [GitHub](https://github.com/nycolaide/lapikit).
+Ideas, suggestions, and contributions are welcome. Suggest a feature, start a discussion, or contribute directly on [GitHub](https://github.com/lapikit/lapikit).
 
 <p style="font-weight: bold; font-size: 1.2em; margin-top: 1em; display: block;">What’s next steps</p>
 
-After these updates, the focus will shift to: you can track progress on [GitHub](https://github.com/nycolaide/lapikit) and join discussions about what’s next on [Discord](https://discord.gg/gn9ZGtDtK4).
+After these updates, the focus will shift to: you can track progress on [GitHub](https://github.com/lapikit/lapikit) and join discussions about what’s next on [Discord](https://discord.gg/gn9ZGtDtK4).
 
 ## Contribute to the Lapikit library and it's development
 
-Lapikit is 100% open source. If you want to help out, open a feature request, suggest an idea, or report an issue, you can participate on [GitHub](https://github.com/nycolaide/lapikit). Every contribution helps make Svelte's development faster and cleaner for everyone. Your feedback is important!
+Lapikit is 100% open source. If you want to help out, open a feature request, suggest an idea, or report an issue, you can participate on [GitHub](https://github.com/lapikit/lapikit). Every contribution helps make Svelte's development faster and cleaner for everyone. Your feedback is important!
 
 ## History roadmap to Lapikit
 
