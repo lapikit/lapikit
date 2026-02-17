@@ -12,7 +12,7 @@ env:
   NODE_VERSION: 'lts/*'
   BUN_VERSION: 'latest'
   RELEASE_CHANNEL: public
-  PACKAGE_NAME: repl
+  PACKAGE_NAME: lapikit
 
 jobs:
   prerelease:
