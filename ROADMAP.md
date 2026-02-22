@@ -8,7 +8,6 @@ state:
   section: base
   published: true
   order: -1
-  status: update
 keywords:
   - lapikit
   - planned
