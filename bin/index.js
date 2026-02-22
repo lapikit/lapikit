@@ -23,7 +23,7 @@ async function run() {
 run()
 	.then(() => {
 		terminal('none', `\n\n\n\nWebsite: https://lapikit.dev`);
-		terminal('none', `Github: https://github.com/nycolaide/lapikit`);
+		terminal('none', `Github: https://github.com/lapikit/lapikit`);
 		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
 		process.exit(0);
 	})
