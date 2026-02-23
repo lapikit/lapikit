@@ -10,7 +10,13 @@
 		children = () => null,
 		's-class': sClass,
 		's-style': sStyle,
+		is = 'button',
 		variant = 'default',
+		loading,
+		size = 'md',
+		icon,
+		disabled,
+		block,
 		...rest
 	} = $props();
 
@@ -40,85 +46,167 @@
 	);
 </script>
 
-<button class={componentClass} style={componentStyle} {...restProps}>
-	{@render children()}
-</button>
+<svelte:element
+	this={is}
+	class={componentClass}
+	style={componentStyle}
+	{...restProps}
+	data-size={size}
+	data-variant="primary"
+	data-loading={loading}
+	data-icon-only={icon}
+	{disabled}
+	aria-busy={disabled}
+	aria-disabled={disabled}
+	data-block={block}
+>
+	<span class="outline"></span>
+	<span class="kit-btn__inner">
+		{#if icon}
+			<span class="kit-btn__icon">
+				<!-- icon -->
+			</span>
+		{/if}
+		<span class="kit-btn__content">
+			{@render children()}
+		</span>
+	</span>
+	{#if loading}
+		<span class="spinner"></span>
+	{/if}
+</svelte:element>
 
 <style>
-	/** Global */
 	:root {
-		--kit-radius: 0.625rem;
-	}
+		--kit-btn-h-sm: 32px;
+		--kit-btn-h-md: 40px;
+		--kit-btn-h-lg: 48px;
 
-	:root {
-		--kit-btn-color: rgb(255, 255, 255);
-		--kit-btn-bg: rgb(0, 0, 0);
-		--kit-btn-radius: 8px;
-		--kit-btn-padding-y: 0.625rem;
-		--kit-btn-padding-x: 1rem;
+		--kit-btn-px-sm: 12px;
+		--kit-btn-px-md: 16px;
+		--kit-btn-px-lg: 20px;
+
+		--kit-btn-gap: 8px;
+
+		--bg: #111827;
+		--fg: #ffffff;
+		--bg-hover: #0b1220;
+		--border: rgba(255, 255, 255, 0.08);
+		--font:
+			ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+			'Segoe UI Symbol', 'Noto Color Emoji';
 	}
 
 	.kit-btn {
+		position: relative;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5rem;
-		height: 40px;
-		padding: 0 16px;
-		font-weight: 500;
-		border-radius: 8px;
-		transition:
-			background 150ms,
-			color 150ms,
-			box-shadow 150ms;
+		height: var(--btn-h);
+		padding-inline: var(--btn-px);
+		border-radius: var(--btn-radius);
+		/* border: 1px solid var(--border); */
+		border: 0;
+		background: var(--bg);
+		color: var(--fg);
+		font-family: var(--font);
+		font-size: 14px;
+		text-decoration: none;
+		white-space: nowrap;
+		user-select: none;
+
 		cursor: pointer;
+
+		transition:
+			background 150ms ease,
+			transform 50ms ease;
 	}
 
-	.kit-btn--default,
-	.kit-btn--filled {
-		border-color: rgb(0, 0, 0);
-		background-color: rgb(0, 0, 0);
-		color: rgb(255, 255, 255);
+	/* typography consistency */
+	button,
+	input,
+	select,
+	textarea {
+		font: inherit;
+		color: inherit;
 	}
 
-	.kit-btn--default:hover:not(:disabled),
-	.kit-btn--filled:hover:not(:disabled) {
-		background-color: rgb(24, 24, 24);
+	/* remove native button styles */
+	button {
+		appearance: none;
+		background: none;
+		border: none;
+	}
+
+	.kit-btn[data-size='md'] {
+		--btn-h: var(--kit-btn-h-md);
+		--btn-px: var(--kit-btn-px-md);
+		font-size: 14px;
+	}
+
+	.kit-btn[data-size='md'] {
+		--btn-height: var(--kit-btn-h-md);
+		--btn-px: var(--kit-btn-px-md);
+	}
+
+	.kit-btn__inner {
+		display: flex;
+		align-items: center;
+		gap: var(--kit-btn-gap);
+	}
+
+	.kit-btn[data-icon-only='true'] {
+		padding-inline: 0;
+		width: var(--btn-height);
+	}
+
+	.kit-btn__icon {
+		display: flex;
+		align-items: center;
+	}
+
+	.kit-btn[data-size='sm'] .kit-btn__icon {
+		width: 16px;
+		height: 16px;
+	}
+
+	.kit-btn[data-loading='true'] .kit-btn__inner {
+		opacity: 0;
+	}
+
+	.kit-btn__spinner {
+		position: absolute;
+		inset: 0;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.kit-btn:focus-visible {
-		outline: none;
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
 		box-shadow:
-			0 0 0 2px rgb(255, 255, 255),
-			0 0 0 4px rgb(0, 0, 0);
+			0 0 0 2px var(--bg),
+			0 0 0 4px var(--focus);
 	}
 
-	.kit-btn--text {
-		background-color: transparent;
-		border-color: transparent;
-		color: rgb(0, 0, 0);
-	}
-
-	.kit-btn--text:hover:not(:disabled) {
-		background-color: rgb(239, 239, 239);
-	}
-
-	.kit-btn--text:focus-visible {
-		box-shadow: 0 0 0 3px rgb(0 0 0 / 20%);
+	.kit-btn[data-block='true'] {
+		width: 100%;
 	}
 
 	.kit-btn:disabled {
-		background-color: rgb(96, 96, 96);
-		border-color: rgb(96, 96, 96);
-		color: rgb(226, 226, 226);
-		cursor: not-allowed;
-		opacity: 0.75;
+		pointer-events: none;
+		opacity: 0.5;
 	}
 
-	.kit-btn--text:disabled {
-		background-color: transparent;
-		border-color: transparent;
-		color: rgb(140, 140, 140);
-		opacity: 1;
+	.kit-btn {
+		transition:
+			background 0.15s ease,
+			transform 0.05s ease;
+	}
+
+	.kit-btn:active {
+		transform: translateY(1px);
 	}
 </style>
