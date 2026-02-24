@@ -3,6 +3,7 @@
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
 
 	type BtnVariant = 'default' | 'text' | 'filled';
+	// "button" | "submit" | "reset"
 
 	let {
 		class: className = '',
@@ -17,6 +18,12 @@
 		icon,
 		disabled,
 		block,
+		href,
+		input,
+		type,
+		checked,
+		value,
+		label,
 		...rest
 	} = $props();
 
@@ -44,37 +51,75 @@
 			styleProps
 		})
 	);
+
+	const isInput = $derived(!!input);
+	const tag = $derived((href && 'a') || (isInput && 'input') || is || 'button');
+	const inputWrapperTag = $derived(type === 'checkbox' || type === 'radio' ? 'label' : 'div');
+
+	const resolvedType = $derived(() => {
+		if (tag !== 'button') return type;
+		return type ?? 'button';
+	});
 </script>
 
-<svelte:element
-	this={is}
-	class={componentClass}
-	style={componentStyle}
-	{...restProps}
-	data-size={size}
-	data-variant="primary"
-	data-loading={loading}
-	data-icon-only={icon}
-	{disabled}
-	aria-busy={disabled}
-	aria-disabled={disabled}
-	data-block={block}
->
-	<span class="outline"></span>
-	<span class="kit-btn__inner">
-		{#if icon}
-			<span class="kit-btn__icon">
-				<!-- icon -->
-			</span>
+{#if isInput}
+	<svelte:element
+		this={inputWrapperTag}
+		class={componentClass}
+		style={componentStyle}
+		data-size={size}
+		data-variant="primary"
+		data-loading={loading}
+		data-icon-only={icon}
+		aria-busy={disabled}
+		aria-disabled={disabled}
+		data-block={block}
+	>
+		<span class="outline"></span>
+		<input
+			{...restProps}
+			type={type || 'button'}
+			{checked}
+			{value}
+			aria-label={label || value}
+			{disabled}
+		/>
+		{#if loading}
+			<span class="spinner"></span>
 		{/if}
-		<span class="kit-btn__content">
-			{@render children()}
+	</svelte:element>
+{:else}
+	<svelte:element
+		this={tag}
+		class={componentClass}
+		style={componentStyle}
+		{...restProps}
+		type={resolvedType()}
+		{href}
+		data-size={size}
+		data-variant="primary"
+		data-loading={loading}
+		data-icon-only={icon}
+		{disabled}
+		aria-busy={disabled}
+		aria-disabled={disabled}
+		data-block={block}
+	>
+		<span class="outline"></span>
+		<span class="kit-btn__inner">
+			{#if icon}
+				<span class="kit-btn__icon"><!-- icon --></span>
+			{/if}
+			<span class="kit-btn__content">
+				{@render children()}
+			</span>
 		</span>
-	</span>
-	{#if loading}
-		<span class="spinner"></span>
-	{/if}
-</svelte:element>
+
+		{#if loading}
+			<span class="spinner"></span>
+		{/if}
+	</svelte:element>
+{/if}
 
 <style>
 	:root {
@@ -86,17 +131,47 @@
 		--kit-btn-px-md: 16px;
 		--kit-btn-px-lg: 20px;
 
+		--kit-outline-w: 1px;
+		--btn-radius: 8px;
+
 		--kit-btn-gap: 8px;
 
 		--bg: #111827;
 		--fg: #ffffff;
 		--bg-hover: #0b1220;
 		--border: rgba(255, 255, 255, 0.08);
+		--focus: blue;
 		--font:
 			ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 			'Segoe UI Symbol', 'Noto Color Emoji';
 	}
 
+	.outline {
+		--container-shape-start-start: var(--btn-radius);
+		--container-shape-start-end: var(--btn-radius);
+		--container-shape-end-start: var(--btn-radius);
+		--container-shape-end-end: var(--btn-radius);
+
+		border-width: var(--kit-outline-w);
+		inset: 0;
+		border-style: solid;
+		position: absolute;
+		box-sizing: border-box;
+		border-color: red;
+		z-index: 1;
+		border-start-start-radius: var(--container-shape-start-start);
+		border-start-end-radius: var(--container-shape-start-end);
+		border-end-start-radius: var(--container-shape-end-start);
+		border-end-end-radius: var(--container-shape-end-end);
+	}
+
+	div.kit-btn {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--btn-radius);
+	}
 	.kit-btn {
 		position: relative;
 		display: inline-flex;
@@ -122,6 +197,42 @@
 			transform 50ms ease;
 	}
 
+	.kit-btn > :is(input[type='checkbox'], input[type='radio']) {
+		appearance: none;
+		margin: 0;
+		cursor: pointer;
+	}
+
+	.kit-btn > :is(input[type='checkbox'], input[type='radio']):after {
+		--btn-content: attr(aria-label);
+		content: var(--btn-content);
+		cursor: pointer;
+	}
+
+	.kit-btn:hover {
+		background-color: orange;
+	}
+
+	.kit-btn:has(> :is(input[type='checkbox'], input[type='radio']):checked) {
+		background: pink;
+		color: purple;
+	}
+
+	.kit-btn:has(> :is(input[type='checkbox'], input[type='radio']):checked):hover {
+		background-color: orange;
+	}
+
+	.kit-btn .outline {
+		pointer-events: none;
+	}
+
+	input {
+		border: 0;
+		padding: 0;
+		background: transparent;
+		color: var(--fg);
+		cursor: pointer;
+	}
 	/* typography consistency */
 	button,
 	input,
@@ -170,8 +281,15 @@
 		height: 16px;
 	}
 
-	.kit-btn[data-loading='true'] .kit-btn__inner {
+	.kit-btn[data-loading='true'] .kit-btn__inner,
+	.kit-btn[data-loading='true'] input {
 		opacity: 0;
+	}
+
+	.kit-btn[data-loading='true'] {
+		pointer-events: none;
+		user-select: none;
+		cursor: pointer;
 	}
 
 	.kit-btn__spinner {
@@ -183,12 +301,17 @@
 		justify-content: center;
 	}
 
-	.kit-btn:focus-visible {
+	:is(.kit-btn:focus-visible, .kit-btn:has(> input:focus-visible)) {
 		outline: 2px solid var(--focus);
 		outline-offset: 2px;
 		box-shadow:
 			0 0 0 2px var(--bg),
 			0 0 0 4px var(--focus);
+	}
+
+	.kit-btn > input:focus-visible {
+		outline: none;
+		box-shadow: none;
 	}
 
 	.kit-btn[data-block='true'] {
