@@ -14,9 +14,10 @@
 		is = 'button',
 		variant = 'default',
 		loading,
+		active = false,
 		size = 'md',
 		icon,
-		disabled,
+		disabled = false,
 		block,
 		href,
 		input,
@@ -53,8 +54,11 @@
 	);
 
 	const isInput = $derived(!!input);
+	const isDisabled = $derived(!!disabled);
 	const tag = $derived((href && 'a') || (isInput && 'input') || is || 'button');
 	const inputWrapperTag = $derived(type === 'checkbox' || type === 'radio' ? 'label' : 'div');
+	const resolvedHref = $derived(isDisabled ? undefined : href);
+	const resolvedDisabled = $derived((tag === 'button' && isDisabled) || undefined);
 
 	const resolvedType = $derived(() => {
 		if (tag !== 'button') return type;
@@ -70,9 +74,11 @@
 		data-size={size}
 		data-variant="primary"
 		data-loading={loading}
+		data-active={active}
+		data-disabled={isDisabled}
 		data-icon-only={icon}
 		aria-busy={disabled}
-		aria-disabled={disabled}
+		aria-disabled={isDisabled}
 		data-block={block}
 	>
 		<span class="outline"></span>
@@ -82,7 +88,7 @@
 			{checked}
 			{value}
 			aria-label={label || value}
-			{disabled}
+			disabled={isDisabled}
 		/>
 		{#if loading}
 			<span class="spinner"></span>
@@ -95,14 +101,16 @@
 		style={componentStyle}
 		{...restProps}
 		type={resolvedType()}
-		{href}
+		href={resolvedHref}
 		data-size={size}
 		data-variant="primary"
 		data-loading={loading}
+		data-active={active}
+		data-disabled={isDisabled}
 		data-icon-only={icon}
-		{disabled}
+		disabled={resolvedDisabled}
 		aria-busy={disabled}
-		aria-disabled={disabled}
+		aria-disabled={isDisabled}
 		data-block={block}
 	>
 		<span class="outline"></span>
@@ -222,6 +230,16 @@
 		background-color: orange;
 	}
 
+	.kit-btn[data-active='true'] {
+		background: green;
+		color: red;
+	}
+
+	.kit-btn[data-active='true']:hover {
+		background: orange;
+		color: red;
+	}
+
 	.kit-btn .outline {
 		pointer-events: none;
 	}
@@ -230,7 +248,7 @@
 		border: 0;
 		padding: 0;
 		background: transparent;
-		color: var(--fg);
+		color: inherit;
 		cursor: pointer;
 	}
 	/* typography consistency */
@@ -318,9 +336,15 @@
 		width: 100%;
 	}
 
-	.kit-btn:disabled {
+	.kit-btn[data-disabled='true'] {
 		pointer-events: none;
 		opacity: 0.5;
+		user-select: none;
+		cursor: not-allowed;
+	}
+
+	.kit-btn[data-disabled='true'] > input {
+		cursor: not-allowed;
 	}
 
 	.kit-btn {
