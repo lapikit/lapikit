@@ -183,6 +183,7 @@
 	.kit-btn {
 		position: relative;
 		display: inline-flex;
+		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
 		height: var(--btn-h);
@@ -333,6 +334,7 @@
 	}
 
 	.kit-btn[data-block='true'] {
+		display: flex;
 		width: 100%;
 	}
 
