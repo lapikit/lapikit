@@ -2,7 +2,8 @@
 	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
 
-	type BtnVariant = 'default' | 'text' | 'filled';
+	type BtnVariant = 'filled' | 'outline' | 'text' | 'link';
+	type BtnSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 	// "button" | "submit" | "reset"
 
 	let {
@@ -12,7 +13,7 @@
 		's-class': sClass,
 		's-style': sStyle,
 		is = 'button',
-		variant = 'default',
+		variant = 'filled',
 		loading,
 		active = false,
 		size = 'md',
@@ -25,12 +26,16 @@
 		checked,
 		value,
 		label,
+		wide,
 		...rest
 	} = $props();
 
 	let safeVariant = $derived<BtnVariant>(
-		variant === 'default' || variant === 'text' || variant === 'filled' ? variant : 'default'
+		variant === 'filled' || variant === 'text' || variant === 'filled' ? variant : 'filled'
 	); // Test this solution ...
+	let safeSize = $derived<BtnSize>(
+		size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl' ? size : 'md'
+	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
@@ -71,8 +76,8 @@
 		this={inputWrapperTag}
 		class={componentClass}
 		style={componentStyle}
-		data-size={size}
-		data-variant="primary"
+		data-size={safeSize}
+		data-variant={variant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
@@ -80,8 +85,11 @@
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
 		data-block={block}
+		data-wide={wide}
 	>
-		<span class="outline"></span>
+		{#if variant === 'outline'}
+			<span class="outline"></span>
+		{/if}
 		<input
 			{...restProps}
 			type={type || 'button'}
@@ -102,8 +110,8 @@
 		{...restProps}
 		type={resolvedType()}
 		href={resolvedHref}
-		data-size={size}
-		data-variant="primary"
+		data-size={safeSize}
+		data-variant={variant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
@@ -112,8 +120,12 @@
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
 		data-block={block}
+		data-wide={wide}
 	>
-		<span class="outline"></span>
+		{#if variant === 'outline'}
+			<span class="outline"></span>
+		{/if}
+
 		<span class="kit-btn__inner">
 			{#if icon}
 				<span class="kit-btn__icon"><!-- icon --></span>
@@ -133,11 +145,15 @@
 	:root {
 		--kit-btn-h-sm: 32px;
 		--kit-btn-h-md: 40px;
+		--kit-btn-h-xs: 28px;
 		--kit-btn-h-lg: 48px;
+		--kit-btn-h-xl: 56px;
 
+		--kit-btn-px-xs: 10px;
 		--kit-btn-px-sm: 12px;
 		--kit-btn-px-md: 16px;
 		--kit-btn-px-lg: 20px;
+		--kit-btn-px-xl: 24px;
 
 		--kit-outline-w: 1px;
 		--btn-radius: 8px;
@@ -191,8 +207,7 @@
 		border-radius: var(--btn-radius);
 		/* border: 1px solid var(--border); */
 		border: 0;
-		background: var(--bg);
-		color: var(--fg);
+
 		font-family: var(--font);
 		font-size: 14px;
 		text-decoration: none;
@@ -204,6 +219,16 @@
 		transition:
 			background 150ms ease,
 			transform 50ms ease;
+	}
+
+	.kit-btn[data-variant='filled'] {
+		background: var(--bg);
+		color: var(--fg);
+	}
+
+	.kit-btn[data-wide='true'] {
+		width: 100%;
+		max-width: 16rem;
 	}
 
 	.kit-btn > :is(input[type='checkbox'], input[type='radio']) {
@@ -268,15 +293,39 @@
 		border: none;
 	}
 
+	.kit-btn[data-size='xs'] {
+		--btn-h: var(--kit-btn-h-xs);
+		--btn-height: var(--kit-btn-h-xs);
+		--btn-px: var(--kit-btn-px-xs);
+		font-size: 12px;
+	}
+
+	.kit-btn[data-size='sm'] {
+		--btn-h: var(--kit-btn-h-sm);
+		--btn-height: var(--kit-btn-h-sm);
+		--btn-px: var(--kit-btn-px-sm);
+		font-size: 13px;
+	}
+
 	.kit-btn[data-size='md'] {
 		--btn-h: var(--kit-btn-h-md);
+		--btn-height: var(--kit-btn-h-md);
 		--btn-px: var(--kit-btn-px-md);
 		font-size: 14px;
 	}
 
-	.kit-btn[data-size='md'] {
-		--btn-height: var(--kit-btn-h-md);
-		--btn-px: var(--kit-btn-px-md);
+	.kit-btn[data-size='lg'] {
+		--btn-h: var(--kit-btn-h-lg);
+		--btn-height: var(--kit-btn-h-lg);
+		--btn-px: var(--kit-btn-px-lg);
+		font-size: 15px;
+	}
+
+	.kit-btn[data-size='xl'] {
+		--btn-h: var(--kit-btn-h-xl);
+		--btn-height: var(--kit-btn-h-xl);
+		--btn-px: var(--kit-btn-px-xl);
+		font-size: 16px;
 	}
 
 	.kit-btn__inner {
@@ -295,9 +344,29 @@
 		align-items: center;
 	}
 
+	.kit-btn[data-size='xs'] .kit-btn__icon {
+		width: 14px;
+		height: 14px;
+	}
+
 	.kit-btn[data-size='sm'] .kit-btn__icon {
 		width: 16px;
 		height: 16px;
+	}
+
+	.kit-btn[data-size='md'] .kit-btn__icon {
+		width: 18px;
+		height: 18px;
+	}
+
+	.kit-btn[data-size='lg'] .kit-btn__icon {
+		width: 20px;
+		height: 20px;
+	}
+
+	.kit-btn[data-size='xl'] .kit-btn__icon {
+		width: 22px;
+		height: 22px;
 	}
 
 	.kit-btn[data-loading='true'] .kit-btn__inner,
