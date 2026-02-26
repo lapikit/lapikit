@@ -1,3 +1,3 @@
-const lapikitComponents: readonly string[] = ['sheet', 'btn'] as const;
+const lapikitComponents: readonly string[] = ['sheet', 'app', 'btn'] as const;
 
 export default lapikitComponents;
