@@ -443,5 +443,4 @@
 	.kit-btn[data-disabled='true'] > input {
 		cursor: not-allowed;
 	}
-
 </style>
