@@ -15,6 +15,10 @@ export function ripple(el: HTMLElement, options: RippleOptions = {}) {
 
 	setOptions(options);
 
+	function isAriaDisabled() {
+		return el.getAttribute('aria-disabled') === 'true';
+	}
+
 	function addClasses(center?: boolean) {
 		const shouldBeCentered = center || options.center;
 
@@ -32,7 +36,7 @@ export function ripple(el: HTMLElement, options: RippleOptions = {}) {
 	}
 
 	function setOptions(options: RippleOptions) {
-		if (options.disabled || el.hasAttribute('aria-disabled')) {
+		if (options.disabled || isAriaDisabled()) {
 			rippleContainer.remove();
 		} else {
 			el.appendChild(rippleContainer);
@@ -62,7 +66,7 @@ export function ripple(el: HTMLElement, options: RippleOptions = {}) {
 	}
 
 	function createRipple(e: PointerEvent | KeyboardEvent | TouchEvent, center?: boolean) {
-		if (options.disabled || el.hasAttribute('aria-disabled')) {
+		if (options.disabled || isAriaDisabled()) {
 			return;
 		}
 

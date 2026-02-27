@@ -112,7 +112,7 @@
 			cubic-bezier(0.4, 0, 0.2, 1);
 		animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
 			cubic-bezier(0.4, 0, 0.2, 1);
-		border-radius: var(--radius);
+		border-radius: var(--system-ripple-radius);
 	}
 
 	:global(.kit-ripple--center) {
@@ -131,6 +131,16 @@
 		background: none;
 		pointer-events: none;
 		z-index: 999;
-		border-radius: var(--radius);
+		border-radius: var(--system-ripple-radius);
+	}
+
+	@keyframes -global-animation-l-ripple {
+		from {
+			scale: 0;
+		}
+
+		to {
+			scale: 1;
+		}
 	}
 </style>

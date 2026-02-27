@@ -93,11 +93,11 @@
 		data-density={safeDensity}
 		data-rounded={rounded}
 		aria-busy={disabled}
-		aria-disabled={isDisabled}
+		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
 		use:ripple={{
-			component: 'button',
+			component: 'btn',
 			disabled: noRipple || disabled
 		}}
 	>
@@ -134,11 +134,11 @@
 		data-rounded={rounded}
 		disabled={resolvedDisabled}
 		aria-busy={disabled}
-		aria-disabled={isDisabled}
+		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
 		use:ripple={{
-			component: 'button',
+			component: 'btn',
 			disabled: noRipple || disabled
 		}}
 	>
@@ -203,6 +203,7 @@
 		--btn-density-scale: 1;
 		--btn-density-height-scale: 1;
 		--btn-radius: 8px;
+		--btn-shape: var(--btn-radius);
 
 		position: relative;
 		display: inline-flex;
@@ -443,13 +444,4 @@
 		cursor: not-allowed;
 	}
 
-	@keyframes animation-l-ripple {
-		from {
-			scale: 0;
-		}
-
-		to {
-			scale: 1;
-		}
-	}
 </style>
