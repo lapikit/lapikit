@@ -12,6 +12,7 @@
 		's-class': sClass,
 		's-style': sStyle,
 		variant = 'filled',
+		density = 'default',
 		loading,
 		active = false,
 		size = 'md',
@@ -32,6 +33,11 @@
 	); // Test this solution ...
 	let safeSize = $derived(
 		size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl' ? size : 'md'
+	);
+	let safeDensity = $derived(
+		density === 'compact' || density === 'comfortable' || density === 'default'
+			? density
+			: 'default'
 	);
 
 	let { classProps, styleProps, restProps } = $derived(
@@ -79,6 +85,7 @@
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
+		data-density={safeDensity}
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
 		data-block={block}
@@ -113,6 +120,7 @@
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
+		data-density={safeDensity}
 		disabled={resolvedDisabled}
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
@@ -177,6 +185,7 @@
 		--kit-btn-px-md: 16px;
 		--kit-btn-px-lg: 20px;
 		--kit-btn-px-xl: 24px;
+		--btn-density-scale: 1;
 		--btn-radius: 8px;
 
 		position: relative;
@@ -188,7 +197,7 @@
 		background: var(--btn-bg);
 		color: var(--btn-fg);
 		height: var(--btn-h);
-		padding-inline: var(--btn-px);
+		padding-inline: calc(var(--btn-px) * var(--btn-density-scale));
 		border-radius: var(--btn-radius);
 		text-decoration: none;
 		white-space: nowrap;
@@ -323,6 +332,19 @@
 		--btn-height: var(--kit-btn-h-xl);
 		--btn-px: var(--kit-btn-px-xl);
 		font-size: 16px;
+	}
+
+	/* density */
+	.kit-btn[data-density='default'] {
+		--btn-density-scale: 1;
+	}
+
+	.kit-btn[data-density='compact'] {
+		--btn-density-scale: 0.85;
+	}
+
+	.kit-btn[data-density='comfortable'] {
+		--btn-density-scale: 1.15;
 	}
 
 	.kit-btn[data-wide='true'] {
