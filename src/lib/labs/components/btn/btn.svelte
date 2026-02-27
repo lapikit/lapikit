@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
+	import { ripple } from '$lib/labs/animations/index.js';
 	import type { ButtonProps } from './btn.types.ts';
 
 	let {
@@ -16,6 +17,7 @@
 		loading,
 		active = false,
 		size = 'md',
+		rounded,
 		disabled = false,
 		block,
 		href,
@@ -25,12 +27,15 @@
 		value,
 		label,
 		wide,
+		noRipple,
 		...rest
 	}: ButtonProps = $props();
 
 	let safeVariant = $derived(
-		variant === 'filled' || variant === 'text' || variant === 'link' ? variant : 'filled'
-	); // Test this solution ...
+		variant === 'filled' || variant === 'outline' || variant === 'text' || variant === 'link'
+			? variant
+			: 'filled'
+	);
 	let safeSize = $derived(
 		size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl' ? size : 'md'
 	);
@@ -81,17 +86,22 @@
 		class={componentClass}
 		style={componentStyle}
 		data-size={safeSize}
-		data-variant={variant}
+		data-variant={safeVariant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
 		data-density={safeDensity}
+		data-rounded={rounded}
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
 		data-block={block}
 		data-wide={wide}
+		use:ripple={{
+			component: 'button',
+			disabled: noRipple || disabled
+		}}
 	>
-		{#if variant === 'outline'}
+		{#if safeVariant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 		<input
@@ -116,18 +126,23 @@
 		type={resolvedType()}
 		href={resolvedHref}
 		data-size={safeSize}
-		data-variant={variant}
+		data-variant={safeVariant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
 		data-density={safeDensity}
+		data-rounded={rounded}
 		disabled={resolvedDisabled}
 		aria-busy={disabled}
 		aria-disabled={isDisabled}
 		data-block={block}
 		data-wide={wide}
+		use:ripple={{
+			component: 'button',
+			disabled: noRipple || disabled
+		}}
 	>
-		{#if variant === 'outline'}
+		{#if safeVariant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 
@@ -186,6 +201,7 @@
 		--kit-btn-px-lg: 20px;
 		--kit-btn-px-xl: 24px;
 		--btn-density-scale: 1;
+		--btn-density-height-scale: 1;
 		--btn-radius: 8px;
 
 		position: relative;
@@ -196,7 +212,7 @@
 		font-family: var(--kit-btn-font);
 		background: var(--btn-bg);
 		color: var(--btn-fg);
-		height: var(--btn-h);
+		height: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
 		padding-inline: calc(var(--btn-px) * var(--btn-density-scale));
 		border-radius: var(--btn-radius);
 		text-decoration: none;
@@ -236,8 +252,8 @@
 	}
 
 	.kit-btn[data-active='true']:hover {
-		background: var(--btn-active-bg);
-		color: var(--btn-active-fg);
+		background: var(--btn-hover-bg);
+		color: var(--btn-hover-fg);
 		text-decoration: var(--btn-decoration);
 	}
 
@@ -337,14 +353,42 @@
 	/* density */
 	.kit-btn[data-density='default'] {
 		--btn-density-scale: 1;
+		--btn-density-height-scale: 1;
 	}
 
 	.kit-btn[data-density='compact'] {
-		--btn-density-scale: 0.85;
+		--btn-density-scale: 0.9;
+		--btn-density-height-scale: 0.92;
 	}
 
 	.kit-btn[data-density='comfortable'] {
-		--btn-density-scale: 1.15;
+		--btn-density-scale: 1.1;
+		--btn-density-height-scale: 1.08;
+	}
+
+	/* rounded */
+	.kit-btn[data-rounded='0'] {
+		--btn-radius: 0;
+	}
+
+	.kit-btn[data-rounded='xs'] {
+		--btn-radius: 2px;
+	}
+
+	.kit-btn[data-rounded='sm'] {
+		--btn-radius: 4px;
+	}
+
+	.kit-btn[data-rounded='md'] {
+		--btn-radius: 8px;
+	}
+
+	.kit-btn[data-rounded='lg'] {
+		--btn-radius: 16px;
+	}
+
+	.kit-btn[data-rounded='xl'] {
+		--btn-radius: 99999px;
 	}
 
 	.kit-btn[data-wide='true'] {
@@ -397,5 +441,15 @@
 
 	.kit-btn[data-disabled='true'] > input {
 		cursor: not-allowed;
+	}
+
+	@keyframes animation-l-ripple {
+		from {
+			scale: 0;
+		}
+
+		to {
+			scale: 1;
+		}
 	}
 </style>
