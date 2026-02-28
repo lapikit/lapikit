@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
+	import { ripple } from '$lib/labs/animations/index.js';
 	import type { ButtonProps } from './btn.types.ts';
 
 	let {
@@ -12,9 +13,11 @@
 		's-class': sClass,
 		's-style': sStyle,
 		variant = 'filled',
+		density = 'default',
 		loading,
 		active = false,
 		size = 'md',
+		rounded,
 		disabled = false,
 		block,
 		href,
@@ -24,14 +27,22 @@
 		value,
 		label,
 		wide,
+		noRipple,
 		...rest
 	}: ButtonProps = $props();
 
 	let safeVariant = $derived(
-		variant === 'filled' || variant === 'text' || variant === 'link' ? variant : 'filled'
-	); // Test this solution ...
+		variant === 'filled' || variant === 'outline' || variant === 'text' || variant === 'link'
+			? variant
+			: 'filled'
+	);
 	let safeSize = $derived(
 		size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl' ? size : 'md'
+	);
+	let safeDensity = $derived(
+		density === 'compact' || density === 'comfortable' || density === 'default'
+			? density
+			: 'default'
 	);
 
 	let { classProps, styleProps, restProps } = $derived(
@@ -75,16 +86,22 @@
 		class={componentClass}
 		style={componentStyle}
 		data-size={safeSize}
-		data-variant={variant}
+		data-variant={safeVariant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
+		data-density={safeDensity}
+		data-rounded={rounded}
 		aria-busy={disabled}
-		aria-disabled={isDisabled}
+		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
+		use:ripple={{
+			component: 'btn',
+			disabled: noRipple || disabled
+		}}
 	>
-		{#if variant === 'outline'}
+		{#if safeVariant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 		<input
@@ -109,17 +126,23 @@
 		type={resolvedType()}
 		href={resolvedHref}
 		data-size={safeSize}
-		data-variant={variant}
+		data-variant={safeVariant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
+		data-density={safeDensity}
+		data-rounded={rounded}
 		disabled={resolvedDisabled}
 		aria-busy={disabled}
-		aria-disabled={isDisabled}
+		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
+		use:ripple={{
+			component: 'btn',
+			disabled: noRipple || disabled
+		}}
 	>
-		{#if variant === 'outline'}
+		{#if safeVariant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 
@@ -177,7 +200,10 @@
 		--kit-btn-px-md: 16px;
 		--kit-btn-px-lg: 20px;
 		--kit-btn-px-xl: 24px;
+		--btn-density-scale: 1;
+		--btn-density-height-scale: 1;
 		--btn-radius: 8px;
+		--btn-shape: var(--btn-radius);
 
 		position: relative;
 		display: inline-flex;
@@ -187,8 +213,8 @@
 		font-family: var(--kit-btn-font);
 		background: var(--btn-bg);
 		color: var(--btn-fg);
-		height: var(--btn-h);
-		padding-inline: var(--btn-px);
+		height: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
+		padding-inline: calc(var(--btn-px) * var(--btn-density-scale));
 		border-radius: var(--btn-radius);
 		text-decoration: none;
 		white-space: nowrap;
@@ -227,8 +253,8 @@
 	}
 
 	.kit-btn[data-active='true']:hover {
-		background: var(--btn-active-bg);
-		color: var(--btn-active-fg);
+		background: var(--btn-hover-bg);
+		color: var(--btn-hover-fg);
 		text-decoration: var(--btn-decoration);
 	}
 
@@ -323,6 +349,47 @@
 		--btn-height: var(--kit-btn-h-xl);
 		--btn-px: var(--kit-btn-px-xl);
 		font-size: 16px;
+	}
+
+	/* density */
+	.kit-btn[data-density='default'] {
+		--btn-density-scale: 1;
+		--btn-density-height-scale: 1;
+	}
+
+	.kit-btn[data-density='compact'] {
+		--btn-density-scale: 0.9;
+		--btn-density-height-scale: 0.92;
+	}
+
+	.kit-btn[data-density='comfortable'] {
+		--btn-density-scale: 1.1;
+		--btn-density-height-scale: 1.08;
+	}
+
+	/* rounded */
+	.kit-btn[data-rounded='0'] {
+		--btn-radius: 0;
+	}
+
+	.kit-btn[data-rounded='xs'] {
+		--btn-radius: 2px;
+	}
+
+	.kit-btn[data-rounded='sm'] {
+		--btn-radius: 4px;
+	}
+
+	.kit-btn[data-rounded='md'] {
+		--btn-radius: 8px;
+	}
+
+	.kit-btn[data-rounded='lg'] {
+		--btn-radius: 16px;
+	}
+
+	.kit-btn[data-rounded='xl'] {
+		--btn-radius: 99999px;
 	}
 
 	.kit-btn[data-wide='true'] {

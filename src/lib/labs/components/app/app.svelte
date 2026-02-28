@@ -99,4 +99,48 @@
 		border-end-start-radius: var(--container-shape-end-start);
 		border-end-end-radius: var(--container-shape-end-end);
 	}
+
+	:global(.kit-ripple) {
+		background-color: currentColor;
+		opacity: 0.1;
+		position: absolute;
+		border-radius: 50%;
+		pointer-events: none;
+		-webkit-transition: 0.6s;
+		transition: 0.6s;
+		-webkit-animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
+			cubic-bezier(0.4, 0, 0.2, 1);
+		animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
+			cubic-bezier(0.4, 0, 0.2, 1);
+		border-radius: var(--system-ripple-radius);
+	}
+
+	:global(.kit-ripple--center) {
+		top: 50% !important;
+		left: 50% !important;
+		translate: -50% -50% !important;
+	}
+
+	:global(.kit-ripple--effect) {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		overflow: hidden;
+		background: none;
+		pointer-events: none;
+		z-index: 999;
+		border-radius: var(--system-ripple-radius);
+	}
+
+	@keyframes -global-animation-l-ripple {
+		from {
+			scale: 0;
+		}
+
+		to {
+			scale: 1;
+		}
+	}
 </style>

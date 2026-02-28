@@ -1,4 +1,4 @@
-import type { Component, SizeType } from '$lib/internal/types/index.js';
+import type { Component, RoundedType, SizeType } from '$lib/labs/utils/types/index.js';
 
 export interface ButtonProps extends Component {
 	ref?: HTMLElement | null;
@@ -12,9 +12,11 @@ export interface ButtonProps extends Component {
 	disabled?: boolean;
 	checked?: boolean;
 	size?: SizeType;
+	rounded?: RoundedType;
 	type?: 'button' | 'submit' | 'reset' | 'checkbox' | 'radio';
 	value?: string | number | boolean;
 	label?: string;
 	block?: boolean;
 	wide?: boolean;
+	noRipple?: boolean;
 }
