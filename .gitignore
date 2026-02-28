@@ -1,5 +1,6 @@
 node_modules
 
+
 # Output
 .output
 .vercel
@@ -22,3 +23,7 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+
+/src/routes/**/*
+!/src/routes/+layout.svelte

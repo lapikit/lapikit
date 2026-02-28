@@ -1,15 +1,9 @@
-interface RippleOptions {
-	component?: string; // The component name to use for the ripple shape
-	center?: boolean;
-	color?: string; // CSS color
-	duration?: number; // In ms
-	disabled?: boolean; // Should the ripple be disabled
-}
+import type { RippleProps } from '../utils/types/index.ts';
 
 const triggerEvents = ['pointerdown', 'touchstart', 'keydown'] as const;
 const cancelEvents = ['mouseleave', 'dragleave', 'touchmove', 'touchcancel', 'pointerup', 'keyup'];
 
-export function ripple(el: HTMLElement, options: RippleOptions = {}) {
+export function ripple(el: HTMLElement, options: RippleProps = {}) {
 	const rippleContainer = document.createElement('div');
 	addClasses();
 
@@ -35,7 +29,7 @@ export function ripple(el: HTMLElement, options: RippleOptions = {}) {
 		}
 	}
 
-	function setOptions(options: RippleOptions) {
+	function setOptions(options: RippleProps) {
 		if (options.disabled || isAriaDisabled()) {
 			rippleContainer.remove();
 		} else {
@@ -135,7 +129,7 @@ export function ripple(el: HTMLElement, options: RippleOptions = {}) {
 				el.removeEventListener(event, createRipple);
 			});
 		},
-		update(newOptions: RippleOptions) {
+		update(newOptions: RippleProps) {
 			options = newOptions;
 
 			setOptions(newOptions);

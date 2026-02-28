@@ -3,7 +3,6 @@ import type { Snippet } from 'svelte';
 type IdElementType = string | undefined;
 type ClassNameType = string | string[] | undefined;
 type StylePropertiesType = string | undefined;
-
 export interface Base {
 	id?: IdElementType;
 	class?: ClassNameType;
