@@ -521,6 +521,17 @@
 		cursor: not-allowed;
 	}
 
+	.kit-btn[data-disabled='true'] :global(.kit-icon) {
+		color: color-mix(in oklab, var(--btn-fg), transparent 45%) !important;
+		--kit-icon-color: color-mix(in oklab, var(--btn-fg), transparent 45%) !important;
+	}
+
+	.kit-btn[data-disabled='true'] :global(.kit-icon img),
+	.kit-btn[data-disabled='true'] :global(.kit-icon .kit-icon__mask) {
+		opacity: 0.7;
+		filter: grayscale(0.2);
+	}
+
 	.kit-btn[data-disabled='true'] > input {
 		cursor: not-allowed;
 	}
