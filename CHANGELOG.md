@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `snippet` support on component Btn
 - New component Icon with lili core v1
+- Add support component Icon on Btn
 - Add support official libs lucide-svelte, svg, img(png,jpg,etc...), Mingcute and @tabler/icons-svelte
 
 ## [0.4.3] - 2026-02-28
