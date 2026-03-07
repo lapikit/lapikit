@@ -16,7 +16,7 @@
 		density = 'default',
 		loading,
 		active = false,
-		size = 'md',
+		size = 'default',
 		rounded,
 		disabled = false,
 		block,
@@ -28,6 +28,10 @@
 		label,
 		wide,
 		noRipple,
+		load,
+		append,
+		prepend,
+		icon,
 		...rest
 	}: ButtonProps = $props();
 
@@ -37,7 +41,11 @@
 			: 'filled'
 	);
 	let safeSize = $derived(
-		size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl' ? size : 'md'
+		size === 'default'
+			? 'md'
+			: size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl'
+				? size
+				: 'md'
 	);
 	let safeDensity = $derived(
 		density === 'compact' || density === 'comfortable' || density === 'default'
@@ -96,6 +104,7 @@
 		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
+		data-icon={icon}
 		use:ripple={{
 			component: 'btn',
 			disabled: noRipple || disabled
@@ -137,6 +146,7 @@
 		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
+		data-icon={icon}
 		use:ripple={{
 			component: 'btn',
 			disabled: noRipple || disabled
@@ -147,13 +157,29 @@
 		{/if}
 
 		<span class="kit-btn__inner">
+			{#if prepend}
+				<span class="kit-btn__prepend">
+					{@render prepend?.()}
+				</span>
+			{/if}
 			<span class="kit-btn__content">
 				{@render children?.()}
 			</span>
+			{#if append}
+				<span class="kit-btn__append">
+					{@render append?.()}
+				</span>
+			{/if}
 		</span>
 
 		{#if loading}
-			<span class="spinner">...</span>
+			<span class="spinner">
+				{#if load}
+					{@render load?.()}
+				{:else}
+					...
+				{/if}
+			</span>
 		{/if}
 	</svelte:element>
 {/if}
@@ -204,6 +230,7 @@
 		--btn-density-height-scale: 1;
 		--btn-radius: 8px;
 		--btn-shape: var(--btn-radius);
+		--kit-btn-gap: 0.45em;
 
 		position: relative;
 		display: inline-flex;
@@ -322,12 +349,18 @@
 		--btn-px: var(--kit-btn-px-xs);
 		font-size: 12px;
 	}
+	.kit-btn[data-size='xs'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xs);
+	}
 
 	.kit-btn[data-size='sm'] {
 		--btn-h: var(--kit-btn-h-sm);
 		--btn-height: var(--kit-btn-h-sm);
 		--btn-px: var(--kit-btn-px-sm);
 		font-size: 13px;
+	}
+	.kit-btn[data-size='sm'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-sm);
 	}
 
 	.kit-btn[data-size='md'] {
@@ -336,6 +369,9 @@
 		--btn-px: var(--kit-btn-px-md);
 		font-size: 14px;
 	}
+	.kit-btn[data-size='md'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-md);
+	}
 
 	.kit-btn[data-size='lg'] {
 		--btn-h: var(--kit-btn-h-lg);
@@ -343,12 +379,18 @@
 		--btn-px: var(--kit-btn-px-lg);
 		font-size: 15px;
 	}
+	.kit-btn[data-size='lg'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-lg);
+	}
 
 	.kit-btn[data-size='xl'] {
 		--btn-h: var(--kit-btn-h-xl);
 		--btn-height: var(--kit-btn-h-xl);
 		--btn-px: var(--kit-btn-px-xl);
 		font-size: 16px;
+	}
+	.kit-btn[data-size='xl'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xl);
 	}
 
 	/* density */
@@ -402,9 +444,38 @@
 	}
 
 	.kit-btn__inner {
-		display: flex;
+		display: inline-flex;
 		align-items: center;
+		justify-content: center;
 		gap: var(--kit-btn-gap);
+		line-height: 1;
+	}
+
+	.kit-btn__content,
+	.kit-btn__prepend,
+	.kit-btn__append {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	.kit-btn__content :global(.kit-icon),
+	.kit-btn__prepend :global(.kit-icon),
+	.kit-btn__append :global(.kit-icon) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		vertical-align: middle;
+	}
+
+	.kit-btn__content :global(svg),
+	.kit-btn__prepend :global(svg),
+	.kit-btn__append :global(svg),
+	.kit-btn__content :global(img),
+	.kit-btn__prepend :global(img),
+	.kit-btn__append :global(img) {
+		display: block;
 	}
 
 	.kit-btn[data-loading='true'] .kit-btn__inner,
@@ -429,6 +500,16 @@
 	.kit-btn[data-block='true'] {
 		display: flex;
 		width: 100%;
+	}
+
+	.kit-btn[data-icon='true'] {
+		width: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
+		min-width: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
+		padding-inline: 0;
+	}
+
+	.kit-btn[data-icon='true'] .kit-btn__inner {
+		gap: 0;
 	}
 
 	.kit-btn[data-disabled='true'] {
