@@ -1,4 +1,5 @@
 import type { Component, RoundedType, SizeType } from '$lib/labs/utils/types/index.js';
+import type { Snippet } from 'svelte';
 
 export interface ButtonProps extends Component {
 	ref?: HTMLElement | null;
@@ -19,4 +20,8 @@ export interface ButtonProps extends Component {
 	block?: boolean;
 	wide?: boolean;
 	noRipple?: boolean;
+	icon?: boolean;
+	load?: Snippet;
+	append?: Snippet;
+	prepend?: Snippet;
 }
