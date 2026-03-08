@@ -50,9 +50,7 @@
 			typeof rest.onpointerdown === 'function' ||
 			typeof rest.onkeydown === 'function'
 	);
-	let isInteractive = $derived(
-		interactive || tag === 'a' || tag === 'button' || hasEventHandler
-	);
+	let isInteractive = $derived(interactive || tag === 'a' || tag === 'button' || hasEventHandler);
 	let isDisabled = $derived(!!disabled);
 	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
 	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
