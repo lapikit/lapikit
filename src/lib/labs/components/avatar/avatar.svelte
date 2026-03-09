@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
-	import KitIcon from '../icon/icon.svelte';
 	import type { AvatarProps } from './avatar.types.ts';
 
 	let {
@@ -12,9 +11,6 @@
 		's-class': sClass,
 		's-style': sStyle,
 		label = undefined,
-		src = undefined,
-		alt = '',
-		icon = undefined,
 		size = 'md',
 		density = 'default',
 		...rest
@@ -55,18 +51,7 @@
 			: 'default'
 	);
 
-	let contentType = $derived(
-		label && label.trim().length > 0
-			? 'label'
-			: src
-				? 'image'
-				: icon
-					? 'icon'
-					: children
-						? 'slot'
-						: 'empty'
-	);
-
+	let contentType = $derived(label && label.trim().length > 0 ? 'label' : children);
 	let displayLabel = $derived(label?.trim() ?? '');
 </script>
 
@@ -82,11 +67,7 @@
 >
 	{#if contentType === 'label'}
 		<span class="kit-avatar__label">{displayLabel}</span>
-	{:else if contentType === 'image'}
-		<img {src} {alt} />
-	{:else if contentType === 'icon'}
-		<KitIcon {icon} />
-	{:else if contentType === 'slot'}
+	{:else}
 		{@render children?.()}
 	{/if}
 </svelte:element>
@@ -155,7 +136,7 @@
 		padding-inline: 0.25rem;
 	}
 
-	.kit-avatar img {
+	.kit-avatar :global(img) {
 		display: block;
 		width: 100%;
 		height: 100%;
