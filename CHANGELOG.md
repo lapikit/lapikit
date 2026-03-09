@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.5] - 2026-03-09
 
-- ANew component Avatar with lili core v1
+### Added
+
+- Add New component Avatar with lili core v1
 
 ## [0.4.4] - 2026-03-07
 
