@@ -87,9 +87,7 @@
 			componentStyle,
 			background ? `--kit-toolbar-background:${background}` : '',
 			color ? `--kit-toolbar-color:${color}` : '',
-			typeof rounded === 'string' && rounded.includes('px')
-				? `--kit-toolbar-radius:${rounded}`
-				: ''
+			typeof rounded === 'string' && rounded.includes('px') ? `--kit-toolbar-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
