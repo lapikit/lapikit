@@ -8,7 +8,9 @@
 	}
 
 	function resolveDensity(value: ListDensity | undefined): ListDensity {
-		return value === 'compact' || value === 'comfortable' || value === 'default' ? value : 'default';
+		return value === 'compact' || value === 'comfortable' || value === 'default'
+			? value
+			: 'default';
 	}
 
 	let {
