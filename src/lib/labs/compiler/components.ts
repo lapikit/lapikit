@@ -4,7 +4,7 @@ const lapikitComponents: readonly string[] = [
 	'btn',
 	'icon',
 	'avatar',
-	'aspect-ratio'
+	'aspect-ratio',
 	'spacer',
 	'separator',
 	'chip',

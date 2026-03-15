@@ -76,11 +76,7 @@
 	let resolvedRatio = $derived(resolveRatio(ratio ?? aspectRatio));
 	let resolvedFit = $derived(resolveFit(fit));
 	let mergedStyle = $derived(
-		[
-			componentStyle,
-			`--kit-aspect-ratio: ${resolvedRatio}`,
-			`--kit-aspect-fit: ${resolvedFit}`
-		]
+		[componentStyle, `--kit-aspect-ratio: ${resolvedRatio}`, `--kit-aspect-fit: ${resolvedFit}`]
 			.filter(Boolean)
 			.join('; ')
 	);
