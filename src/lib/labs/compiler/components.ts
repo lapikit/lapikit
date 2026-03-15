@@ -6,7 +6,8 @@ const lapikitComponents: readonly string[] = [
 	'avatar',
 	'spacer',
 	'separator',
-	'chip'
+	'chip',
+	'card'
 ] as const;
 
 export default lapikitComponents;
