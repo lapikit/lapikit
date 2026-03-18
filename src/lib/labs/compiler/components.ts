@@ -1,6 +1,11 @@
 const lapikitComponents: readonly string[] = [
 	'sheet',
 	'app',
+	'appbar',
+	'btn',
+	'icon',
+	'avatar',
+	'toolbar',
 	'btn',
 	'icon',
 	'avatar',
