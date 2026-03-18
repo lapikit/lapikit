@@ -4,6 +4,8 @@ const lapikitComponents: readonly string[] = [
 	'btn',
 	'icon',
 	'avatar',
+	'list',
+	'list-item',
 	'dialog',
 	'modal',
 	'accordion',

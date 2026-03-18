@@ -6,6 +6,8 @@ export { default as KitIcon } from './icon/icon.svelte';
 export { default as KitCard } from './card/card.svelte';
 export { default as KitChip } from './chip/chip.svelte';
 export { default as KitAvatar } from './avatar/avatar.svelte';
+export { default as KitList } from './list/list.svelte';
+export { default as KitListItem } from './list/modules/list-item.svelte';
 export { default as KitDialog } from './dialog/dialog.svelte';
 export { default as KitModal } from './modal/modal.svelte';
 export { default as KitAccordion } from './accordion/accordion.svelte';
