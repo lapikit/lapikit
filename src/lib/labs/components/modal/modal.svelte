@@ -22,7 +22,9 @@
 	}
 
 	function resolveDensity(value: ModalDensity | undefined): ModalDensity {
-		return value === 'compact' || value === 'comfortable' || value === 'default' ? value : 'default';
+		return value === 'compact' || value === 'comfortable' || value === 'default'
+			? value
+			: 'default';
 	}
 
 	const modalId = crypto.randomUUID();
@@ -71,7 +73,9 @@
 	);
 
 	let contentClass = $derived(
-		Array.isArray(classContent) ? classContent.filter(Boolean).join(' ') : `${classContent ?? ''}`.trim()
+		Array.isArray(classContent)
+			? classContent.filter(Boolean).join(' ')
+			: `${classContent ?? ''}`.trim()
 	);
 
 	let safeSize = $derived(resolveSize(size));
