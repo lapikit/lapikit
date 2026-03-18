@@ -199,8 +199,8 @@
 					size="1"
 					maxlength={max}
 					minlength={min}
-					disabled={disabled}
-					readonly={readonly}
+					{disabled}
+					{readonly}
 					aria-invalid={error || undefined}
 					aria-describedby={messageValue ? `${id ?? name ?? 'textfield'}-message` : undefined}
 					onfocus={handleFocus}
