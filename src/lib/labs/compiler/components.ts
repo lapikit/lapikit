@@ -5,7 +5,17 @@ const lapikitComponents: readonly string[] = [
 	'icon',
 	'avatar',
 	'list',
-	'list-item'
+	'list-item',
+	'dialog',
+	'modal',
+	'accordion',
+	'accordionItem',
+	'alert',
+	'aspect-ratio',
+	'spacer',
+	'separator',
+	'chip',
+	'card'
 ] as const;
 
 export default lapikitComponents;
