@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
-	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
-	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from '$lib/stores/index.js';
+	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { useClassName, useStyles } from '$lib/utils';
+	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from '$lib/@legacy/stores';
 	import type { ModalDensity, ModalPosition, ModalProps, ModalSize } from './modal.types.ts';
 
 	function resolveSize(value: ModalSize | undefined): ModalSize {

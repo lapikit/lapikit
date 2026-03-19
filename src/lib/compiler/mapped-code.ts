@@ -1,5 +1,5 @@
-import type { SClassProp, SStyleProp } from '$lib/compiler/types/index.ts';
-import type { PropValue } from '$lib/utils/types/index.ts';
+import type { SClassProp, SStyleProp } from '$lib/compiler/types';
+import type { PropValue } from '$lib/utils/types';
 
 /**
  * Computes a string of class names based on the provided sClass and classDirectiveProps.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeSStyles } from '../mapped-code.ts';
+import { computeSStyles } from '../mapped-code';
 
 describe('computeSStyles', () => {
 	describe('sStyle as object', () => {

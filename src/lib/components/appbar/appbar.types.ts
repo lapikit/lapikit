@@ -1,4 +1,4 @@
-import type { Component, RoundedType } from '$lib/utils/types/index.ts';
+import type { Component, RoundedType } from '$lib/utils/types';
 
 type Density = 'compact' | 'comfortable' | 'default';
 type Variant = 'outline' | 'text';

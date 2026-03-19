@@ -1,4 +1,4 @@
-import type { Component, SizeType } from '$lib/utils/types/index.ts';
+import type { Component, SizeType } from '$lib/utils/types';
 
 export interface IconProps extends Component {
 	ref?: HTMLElement | null;

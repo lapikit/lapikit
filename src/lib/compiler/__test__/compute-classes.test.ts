@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { computeSClasses } from '../mapped-code.ts';
-import type { SClassProp } from '../types/index.ts';
+import { computeSClasses } from '../mapped-code';
+import type { SClassProp } from '../types';
 
 describe('computeSClasses', () => {
 	describe('sClass as string', () => {

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { useClassName, useStyles, clickOutside } from '$lib/labs/utils/index.js';
-	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
+	import { useClassName, useStyles, clickOutside } from '$lib/utils';
+	import { makeComponentProps } from '$lib/compiler/mapped-code';
 	import { getPositions } from './popover.svelte.ts';
 	import type { ModelPopoverProps, PopoverProps } from './popover.types.ts';
 

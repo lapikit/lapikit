@@ -1,4 +1,4 @@
-import type { ClickOutsideOptions } from './types/index.ts';
+import type { ClickOutsideOptions } from './types';
 
 export function clickOutside(node: HTMLElement, options: ClickOutsideOptions) {
 	let { exclude = [], onClose } = options;

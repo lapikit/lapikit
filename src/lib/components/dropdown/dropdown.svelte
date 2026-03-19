@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { useClassName, useStyles, clickOutside } from '$lib/labs/utils/index.js';
-	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
+	import { useClassName, useStyles, clickOutside } from '$lib/utils';
+	import { makeComponentProps } from '$lib/compiler/mapped-code';
 	import { getPositions } from './dropdown.svelte.ts';
 	import type { DropdownProps, ModelDropdownProps } from './dropdown.types.ts';
 

@@ -1,4 +1,4 @@
-import type { Component } from '$lib/utils/types/index.ts';
+import type { Component } from '$lib/utils/types';
 
 export type AspectRatioValue = string | number;
 export type AspectRatioFit = 'cover' | 'contain' | 'fill';

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
-	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
-	import Icon from '$lib/labs/components/icon/icon.svelte';
+	import { useClassName, useStyles } from '$lib/utils';
+	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import Icon from '$lib/components/icon/icon.svelte';
 	import type { TextfieldProps } from './textfield.types.ts';
 
 	let {

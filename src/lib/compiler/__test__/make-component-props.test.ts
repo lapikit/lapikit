@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeComponentProps } from '../mapped-code.ts';
+import { makeComponentProps } from '../mapped-code';
 
 describe('makeComponentProps', () => {
 	describe('basic separation', () => {

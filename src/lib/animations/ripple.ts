@@ -1,4 +1,4 @@
-import type { RippleProps } from '../utils/types/index.ts';
+import type { RippleProps } from '../utils/types';
 
 const triggerEvents = ['pointerdown', 'touchstart', 'keydown'] as const;
 const cancelEvents = ['mouseleave', 'dragleave', 'touchmove', 'touchcancel', 'pointerup', 'keyup'];

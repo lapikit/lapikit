@@ -1,1 +1,1 @@
-export * from './preprocess/index.ts';
+export * from './preprocess';

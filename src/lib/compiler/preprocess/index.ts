@@ -1,1 +1,1 @@
-export * from './lili.ts';
+export * from './lili';

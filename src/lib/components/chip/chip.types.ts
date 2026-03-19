@@ -1,4 +1,4 @@
-import type { Component, SizeType } from '$lib/utils/types/index.ts';
+import type { Component, SizeType } from '$lib/utils/types';
 import type { Snippet } from 'svelte';
 
 export interface ChipProps extends Component {

@@ -7,4 +7,4 @@ export function componentName(shortName: string): string {
 	return 'Kit' + shortName.charAt(0).toUpperCase() + shortName.slice(1);
 }
 
-export const lapikitImportsRef = 'lapikit/labs/components';
+export const lapikitImportsRef = 'lapikit/components';

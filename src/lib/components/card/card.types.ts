@@ -1,4 +1,4 @@
-import type { Component, RoundedType } from '$lib/utils/types/index.ts';
+import type { Component, RoundedType } from '$lib/utils/types';
 
 export interface CardProps extends Component {
 	ref?: HTMLElement | null;

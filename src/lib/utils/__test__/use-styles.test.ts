@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { useStyles } from '../components.ts';
+import { useStyles } from '../components';
 
 describe('useStyles', () => {
 	describe('no arguments', () => {

@@ -1,5 +1,5 @@
-import { findTagEnd } from '$lib/compiler/preprocess/finding.ts';
-import type { ComponentInfo, KitComponentScan } from '$lib/compiler/types/index.ts';
+import { findTagEnd } from '$lib/compiler/preprocess/finding';
+import type { ComponentInfo, KitComponentScan } from '$lib/compiler/types';
 
 export const decodeSourceMap = (
 	content: string,

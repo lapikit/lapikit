@@ -1,4 +1,4 @@
-import type { Component, RoundedType } from '$lib/utils/types/index.ts';
+import type { Component, RoundedType } from '$lib/utils/types';
 
 export type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export type ModalPosition = 'top' | 'center' | 'bottom';

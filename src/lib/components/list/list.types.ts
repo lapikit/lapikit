@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { Component, RoundedType, SizeType } from '$lib/utils/types/index.ts';
+import type { Component, RoundedType, SizeType } from '$lib/utils/types';
 
 export type ListVariant = 'filled' | 'outline' | 'text';
 export type ListDensity = 'compact' | 'comfortable' | 'default';

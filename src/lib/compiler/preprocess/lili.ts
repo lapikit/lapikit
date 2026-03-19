@@ -1,10 +1,10 @@
-import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/compiler/types/index.ts';
-import { componentName, lapikitImportsRef } from '$lib/compiler/preprocess/source-import.ts';
-import { decodeSourceMap } from '$lib/compiler/preprocess/decode-sourcemap.ts';
+import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/compiler/types';
+import { componentName, lapikitImportsRef } from '$lib/compiler/preprocess/source-import';
+import { decodeSourceMap } from '$lib/compiler/preprocess/decode-sourcemap';
 
 // imports components and plugins
-import lapikitComponents from '$lib/compiler/components.ts';
-import lapikitPlugins from '$lib/compiler/plugins.ts';
+import lapikitComponents from '$lib/compiler/components';
+import lapikitPlugins from '$lib/compiler/plugins';
 
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {

@@ -1,2 +1,2 @@
-export * from './components.ts';
-export * from './outside.ts';
+export * from './components';
+export * from './outside';
