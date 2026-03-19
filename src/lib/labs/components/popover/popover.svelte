@@ -54,9 +54,7 @@
 			componentStyle,
 			background ? `--kit-popover-background:${background}` : '',
 			color ? `--kit-popover-color:${color}` : '',
-			typeof rounded === 'string' && rounded.includes('px')
-				? `--kit-popover-radius:${rounded}`
-				: ''
+			typeof rounded === 'string' && rounded.includes('px') ? `--kit-popover-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
