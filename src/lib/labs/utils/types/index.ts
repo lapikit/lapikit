@@ -43,3 +43,8 @@ export interface RippleProps {
 	duration?: number; // In ms
 	disabled?: boolean; // Should the ripple be disabled
 }
+
+export type ClickOutsideOptions = {
+	exclude?: (HTMLElement | PointerEvent | null)[];
+	onClose: () => void;
+};
