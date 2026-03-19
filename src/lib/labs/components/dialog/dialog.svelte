@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { disabledScroll } from '$lib/internal/helpers/scroll.js';
+	import { disabledScroll } from '$lib/@legacy/internal/helpers/scroll.js';
 	import { makeComponentProps } from '$lib/labs/compiler/mapped-code.js';
 	import { useClassName, useStyles } from '$lib/labs/utils/index.js';
 	import type { DialogDensity, DialogPosition, DialogProps, DialogSize } from './dialog.types.ts';

@@ -43,37 +43,37 @@
 	"bin": {
 		"lapikit": "bin/index.js"
 	},
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"svelte": "./dist/@legacy/index.js",
+	"types": "./dist/@legacy/index.d.ts",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"types": "./dist/@legacy/index.d.ts",
+			"svelte": "./dist/@legacy/index.js"
 		},
 		"./components": {
-			"svelte": "./dist/components/index.js",
-			"default": "./dist/components/index.js"
+			"svelte": "./dist/@legacy/components/index.js",
+			"default": "./dist/@legacy/components/index.js"
 		},
 		"./vite": {
-			"default": "./dist/internal/plugins/vite.js"
+			"default": "./dist/@legacy/internal/plugins/vite.js"
 		},
 		"./stores": {
-			"default": "./dist/stores/index.js"
+			"default": "./dist/@legacy/stores/index.js"
 		},
 		"./actions": {
-			"default": "./dist/actions/index.js"
+			"default": "./dist/@legacy/actions/index.js"
 		},
 		"./core/colors": {
-			"default": "./dist/internal/core/standard-colors.js"
+			"default": "./dist/@legacy/internal/core/standard-colors.js"
 		},
 		"./styles": {
-			"types": "./dist/styles.css.d.ts",
-			"default": "./dist/styles.css"
+			"types": "./dist/@legacy/styles.css.d.ts",
+			"default": "./dist/@legacy/styles.css"
 		},
 		"./themes": {
-			"types": "./dist/themes.css.d.ts",
-			"default": "./dist/themes.css"
+			"types": "./dist/@legacy/themes.css.d.ts",
+			"default": "./dist/@legacy/themes.css"
 		},
 		"./labs/preprocess": {
 			"default": "./dist/entry-bundler.js"
