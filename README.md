@@ -86,7 +86,7 @@ Be part of the next revolution in code editing by contributing to the project. T
 
 Licensed under the [MIT license](https://github.com/lapikit/lapikit/blob/main/LICENSE).
 
-Copyright © 2025 Nycolaide
+Copyright © 2025 - 2026 Nycolaide
 
 ## 🪧We support these projects
 

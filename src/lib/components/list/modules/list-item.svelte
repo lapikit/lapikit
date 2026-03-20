@@ -1,76 +1,195 @@
 <script lang="ts">
-	import { getAssets } from '$lib/internal/core/actions/assets.svelte.js';
-	import type { ListItemProps } from '../types.js';
-
-	// external
-	import { ripple } from '$lib/internal/core/animations/ripple.js';
+	import { ripple } from '$lib/animations';
+	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { useClassName, useStyles } from '$lib/utils';
+	import type { ListItemProps } from '../list.types.ts';
 
 	let {
-		children,
-		append,
-		prepend,
 		ref = $bindable(),
 		is = 'div',
-		dark,
-		light,
-		background,
-		color,
-		rounded,
-		disabled,
-		active,
-		href,
-		noRipple,
+		children = undefined,
+		class: className = '',
+		style: styleAttr = '',
+		's-class': sClass,
+		's-style': sStyle,
+		append = undefined,
+		prepend = undefined,
+		href = undefined,
+		color = undefined,
+		background = undefined,
+		rounded = 'sm',
+		active = false,
+		disabled = false,
+		noRipple = false,
 		...rest
 	}: ListItemProps = $props();
 
-	const assets = getAssets();
+	let { classProps, styleProps, restProps } = $derived(
+		makeComponentProps(rest as Record<string, unknown>)
+	);
 
-	$effect(() => {
-		const refProps = { ...rest };
-		if (refProps?.onclick) is = 'button';
-	});
+	let tag = $derived(href ? 'a' : is === 'div' && restProps.onclick ? 'button' : is);
+	let isInteractive = $derived(tag !== 'div' && tag !== 'li' && !disabled);
+
+	let componentClass = $derived(
+		useClassName({
+			baseClass: 'kit-list-item',
+			className: `${className ?? ''}`.trim(),
+			sClass,
+			classProps
+		})
+	);
+
+	let componentStyle = $derived(
+		useStyles({
+			styleAttr,
+			sStyle,
+			styleProps
+		})
+	);
+
+	let mergedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-list-item-fg:${color}` : '',
+			background ? `--kit-list-item-bg:${background}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
-	this={href ? 'a' : is}
+	this={tag}
 	bind:this={ref}
-	{...rest}
+	class={componentClass}
+	style={mergedStyle}
 	href={href && !disabled ? href : undefined}
-	class={[
-		'kit-list-item',
-		light && 'light',
-		dark && 'dark',
-		append && 'kit-list-item--append',
-		prepend && 'kit-list-item--prepend',
-		active && 'kit-list-item--active',
-		disabled && 'kit-list-item--disabled',
-		rest.class
-	]}
+	data-active={active}
+	data-disabled={disabled}
+	data-rounded={rounded}
+	aria-disabled={disabled || undefined}
+	disabled={tag === 'button' ? disabled : undefined}
+	tabindex={href && disabled ? -1 : undefined}
+	role={tag === 'div' ? 'listitem' : undefined}
 	use:ripple={{
 		component: 'list-item',
-		disabled: noRipple || disabled || is === 'div'
+		disabled: noRipple || !isInteractive
 	}}
-	role={is === 'button' ? 'listitem' : undefined}
-	tabindex={href && disabled ? -2 : 0}
-	aria-disabled={href ? disabled : undefined}
-	disabled={href ? undefined : disabled}
-	style:--list-item-background={assets.color(background)}
-	style:--list-item-color={assets.color(color)}
-	style:--list-item-shape={assets.shape(rounded)}
+	{...restProps}
 >
-	{#if append}
-		<div class="kit-list-item-content--append">
-			{@render append?.()}
-		</div>
+	{#if prepend}
+		<span class="kit-list-item__prepend">
+			{@render prepend?.()}
+		</span>
 	{/if}
 
-	<div class="kit-list-item-content--content">
+	<span class="kit-list-item__content">
 		{@render children?.()}
-	</div>
+	</span>
 
-	{#if prepend}
-		<div class="kit-list-item-content--prepend">
-			{@render prepend?.()}
-		</div>
+	{#if append}
+		<span class="kit-list-item__append">
+			{@render append?.()}
+		</span>
 	{/if}
 </svelte:element>
+
+<style>
+	.kit-list-item {
+		--kit-list-item-bg: transparent;
+		--kit-list-item-fg: inherit;
+		--list-item-shape: 8px;
+
+		position: relative;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: var(--kit-list-item-gap, 0.625rem);
+		min-height: var(--kit-list-item-h, 2.75rem);
+		padding-inline: var(--kit-list-item-px, 0.875rem);
+		border: 0;
+		border-radius: var(--list-item-shape);
+		background: var(--kit-list-item-bg);
+		color: var(--kit-list-item-fg);
+		text-decoration: none;
+		font: inherit;
+		font-size: var(--kit-list-item-font, 0.9375rem);
+		text-align: left;
+	}
+
+	.kit-list-item[data-rounded='0'] {
+		--list-item-shape: 0;
+	}
+
+	.kit-list-item[data-rounded='xs'] {
+		--list-item-shape: 2px;
+	}
+
+	.kit-list-item[data-rounded='sm'] {
+		--list-item-shape: 8px;
+	}
+
+	.kit-list-item[data-rounded='md'] {
+		--list-item-shape: 12px;
+	}
+
+	.kit-list-item[data-rounded='lg'] {
+		--list-item-shape: 16px;
+	}
+
+	.kit-list-item[data-rounded='xl'] {
+		--list-item-shape: 9999px;
+	}
+
+	.kit-list[data-variant='filled'] .kit-list-item {
+		background: var(--kit-list-item-bg, transparent);
+	}
+
+	.kit-list[data-variant='outline'] .kit-list-item::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border: 1px solid color-mix(in oklab, currentColor 16%, transparent);
+		border-radius: inherit;
+		pointer-events: none;
+	}
+
+	.kit-list-item[data-active='true'] {
+		background: color-mix(in oklab, currentColor 12%, transparent);
+	}
+
+	.kit-list-item[data-disabled='true'] {
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	.kit-list-item:is(button, a) {
+		cursor: pointer;
+	}
+
+	.kit-list-item__prepend,
+	.kit-list-item__append,
+	.kit-list-item__content {
+		display: inline-flex;
+		align-items: center;
+		min-width: 0;
+	}
+
+	.kit-list-item__content {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.kit-list-item:is(button, a):hover::after,
+	.kit-list-item:is(button, a):focus-visible::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: currentColor;
+		opacity: 0.06;
+		pointer-events: none;
+	}
+</style>
