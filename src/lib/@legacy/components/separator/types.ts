@@ -1,4 +1,4 @@
-import type { Base } from '$lib/internal/types/index.js';
+import type { Base } from '$lib/@legacy/internal/types/index.js';
 
 type Orientation = 'horizontal' | 'vertical';
 

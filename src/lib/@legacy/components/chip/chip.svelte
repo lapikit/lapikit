@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { getAssets } from '$lib/internal/core/actions/assets.svelte.js';
+	import { getAssets } from '$lib/@legacy/internal/core/actions/assets.svelte.js';
 	import { Icon } from '../index.js';
 	import type { ChipProps } from './types.js';
 
 	// external
-	import LoadingFill from '$lib/assets/icons/loading-fill.svelte';
+	import LoadingFill from '$lib/@legacy/assets/icons/loading-fill.svelte';
 	import Close from '../../assets/icons/close-fill.svelte';
-	import { ripple } from '$lib/internal/core/animations/ripple.js';
+	import { ripple } from '$lib/@legacy/internal/core/animations/ripple.js';
 
 	let {
 		children,

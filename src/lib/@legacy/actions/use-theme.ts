@@ -1,4 +1,4 @@
-import { theme } from '$lib/stores/themes.js';
+import { theme } from '$lib/@legacy/stores/themes.js';
 
 // states
 const isBrowser = typeof window !== 'undefined';

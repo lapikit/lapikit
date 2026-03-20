@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { getAssets } from '$lib/internal/core/actions/assets.svelte.js';
+	import { getAssets } from '$lib/@legacy/internal/core/actions/assets.svelte.js';
 	import type { CardProps } from './types.js';
 
 	// external
-	import { ripple } from '$lib/internal/core/animations/ripple.js';
+	import { ripple } from '$lib/@legacy/internal/core/animations/ripple.js';
 
 	let {
 		children,

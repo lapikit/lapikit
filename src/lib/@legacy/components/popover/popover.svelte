@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getAssets } from '$lib/internal/core/actions/assets.svelte.js';
-	import { clickOutside } from '$lib/internal/helpers/outside.js';
-	import { getPositions } from '$lib/internal/core/actions/popover.svelte.js';
+	import { getAssets } from '$lib/@legacy/internal/core/actions/assets.svelte.js';
+	import { clickOutside } from '$lib/@legacy/internal/helpers/outside.js';
+	import { getPositions } from '$lib/@legacy/internal/core/actions/popover.svelte.js';
 	import type { PopoverProps, ModelPopoverProps } from './types.js';
 
 	let {

@@ -1,9 +1,9 @@
 <script lang="ts">
 	const BROWSER = typeof window !== 'undefined';
-	import { useTheme } from '$lib/actions/use-theme.js';
-	import { modalOpen, setOpenModal } from '$lib/stores/components.js';
+	import { useTheme } from '$lib/@legacy/actions/use-theme.js';
+	import { modalOpen, setOpenModal } from '$lib/@legacy/stores/components.js';
 
-	import { viewport } from '$lib/stores/viewport.js';
+	import { viewport } from '$lib/@legacy/stores/viewport.js';
 	import type { AppProps } from './types.js';
 
 	let {
