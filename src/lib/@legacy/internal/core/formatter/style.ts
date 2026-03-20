@@ -1,5 +1,5 @@
-import { parserValues } from '$lib/internal/helpers/parser.js';
-import type { FragStyles } from '$lib/internal/types/configuration.js';
+import { parserValues } from '$lib/@legacy/internal/helpers/parser.js';
+import type { FragStyles } from '$lib/@legacy/internal/types/configuration.js';
 
 export async function stylesFormatter({ styles }: { styles: FragStyles }) {
 	let css: string = `:root {\n`;

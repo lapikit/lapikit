@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { terminal } from '$lib/internal/core/bin/terminal.js';
-import { liliRabbit } from '$lib/internal/core/formatter/index.js';
+import { terminal } from '$lib/@legacy/internal/core/bin/terminal.js';
+import { liliRabbit } from '$lib/@legacy/internal/core/formatter/index.js';
 import { parserConfigLapikit } from '../helpers/parser.js';
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,8 +1,8 @@
-import { preset } from '$lib/internal/config/presets.js';
-import { formatColor } from '$lib/internal/helpers/colors.js';
-import { deepMerge } from '$lib/internal/helpers/deep-merge.js';
-import { parserValues } from '$lib/internal/helpers/parser.js';
-import type { FragThemes } from '$lib/internal/types/index.js';
+import { preset } from '$lib/@legacy/internal/config/presets.js';
+import { formatColor } from '$lib/@legacy/internal/helpers/colors.js';
+import { deepMerge } from '$lib/@legacy/internal/helpers/deep-merge.js';
+import { parserValues } from '$lib/@legacy/internal/helpers/parser.js';
+import type { FragThemes } from '$lib/@legacy/internal/types/index.js';
 
 export async function themesFormatter({
 	themes,

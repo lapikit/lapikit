@@ -1,6 +1,6 @@
-import { preset } from '$lib/internal/config/presets.js';
-import { deepMerge } from '$lib/internal/helpers/deep-merge.js';
-import type { DevConfiguration } from '$lib/internal/types/index.js';
+import { preset } from '$lib/@legacy/internal/config/presets.js';
+import { deepMerge } from '$lib/@legacy/internal/helpers/deep-merge.js';
+import type { DevConfiguration } from '$lib/@legacy/internal/types/index.js';
 import { componentFormatter } from './component.js';
 import { devicesFormatter } from './device.js';
 import { stylesFormatter } from './style.js';

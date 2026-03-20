@@ -1,4 +1,4 @@
-import { parserValues } from '$lib/internal/helpers/parser.js';
+import { parserValues } from '$lib/@legacy/internal/helpers/parser.js';
 
 export async function devicesFormatter({
 	devices

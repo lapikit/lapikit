@@ -1,4 +1,4 @@
-import { x11Colors } from '$lib/internal/core/x11-colors.js';
+import { x11Colors } from '$lib/@legacy/internal/core/x11-colors.js';
 
 export const formatColor = (input: string) => {
 	input = input.trim();
