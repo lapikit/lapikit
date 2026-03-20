@@ -1,0 +1,21 @@
+import { parserValues } from '$lib/@legacy/internal/helpers/parser.js';
+import type { FragTypography } from '$lib/@legacy/internal/types/configuration.js';
+
+export async function typographyFormatter({
+	typography,
+	defaultTypography = 'default'
+}: {
+	typography: FragTypography;
+	defaultTypography: string;
+}) {
+	let css: string = '';
+	for (const [name, values] of Object.entries(typography)) {
+		let cssTypo = defaultTypography === name ? `:root {\n` : `.${name} {\n`;
+		for (const [fontName, fontValue] of Object.entries(values || {})) {
+			cssTypo += `  --kit-font-${fontName}: ${parserValues(fontValue).replaceAll('"', '')};\n`;
+		}
+		css += cssTypo + '}\n';
+	}
+
+	return css;
+}
