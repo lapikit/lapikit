@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { SClassProp, SStyleProp } from '$lib/compiler/types/index';
+import type { SClassProp, SStyleProp } from '$lib/compiler/types';
 
 type IdElementType = string | undefined;
 type ClassNameType = string | string[] | undefined;
