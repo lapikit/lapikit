@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { Component, RoundedType } from '$lib/utils/types';
+import type { Component, RoundedType } from '$lib/@types';
 
 export type AlertVariant = 'filled' | 'outline' | 'text';
 export type AlertDensity = 'compact' | 'comfortable' | 'default';

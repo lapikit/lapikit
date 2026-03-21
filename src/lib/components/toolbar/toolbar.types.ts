@@ -1,4 +1,4 @@
-import type { Component, PropValue, RoundedType } from '$lib/utils/types';
+import type { Component, PropValue, RoundedType } from '$lib/@types';
 
 type Variant = 'outline' | 'text' | 'dash';
 type Density = 'compact' | 'comfortable' | 'default';

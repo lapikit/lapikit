@@ -1,5 +1,5 @@
-import type { SClassProp, SStyleProp } from '$lib/compiler/types';
-import type { PropValue } from '$lib/utils/types';
+import type { SClassProp, SStyleProp } from '$lib/@types';
+import type { PropValue } from '$lib/@types';
 
 /**
  * Computes a string of class names based on the provided sClass and classDirectiveProps.

@@ -1,4 +1,4 @@
-import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/compiler/types';
+import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/@types';
 import { componentName, lapikitImportsRef } from '$lib/compiler/preprocess/source-import';
 import { decodeSourceMap } from '$lib/compiler/preprocess/decode-sourcemap';
 
