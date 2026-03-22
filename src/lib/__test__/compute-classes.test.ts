@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeSClasses } from '../mapped-code';
+import { computeSClasses } from '$lib/html-mapped';
 import type { SClassProp } from '$lib/@types';
 
 describe('computeSClasses', () => {

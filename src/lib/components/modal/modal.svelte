@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { useClassName, useStyles } from '$lib/utils';
 	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from '$lib/@legacy/stores';
 	import type { ModalDensity, ModalPosition, ModalProps, ModalSize } from './modal.types.ts';

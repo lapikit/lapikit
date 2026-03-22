@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ripple } from '$lib/animations';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { useClassName, useStyles } from '$lib/utils';
 	import type { ListItemProps } from '../list.types.ts';
 

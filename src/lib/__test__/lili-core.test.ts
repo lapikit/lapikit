@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { liliCore } from '../lili.ts';
-import { componentName, lapikitImportsRef } from '../source-import.ts';
+import { componentName, liliCore } from '$lib/framework';
+import { lapikitImportsRef } from '$lib/constants';
 
 describe('liliCore', () => {
 	it('converts kit tags with multiline attributes and injects imports', () => {

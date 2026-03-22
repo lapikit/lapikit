@@ -1,4 +1,4 @@
-import { liliCore } from '$lib/compiler/preprocess';
+import { liliCore } from '$lib/framework';
 import type { LapikitPreprocessOptions } from '$lib/@types';
 
 function lapikitPreprocess(options?: LapikitPreprocessOptions) {

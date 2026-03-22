@@ -1,4 +1,6 @@
-const lapikitComponents: readonly string[] = [
+export const lapikitImportsRef = 'lapikit/components';
+
+export const lapikitComponents: readonly string[] = [
 	'sheet',
 	'app',
 	'btn',
@@ -30,4 +32,9 @@ const lapikitComponents: readonly string[] = [
 	'card'
 ] as const;
 
-export default lapikitComponents;
+export const lapikitPlugins = {
+	repl: {
+		components: ['repl'],
+		ref: '@lapikit/repl'
+	}
+} as const;

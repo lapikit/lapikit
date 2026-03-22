@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import Icon from '$lib/components/icon/icon.svelte';
 	import type { TextfieldProps } from './textfield.types.ts';
 

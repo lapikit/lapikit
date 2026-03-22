@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeSStyles } from '../mapped-code';
+import { computeSStyles } from '$lib/html-mapped';
 
 describe('computeSStyles', () => {
 	describe('sStyle as object', () => {

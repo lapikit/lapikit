@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeComponentProps } from '../mapped-code';
+import { makeComponentProps } from '$lib/html-mapped';
 
 describe('makeComponentProps', () => {
 	describe('basic separation', () => {

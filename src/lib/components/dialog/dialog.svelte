@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { disabledScroll } from '$lib/@legacy/internal/helpers/scroll';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { useClassName, useStyles } from '$lib/utils';
 	import type { DialogDensity, DialogPosition, DialogProps, DialogSize } from './dialog.types.ts';
 

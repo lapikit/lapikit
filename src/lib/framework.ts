@@ -1,10 +1,15 @@
 import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/@types';
-import { componentName, lapikitImportsRef } from '$lib/compiler/preprocess/source-import';
-import { decodeSourceMap } from '$lib/compiler/preprocess/decode-sourcemap';
+import { decodeSourceMap } from '$lib/escaping';
+import { lapikitImportsRef, lapikitComponents, lapikitPlugins } from '$lib/constants';
 
-// imports components and plugins
-import lapikitComponents from '$lib/compiler/components';
-import lapikitPlugins from '$lib/compiler/plugins';
+/**
+ * componentName generates the component name used in imports
+ * @param shortName The short name of the component
+ * @returns The component name with "Kit" prefix and the first letter capitalized
+ */
+export function componentName(shortName: string): string {
+	return 'Kit' + shortName.charAt(0).toUpperCase() + shortName.slice(1);
+}
 
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {
