@@ -16,19 +16,16 @@ declare global {
 		type KitModule = typeof KitComponents;
 		type AnyComponent = Component<Record<string, unknown>, Record<string, unknown>>;
 
-		type KebabCase<S extends string> =
-			S extends `${infer Head}${infer Tail}`
-				? Tail extends Uncapitalize<Tail>
-					? `${Lowercase<Head>}${KebabCase<Tail>}`
-					: `${Lowercase<Head>}-${KebabCase<Tail>}`
-				: S;
+		type KebabCase<S extends string> = S extends `${infer Head}${infer Tail}`
+			? Tail extends Uncapitalize<Tail>
+				? `${Lowercase<Head>}${KebabCase<Tail>}`
+				: `${Lowercase<Head>}-${KebabCase<Tail>}`
+			: S;
 
 		type KitIntrinsicElements = {
 			[K in keyof KitModule as K extends `Kit${infer Name}`
 				? `kit:${KebabCase<Name>}`
-				: never]: KitModule[K] extends AnyComponent
-				? ComponentProps<KitModule[K]>
-				: never;
+				: never]: KitModule[K] extends AnyComponent ? ComponentProps<KitModule[K]> : never;
 		};
 
 		// eslint-disable-next-line @typescript-eslint/no-empty-object-type
