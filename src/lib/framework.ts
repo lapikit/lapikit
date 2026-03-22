@@ -1,6 +1,12 @@
 import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/@types';
 import { decodeSourceMap } from '$lib/escaping';
-import { lapikitImportsRef, lapikitComponents, lapikitPlugins } from '$lib/constants';
+import {
+	lapikitImportsRef,
+	lapikitImportsLabsRef,
+	lapikitComponents,
+	lapikitLabsComponents,
+	lapikitPlugins
+} from '$lib/constants';
 
 /**
  * componentName generates the component name used in imports
@@ -14,11 +20,15 @@ export function componentName(shortName: string): string {
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {
 		markup({ content }: { content: string; filename?: string }) {
-			const allComponents = [...lapikitComponents];
+			const allComponents = [...lapikitComponents, ...lapikitLabsComponents];
 			const componentToRef = new Map<string, string>();
 
 			lapikitComponents.forEach((comp) => {
 				componentToRef.set(comp, lapikitImportsRef);
+			});
+
+			lapikitLabsComponents.forEach((comp) => {
+				componentToRef.set(comp, lapikitImportsLabsRef);
 			});
 
 			// plugins

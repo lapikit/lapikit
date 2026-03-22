@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { componentName, liliCore } from '$lib/framework';
-import { lapikitImportsRef } from '$lib/constants';
+import { lapikitImportsLabsRef } from '$lib/constants';
 
 describe('liliCore', () => {
 	it('converts kit tags with multiline attributes and injects imports', () => {
@@ -10,7 +10,7 @@ describe('liliCore', () => {
 
 		const result = preprocess.markup({ content: input });
 
-		expect(result?.code).toContain(`import { ${sheetName} } from '${lapikitImportsRef}';`);
+		expect(result?.code).toContain(`import { ${sheetName} } from '${lapikitImportsLabsRef}';`);
 		expect(result?.code).toContain(`<${sheetName}`);
 		expect(result?.code).toContain('class="gnome"');
 		expect(result?.code).toContain('on:click={() => a > b}');
@@ -27,7 +27,7 @@ describe('liliCore', () => {
 		expect(result?.code).toContain("const template = '<kit:sheet />';");
 		expect(result?.code).toContain('content: "<kit:sheet />";');
 		expect(result?.code).toContain(`<${sheetName}>content</${sheetName}>`);
-		expect(result?.code).toContain(`import { ${sheetName} } from '${lapikitImportsRef}';`);
+		expect(result?.code).toContain(`import { ${sheetName} } from '${lapikitImportsLabsRef}';`);
 	});
 
 	it('does nothing when kit tags exist only inside script or style', () => {

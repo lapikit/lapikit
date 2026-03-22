@@ -1,7 +1,7 @@
-export const lapikitImportsRef = 'lapikit/components';
+export const lapikitImportsRef = 'lapikit/labs/components';
+export const lapikitImportsLabsRef = 'lapikit/labs/labs/components';
 
 export const lapikitComponents: readonly string[] = [
-	'sheet',
 	'app',
 	'btn',
 	'icon',
@@ -31,6 +31,8 @@ export const lapikitComponents: readonly string[] = [
 	'chip',
 	'card'
 ] as const;
+
+export const lapikitLabsComponents: readonly string[] = ['sheet'] as const;
 
 export const lapikitPlugins = {
 	repl: {
