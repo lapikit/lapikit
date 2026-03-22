@@ -76,6 +76,7 @@
 			"default": "./dist/@legacy/themes.css"
 		},
 		"./labs/preprocess": {
+			"types": "./dist/entry-bundler.d.ts",
 			"default": "./dist/entry-bundler.js"
 		},
 		"./labs/components": {
