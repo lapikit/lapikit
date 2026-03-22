@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { getPositionsTooltip } from './tooltip.svelte.ts';
 	import type { TooltipProps } from './tooltip.types.ts';
 

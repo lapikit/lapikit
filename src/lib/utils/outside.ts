@@ -1,4 +1,4 @@
-import type { ClickOutsideOptions } from './types';
+import type { ClickOutsideOptions } from '$lib/@types';
 
 export function clickOutside(node: HTMLElement, options: ClickOutsideOptions) {
 	let { exclude = [], onClose } = options;

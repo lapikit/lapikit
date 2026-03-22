@@ -1,2 +1,2 @@
-export * from './components';
-export * from './outside';
+export * from './components.js';
+export * from './outside.js';

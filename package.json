@@ -76,11 +76,16 @@
 			"default": "./dist/@legacy/themes.css"
 		},
 		"./labs/preprocess": {
+			"types": "./dist/entry-bundler.d.ts",
 			"default": "./dist/entry-bundler.js"
 		},
 		"./labs/components": {
 			"svelte": "./dist/components/index.js",
 			"default": "./dist/components/index.js"
+		},
+		"./labs/labs/components": {
+			"svelte": "./dist/labs/index.js",
+			"default": "./dist/labs/index.js"
 		}
 	},
 	"peerDependencies": {

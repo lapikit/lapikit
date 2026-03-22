@@ -1,4 +1,4 @@
-import type { useClassNameProps, useStylesProps } from '$lib/utils/types';
+import type { useClassNameProps, useStylesProps } from '$lib/@types';
 
 /**
  * useClassName - Utility to compute class names for a component.

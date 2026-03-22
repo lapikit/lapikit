@@ -1,7 +1,8 @@
-import { liliCore } from '$lib/compiler/preprocess';
-import type { LapikitPreprocessOptions } from '$lib/compiler/types/options';
+import { liliCore } from './framework.js';
+import type { LapikitPreprocessOptions } from './@types/index.js';
+import type { PreprocessorGroup } from 'svelte/compiler';
 
-function lapikitPreprocess(options?: LapikitPreprocessOptions) {
+function lapikitPreprocess(options?: LapikitPreprocessOptions): PreprocessorGroup {
 	return liliCore(options);
 }
 

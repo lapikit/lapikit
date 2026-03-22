@@ -1,4 +1,4 @@
-import type { Component } from '$lib/utils/types';
+import type { Component } from '$lib/@types';
 
 export type AspectRatioValue = string | number;
 export type AspectRatioFit = 'cover' | 'contain' | 'fill';
