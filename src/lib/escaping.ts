@@ -1,4 +1,4 @@
-import type { ComponentInfo, KitComponentScan } from '$lib/@types';
+import type { ComponentInfo, KitComponentScan } from './@types/index.js';
 
 export const decodeSourceMap = (
 	content: string,

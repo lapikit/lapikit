@@ -1,12 +1,12 @@
-import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/@types';
-import { decodeSourceMap } from '$lib/escaping';
+import type { ComponentInfo, LapikitPreprocessOptions } from './@types/index.js';
+import { decodeSourceMap } from './escaping.js';
 import {
 	lapikitImportsRef,
 	lapikitImportsLabsRef,
 	lapikitComponents,
 	lapikitLabsComponents,
 	lapikitPlugins
-} from '$lib/constants';
+} from './constants.js';
 
 /**
  * componentName generates the component name used in imports
