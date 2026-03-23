@@ -19,6 +19,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.15] - 2026-03-23
+
+### Updated
+
+- Lili preprocessor call new components
+- Labs components use specific path
+
+### Fixed
+
+- Bugfix fatal crash in svelte.config if call new preprocessor lili
+- Bugfix undefined types on new components
+- Bugfix stability if re run lili preprocessor
+- Bugfix crash if use legacy imports components
+
 ## [0.4.14] - 2026-03-20
 
 ### Updated
