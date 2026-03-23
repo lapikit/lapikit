@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { ripple } from '$lib/animations';
 	import type { ChipProps } from './chip.types.ts';
 

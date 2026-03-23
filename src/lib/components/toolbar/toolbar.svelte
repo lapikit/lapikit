@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils/index';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import type { ToolbarProps } from './toolbar.types.ts';
 
 	let {

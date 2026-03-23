@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import type { AppbarProps } from './appbar.types.ts';
 
 	let {

@@ -1,4 +1,4 @@
-import type { Component } from '$lib/utils/types';
+import type { Component } from '$lib/@types';
 
 export type AvatarSize = 'default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarDensity = 'compact' | 'comfortable' | 'default';

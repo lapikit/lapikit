@@ -1,4 +1,4 @@
-import type { RoundedType, Component } from '$lib/utils/types';
+import type { RoundedType, Component } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface AccordionProps extends Component {

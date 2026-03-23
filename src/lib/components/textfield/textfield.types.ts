@@ -1,4 +1,4 @@
-import type { Component, RoundedType, SizeType } from '$lib/utils/types';
+import type { Component, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes } from 'svelte/elements';
 

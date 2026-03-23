@@ -1,19 +1,34 @@
-import type { ComponentInfo, LapikitPreprocessOptions } from '$lib/compiler/types';
-import { componentName, lapikitImportsRef } from '$lib/compiler/preprocess/source-import';
-import { decodeSourceMap } from '$lib/compiler/preprocess/decode-sourcemap';
+import type { ComponentInfo, LapikitPreprocessOptions } from './@types/index.js';
+import { decodeSourceMap } from './escaping.js';
+import {
+	lapikitImportsRef,
+	lapikitImportsLabsRef,
+	lapikitComponents,
+	lapikitLabsComponents,
+	lapikitPlugins
+} from './constants.js';
 
-// imports components and plugins
-import lapikitComponents from '$lib/compiler/components';
-import lapikitPlugins from '$lib/compiler/plugins';
+/**
+ * componentName generates the component name used in imports
+ * @param shortName The short name of the component
+ * @returns The component name with "Kit" prefix and the first letter capitalized
+ */
+export function componentName(shortName: string): string {
+	return 'Kit' + shortName.charAt(0).toUpperCase() + shortName.slice(1);
+}
 
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {
 		markup({ content }: { content: string; filename?: string }) {
-			const allComponents = [...lapikitComponents];
+			const allComponents = [...lapikitComponents, ...lapikitLabsComponents];
 			const componentToRef = new Map<string, string>();
 
 			lapikitComponents.forEach((comp) => {
 				componentToRef.set(comp, lapikitImportsRef);
+			});
+
+			lapikitLabsComponents.forEach((comp) => {
+				componentToRef.set(comp, lapikitImportsLabsRef);
 			});
 
 			// plugins

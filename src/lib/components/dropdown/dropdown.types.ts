@@ -1,4 +1,4 @@
-import type { Component, PropValue, RoundedType } from '$lib/utils/types/index';
+import type { Component, PropValue, RoundedType } from '$lib/@types/index';
 import type { Snippet } from 'svelte';
 
 export type PositionElement = {

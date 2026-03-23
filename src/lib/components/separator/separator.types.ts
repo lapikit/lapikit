@@ -1,4 +1,4 @@
-import type { Base } from '$lib/utils/types';
+import type { Base } from '$lib/@types';
 
 type Orientation = 'horizontal' | 'vertical';
 

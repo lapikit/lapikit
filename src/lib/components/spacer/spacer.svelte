@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { makeComponentProps } from '$lib/compiler/mapped-code';
+	import { makeComponentProps } from '$lib/html-mapped';
 	import { useClassName, useStyles } from '$lib/utils';
 	import type { SpacerProps } from './spacer.types.ts';
 

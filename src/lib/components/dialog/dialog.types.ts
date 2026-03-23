@@ -1,4 +1,4 @@
-import type { Component, RoundedType } from '$lib/utils/types';
+import type { Component, RoundedType } from '$lib/@types';
 
 export type DialogSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type DialogPosition = 'top' | 'center' | 'bottom';

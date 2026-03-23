@@ -1,4 +1,4 @@
-import type { Component, RoundedType, SizeType } from '$lib/utils/types';
+import type { Component, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface ButtonProps extends Component {

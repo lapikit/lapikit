@@ -1,4 +1,4 @@
-import type { Component, SizeType } from '$lib/utils/types';
+import type { Component, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface ChipProps extends Component {
