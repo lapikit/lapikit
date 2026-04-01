@@ -19,6 +19,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-04-01
+
+Lili preprocessor has stable for all components, new components and new features coming soon !
+
+### Added
+
+- New components is available with new preprocessor Lili
+- New features for all components with new preprocessor Lili
+
+## Updated
+
+- Legacy components are still available but not maintained, use new components with new preprocessor Lili for more stability and new features
+
+## Fixed
+
+- Bugfix stability for all components with new preprocessor Lili
+
 ## [0.4.15] - 2026-03-23
 
 ### Updated
