@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { terminal } from './helpers.js';
+
 export async function findSvelteConfigFile(projectPath) {
 	for (const ext of ['js', 'ts']) {
 		const file = path.join(projectPath, `svelte.config.${ext}`);

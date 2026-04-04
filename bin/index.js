@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { ansi, terminal } from './helpers.js';
+import { ansi, terminal, createRL, toggle } from './helpers.js';
 import { addLiliPreprocess, findSvelteConfigFile } from './hooks.js';
 
 async function run() {

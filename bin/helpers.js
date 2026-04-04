@@ -1,3 +1,5 @@
+import readline from 'node:readline/promises';
+
 const color = {
 	red: (text) => `\x1b[31m${text}\x1b[0m`,
 	green: (text) => `\x1b[32m${text}\x1b[0m`,
@@ -57,6 +59,10 @@ export const terminal = (type = 'info', msg) => {
 	else if (type === 'none') console.log(msg);
 	else console.log(name, ansi.bold.blue('[info]'), msg);
 };
+
+export function createRL() {
+	return readline.createInterface({ input: process.stdin, output: process.stdout });
+}
 
 export async function toggle(rl, message, initial = true) {
 	const hint = initial ? 'Y/n' : 'y/N';
