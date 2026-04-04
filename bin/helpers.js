@@ -57,3 +57,38 @@ export const terminal = (type = 'info', msg) => {
 	else if (type === 'none') console.log(msg);
 	else console.log(name, ansi.bold.blue('[info]'), msg);
 };
+
+export async function toggle(rl, message, initial = true) {
+	const hint = initial ? 'Y/n' : 'y/N';
+	const answer = (await rl.question(`${message} (${hint}): `)).trim().toLowerCase();
+	if (answer === '') return initial;
+	return answer === 'y';
+}
+
+export async function text(rl, message, initial = '', validate) {
+	while (true) {
+		const hint = initial ? ` (${initial})` : '';
+		const answer = (await rl.question(`${message}${hint}: `)).trim();
+		const value = answer === '' ? initial : answer;
+		if (validate) {
+			const result = validate(value);
+			if (result !== true) {
+				terminal('warn', result);
+				continue;
+			}
+		}
+		return value;
+	}
+}
+
+export async function select(rl, message, choices) {
+	console.log(`\n${message}`);
+	choices.forEach((c, i) => console.log(`  ${i + 1}. ${c.title}`));
+
+	while (true) {
+		const answer = (await rl.question(`Choice (1): `)).trim();
+		const index = answer === '' ? 0 : parseInt(answer, 10) - 1;
+		if (index >= 0 && index < choices.length) return choices[index].value;
+		terminal('warn', `Please enter a number between 1 and ${choices.length}`);
+	}
+}

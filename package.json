@@ -138,8 +138,5 @@
 		"theme",
 		"css",
 		"typescript"
-	],
-	"dependencies": {
-		"prompts": "^2.4.2"
-	}
+	]
 }
