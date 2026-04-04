@@ -33,7 +33,7 @@ async function run() {
 		process.exit(0);
 	}
 
-	console.log('\n\n');
+	console.log('\n');
 
 	try {
 		const svelteConfigFile = await findSvelteConfigFile(process.cwd());
@@ -45,7 +45,7 @@ async function run() {
 
 run()
 	.then(() => {
-		terminal('none', `\n\nThank's for installing Lapikit!`);
+		terminal('none', `\n\nThank's for installing Lapikit!\n`);
 		terminal('none', `Website: https://lapikit.dev`);
 		terminal('none', `Github: https://github.com/lapikit/lapikit`);
 		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
