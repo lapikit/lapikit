@@ -22,7 +22,7 @@ async function run() {
 
 	console.log('List actions that will be done:');
 	console.log(
-		ansi.green('✓') + ' Add lili preprocess (named: preprocess) on your svelte.config.js file'
+		ansi.color.green('✓') + ' Add lili preprocess (named: preprocess) on your svelte.config.js file'
 	);
 	console.log(ansi.inverse.purple('Setup will take less than 5 seconds\n\n\n'));
 
