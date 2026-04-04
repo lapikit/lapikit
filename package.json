@@ -1,6 +1,6 @@
 {
 	"name": "lapikit",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
@@ -138,8 +138,5 @@
 		"theme",
 		"css",
 		"typescript"
-	],
-	"dependencies": {
-		"prompts": "^2.4.2"
-	}
+	]
 }

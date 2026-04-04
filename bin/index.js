@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-import { initConfiguration } from './configuration.js';
-import { ansi, terminal } from './helper.js';
-import { initPrompts } from './prompts.js';
+import { ansi, terminal, createRL, toggle } from './helpers.js';
+import { addLiliPreprocess, findSvelteConfigFile } from './hooks.js';
 
 async function run() {
+	const rl = createRL();
+
 	console.log('  _                 _ _    _ _   ');
 	console.log(' | |               (_) |  (_) |  ');
 	console.log(' | |     __ _ _ __  _| | ___| |_ ');
@@ -15,14 +16,37 @@ async function run() {
 
 	terminal('none', `${ansi.bold.blue('Lapikit')} - Component Library for Svelte\n\n`);
 
-	const promptsConfig = await initPrompts();
+	console.log(
+		'This installer will guide you through the process of installing Lapikit on your Svelte project.\n'
+	);
 
-	await initConfiguration(promptsConfig);
+	console.log('List actions that will be done:');
+	console.log(
+		ansi.color.green('✓') +
+			' Add lili preprocess (named: lapikitPreprocess) on your svelte.config.js file\n'
+	);
+	console.log(ansi.underline.purple('Setup will take less than 5 seconds\n'));
+
+	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
+	if (!confirm) {
+		terminal('warn', `installation canceled.`);
+		process.exit(0);
+	}
+
+	console.log('\n');
+
+	try {
+		const svelteConfigFile = await findSvelteConfigFile(process.cwd());
+		await addLiliPreprocess(svelteConfigFile);
+	} catch (error) {
+		terminal('warn', `Warning: Could not update svelte.config file: ${error.message}`);
+	}
 }
 
 run()
 	.then(() => {
-		terminal('none', `\n\n\n\nWebsite: https://lapikit.dev`);
+		terminal('none', `\n\nThank's for installing Lapikit!\n`);
+		terminal('none', `Website: https://lapikit.dev`);
 		terminal('none', `Github: https://github.com/lapikit/lapikit`);
 		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
 		process.exit(0);
