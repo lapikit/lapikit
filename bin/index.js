@@ -22,11 +22,12 @@ async function run() {
 
 	console.log('List actions that will be done:');
 	console.log(
-		ansi.color.green('✓') + ' Add lili preprocess (named: preprocess) on your svelte.config.js file'
+		ansi.color.green('✓') +
+			' Add lili preprocess (named: preprocess) on your svelte.config.js file\n'
 	);
-	console.log(ansi.inverse.purple('Setup will take less than 5 seconds\n\n\n'));
+	console.log(ansi.underline.purple('Setup will take less than 5 seconds\n'));
 
-	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
+	const confirm = await toggle(rl, 'Launch install Lapikit on your project?\n\n');
 	if (!confirm) {
 		terminal('warn', `installation canceled.`);
 		process.exit(0);
@@ -42,7 +43,8 @@ async function run() {
 
 run()
 	.then(() => {
-		terminal('none', `\n\n\n\nWebsite: https://lapikit.dev`);
+		terminal('none', `\n\nThank's for installing Lapikit!`);
+		terminal('none', `Website: https://lapikit.dev`);
 		terminal('none', `Github: https://github.com/lapikit/lapikit`);
 		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
 		process.exit(0);

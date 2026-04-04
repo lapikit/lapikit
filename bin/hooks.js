@@ -64,5 +64,5 @@ export async function addLiliPreprocess(svelteConfigFile) {
 	}
 
 	await fs.writeFile(svelteConfigFile, content);
-	terminal('info', `lapikitPreprocess added to ${svelteConfigFile}`);
+	terminal('success', `lapikitPreprocess added to ${svelteConfigFile}`);
 }
