@@ -23,15 +23,17 @@ async function run() {
 	console.log('List actions that will be done:');
 	console.log(
 		ansi.color.green('✓') +
-			' Add lili preprocess (named: preprocess) on your svelte.config.js file\n'
+			' Add lili preprocess (named: lapikitPreprocess) on your svelte.config.js file\n'
 	);
 	console.log(ansi.underline.purple('Setup will take less than 5 seconds\n'));
 
-	const confirm = await toggle(rl, 'Launch install Lapikit on your project?\n\n');
+	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
 	if (!confirm) {
 		terminal('warn', `installation canceled.`);
 		process.exit(0);
 	}
+
+	console.log('\n\n');
 
 	try {
 		const svelteConfigFile = await findSvelteConfigFile(process.cwd());
