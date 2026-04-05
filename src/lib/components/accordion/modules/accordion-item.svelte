@@ -130,11 +130,7 @@
 		--kit-accordion-item-radius: var(--kit-accordion-radius, 8px);
 		--kit-accordion-item-fg: var(--kit-accordion-fg, var(--kit-fg));
 		--kit-accordion-item-bg: var(--kit-surface-2);
-		--kit-accordion-item-bd: color-mix(
-			in oklab,
-			var(--kit-accordion-item-bg),
-			var(--kit-fg) 12%
-		);
+		--kit-accordion-item-bd: color-mix(in oklab, var(--kit-accordion-item-bg), var(--kit-fg) 12%);
 		--kit-accordion-item-trigger-y: 1rem;
 		--kit-accordion-item-trigger-x: 1.25rem;
 
