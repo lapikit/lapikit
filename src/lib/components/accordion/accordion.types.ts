@@ -5,8 +5,6 @@ export interface AccordionProps extends Component {
 	ref?: HTMLElement | null;
 	is?: 'div';
 	text?: string;
-	dark?: boolean;
-	light?: boolean;
 	color?: string;
 	background?: string;
 	rounded?: RoundedType;
@@ -23,8 +21,6 @@ export interface AccordionItemProps extends Component {
 	is?: 'div';
 	index: number | string;
 	text?: string;
-	dark?: boolean;
-	light?: boolean;
 	rounded?: RoundedType;
 	color?: string;
 	background?: string;

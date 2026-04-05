@@ -99,7 +99,7 @@
 	.kit-list-item {
 		--kit-list-item-bg: transparent;
 		--kit-list-item-fg: inherit;
-		--list-item-shape: 8px;
+		--kit-list-item-radius: 8px;
 
 		position: relative;
 		display: grid;
@@ -109,7 +109,7 @@
 		min-height: var(--kit-list-item-h, 2.75rem);
 		padding-inline: var(--kit-list-item-px, 0.875rem);
 		border: 0;
-		border-radius: var(--list-item-shape);
+		border-radius: var(--kit-list-item-radius);
 		background: var(--kit-list-item-bg);
 		color: var(--kit-list-item-fg);
 		text-decoration: none;
@@ -119,34 +119,34 @@
 	}
 
 	.kit-list-item[data-rounded='0'] {
-		--list-item-shape: 0;
+		--kit-list-item-radius: 0;
 	}
 
 	.kit-list-item[data-rounded='xs'] {
-		--list-item-shape: 2px;
+		--kit-list-item-radius: 2px;
 	}
 
 	.kit-list-item[data-rounded='sm'] {
-		--list-item-shape: 8px;
+		--kit-list-item-radius: 8px;
 	}
 
 	.kit-list-item[data-rounded='md'] {
-		--list-item-shape: 12px;
+		--kit-list-item-radius: 12px;
 	}
 
 	.kit-list-item[data-rounded='lg'] {
-		--list-item-shape: 16px;
+		--kit-list-item-radius: 16px;
 	}
 
 	.kit-list-item[data-rounded='xl'] {
-		--list-item-shape: 9999px;
+		--kit-list-item-radius: 9999px;
 	}
 
-	.kit-list[data-variant='filled'] .kit-list-item {
+	:global(.kit-list[data-variant='filled']) .kit-list-item {
 		background: var(--kit-list-item-bg, transparent);
 	}
 
-	.kit-list[data-variant='outline'] .kit-list-item::before {
+	:global(.kit-list[data-variant='outline']) .kit-list-item::before {
 		content: '';
 		position: absolute;
 		inset: 0;

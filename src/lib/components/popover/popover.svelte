@@ -9,8 +9,6 @@
 		open = $bindable(false),
 		children,
 		activator,
-		dark = false,
-		light = false,
 		rounded,
 		position = 'bottom',
 		color,
@@ -52,8 +50,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-popover-background:${background}` : '',
-			color ? `--kit-popover-color:${color}` : '',
+			background ? `--kit-popover-bg:${background}` : '',
+			color ? `--kit-popover-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px') ? `--kit-popover-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
@@ -122,8 +120,6 @@
 		class={componentClass}
 		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
 		role="dialog"
-		data-light={light || undefined}
-		data-dark={dark || undefined}
 		data-rounded={rounded}
 		data-position={axis.location ?? safePosition}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: () => (open = false) }}
@@ -135,10 +131,10 @@
 
 <style>
 	.kit-popover-content {
-		--kit-popover-background: var(--kit-surface-1);
-		--kit-popover-color: var(--kit-fg);
+		--kit-popover-bg: var(--kit-surface-1);
+		--kit-popover-fg: var(--kit-fg);
 		--kit-popover-radius: 12px;
-		--kit-popover-border: color-mix(in oklab, var(--kit-fg), transparent 88%);
+		--kit-popover-bd: color-mix(in oklab, var(--kit-fg), transparent 88%);
 		--kit-popover-shadow: 0 18px 40px -18px color-mix(in oklab, black 24%, transparent);
 
 		position: fixed;
@@ -147,24 +143,13 @@
 		width: auto;
 		max-width: min(28rem, calc(100vw - 1rem));
 		padding: 1rem;
-		border: 1px solid var(--kit-popover-border);
+		border: 1px solid var(--kit-popover-bd);
 		border-radius: var(--kit-popover-radius);
-		background: var(--kit-popover-background);
-		color: var(--kit-popover-color);
+		background: var(--kit-popover-bg);
+		color: var(--kit-popover-fg);
 		box-shadow: var(--kit-popover-shadow);
 		opacity: 1;
 		transition: opacity 140ms ease;
-	}
-
-	.kit-popover-content[data-light='true'] {
-		--kit-popover-background: color-mix(in oklab, white 94%, var(--kit-surface-1));
-		--kit-popover-color: var(--kit-fg);
-	}
-
-	.kit-popover-content[data-dark='true'] {
-		--kit-popover-background: color-mix(in oklab, black 78%, var(--kit-surface-3));
-		--kit-popover-color: white;
-		--kit-popover-border: color-mix(in oklab, white, transparent 80%);
 	}
 
 	.kit-popover-content[data-rounded='0'] {

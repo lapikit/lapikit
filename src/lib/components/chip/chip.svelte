@@ -230,9 +230,8 @@
 		--kit-chip-bg: var(--kit-surface-2);
 		--kit-chip-fg: var(--kit-fg);
 		--kit-chip-bd: var(--kit-border);
-		--kit-chip-bg--hover: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 6%);
-		--kit-chip-bg--active: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 10%);
-		--kit-chip-font: var(--kit-font);
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 6%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 10%);
 		--kit-chip-h-xs: 24px;
 		--kit-chip-h-sm: 28px;
 		--kit-chip-h-md: 32px;
@@ -243,9 +242,9 @@
 		--kit-chip-px-md: 12px;
 		--kit-chip-px-lg: 14px;
 		--kit-chip-px-xl: 16px;
-		--chip-density-scale: 1;
-		--chip-density-height-scale: 1;
-		--chip-radius: 99999px;
+		--kit-chip-density-scale: 1;
+		--kit-chip-density-h-scale: 1;
+		--kit-chip-radius: 99999px;
 		--kit-chip-gap: 0.35em;
 
 		position: relative;
@@ -253,12 +252,12 @@
 		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
-		font-family: var(--kit-chip-font);
-		background: var(--chip-bg);
-		color: var(--chip-fg);
-		height: max(24px, calc(var(--chip-h) * var(--chip-density-height-scale)));
-		padding-inline: calc(var(--chip-px) * var(--chip-density-scale));
-		border-radius: var(--chip-radius);
+		font-family: var(--kit-font);
+		background: var(--kit-chip-bg);
+		color: var(--kit-chip-fg);
+		height: max(24px, calc(var(--kit-chip-h) * var(--kit-chip-density-h-scale)));
+		padding-inline: calc(var(--kit-chip-px) * var(--kit-chip-density-scale));
+		border-radius: var(--kit-chip-radius);
 		text-decoration: none;
 		white-space: nowrap;
 		user-select: none;
@@ -274,23 +273,23 @@
 	}
 
 	.kit-chip[data-interactive='true']:hover {
-		background: var(--chip-hover-bg);
-		color: var(--chip-hover-fg);
-		text-decoration: var(--chip-decoration);
+		background: var(--kit-chip-hover-bg);
+		color: var(--kit-chip-fg);
+		text-decoration: var(--kit-chip-decoration);
 	}
 
 	.kit-chip[data-interactive='true']:active,
 	.kit-chip[data-active='true'] {
-		background: var(--chip-active-bg);
-		color: var(--chip-active-fg);
-		text-decoration: var(--chip-decoration);
+		background: var(--kit-chip-active-bg);
+		color: var(--kit-chip-fg);
+		text-decoration: var(--kit-chip-decoration);
 		transform: translateY(1px);
 	}
 
 	.kit-chip[data-active='true'][data-interactive='true']:hover {
-		background: var(--chip-hover-bg);
-		color: var(--chip-hover-fg);
-		text-decoration: var(--chip-decoration);
+		background: var(--kit-chip-hover-bg);
+		color: var(--kit-chip-fg);
+		text-decoration: var(--kit-chip-decoration);
 	}
 
 	:is(.kit-chip:focus-visible, .kit-chip:has(> input:focus-visible)) {
@@ -310,47 +309,43 @@
 	}
 
 	.kit-chip > :is(input[type='checkbox'], input[type='radio']):after {
-		--chip-content: attr(aria-label);
-		content: var(--chip-content);
+		content: attr(aria-label);
 		cursor: pointer;
 	}
 
 	.kit-chip[data-variant='filled'] {
-		--chip-bg: var(--kit-accent);
-		--chip-fg: white;
-		--chip-hover-bg: color-mix(in oklab, var(--kit-accent), black 10%);
-		--chip-hover-fg: var(--chip-fg);
-		--chip-active-bg: color-mix(in oklab, var(--kit-accent), black 16%);
-		--chip-active-fg: var(--chip-fg);
+		--kit-chip-bg: var(--kit-accent);
+		--kit-chip-fg: white;
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-bg), black 10%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-bg), black 16%);
 	}
 
 	.kit-chip[data-variant='outline'] {
 		--outline-color: var(--kit-accent);
+		--kit-chip-bg: transparent;
+		--kit-chip-fg: var(--kit-accent);
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
 	}
 
-	.kit-chip[data-variant='outline'],
 	.kit-chip[data-variant='text'] {
-		--chip-bg: transparent;
-		--chip-fg: var(--kit-accent);
-		--chip-hover-bg: color-mix(in oklab, var(--kit-accent), transparent 80%);
-		--chip-hover-fg: var(--chip-fg);
-		--chip-active-bg: color-mix(in oklab, var(--kit-accent), transparent 92%);
-		--chip-active-fg: var(--chip-fg);
+		--kit-chip-bg: transparent;
+		--kit-chip-fg: var(--kit-accent);
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
 	}
 
 	.kit-chip[data-variant='link'] {
-		--chip-bg: transparent;
-		--chip-fg: var(--kit-accent);
-		--chip-hover-fg: var(--chip-fg);
-		--chip-active-fg: var(--chip-fg);
-		--chip-decoration: underline;
+		--kit-chip-bg: transparent;
+		--kit-chip-fg: var(--kit-accent);
+		--kit-chip-decoration: underline;
 		height: inherit;
 		padding: 0;
 	}
 
 	.kit-chip[data-size='xs'] {
-		--chip-h: var(--kit-chip-h-xs);
-		--chip-px: var(--kit-chip-px-xs);
+		--kit-chip-h: var(--kit-chip-h-xs);
+		--kit-chip-px: var(--kit-chip-px-xs);
 		font-size: 12px;
 	}
 	.kit-chip[data-size='xs'] :global(.kit-icon:not([data-size])) {
@@ -358,8 +353,8 @@
 	}
 
 	.kit-chip[data-size='sm'] {
-		--chip-h: var(--kit-chip-h-sm);
-		--chip-px: var(--kit-chip-px-sm);
+		--kit-chip-h: var(--kit-chip-h-sm);
+		--kit-chip-px: var(--kit-chip-px-sm);
 		font-size: 13px;
 	}
 	.kit-chip[data-size='sm'] :global(.kit-icon:not([data-size])) {
@@ -367,8 +362,8 @@
 	}
 
 	.kit-chip[data-size='md'] {
-		--chip-h: var(--kit-chip-h-md);
-		--chip-px: var(--kit-chip-px-md);
+		--kit-chip-h: var(--kit-chip-h-md);
+		--kit-chip-px: var(--kit-chip-px-md);
 		font-size: 14px;
 	}
 	.kit-chip[data-size='md'] :global(.kit-icon:not([data-size])) {
@@ -376,8 +371,8 @@
 	}
 
 	.kit-chip[data-size='lg'] {
-		--chip-h: var(--kit-chip-h-lg);
-		--chip-px: var(--kit-chip-px-lg);
+		--kit-chip-h: var(--kit-chip-h-lg);
+		--kit-chip-px: var(--kit-chip-px-lg);
 		font-size: 15px;
 	}
 	.kit-chip[data-size='lg'] :global(.kit-icon:not([data-size])) {
@@ -385,8 +380,8 @@
 	}
 
 	.kit-chip[data-size='xl'] {
-		--chip-h: var(--kit-chip-h-xl);
-		--chip-px: var(--kit-chip-px-xl);
+		--kit-chip-h: var(--kit-chip-h-xl);
+		--kit-chip-px: var(--kit-chip-px-xl);
 		font-size: 16px;
 	}
 	.kit-chip[data-size='xl'] :global(.kit-icon:not([data-size])) {
@@ -394,28 +389,24 @@
 	}
 
 	.kit-chip[data-density='default'] {
-		--chip-density-scale: 1;
-		--chip-density-height-scale: 1;
+		--kit-chip-density-scale: 1;
+		--kit-chip-density-h-scale: 1;
 	}
 
 	.kit-chip[data-density='compact'] {
-		--chip-density-scale: 0.92;
-		--chip-density-height-scale: 0.9;
+		--kit-chip-density-scale: 0.92;
+		--kit-chip-density-h-scale: 0.9;
 	}
 
 	.kit-chip[data-density='comfortable'] {
-		--chip-density-scale: 1.08;
-		--chip-density-height-scale: 1.08;
+		--kit-chip-density-scale: 1.08;
+		--kit-chip-density-h-scale: 1.08;
 	}
 
 	.kit-chip[data-label-style='true'] {
 		font-weight: 600;
 		letter-spacing: 0.01em;
 		text-transform: uppercase;
-	}
-
-	.kit-chip .outline {
-		pointer-events: none;
 	}
 
 	.kit-chip__inner {
@@ -479,14 +470,14 @@
 	}
 
 	.kit-chip[data-disabled='true'] {
-		background: color-mix(in oklab, var(--chip-bg), transparent 70%);
-		color: color-mix(in oklab, var(--chip-fg), transparent 45%);
+		background: color-mix(in oklab, var(--kit-chip-bg), transparent 70%);
+		color: color-mix(in oklab, var(--kit-chip-fg), transparent 45%);
 	}
 
 	.kit-chip[data-disabled='true'] :global(.kit-icon),
 	.kit-chip[data-readonly='true'] :global(.kit-icon) {
-		color: color-mix(in oklab, var(--chip-fg), transparent 45%) !important;
-		--kit-icon-color: color-mix(in oklab, var(--chip-fg), transparent 45%) !important;
+		color: color-mix(in oklab, var(--kit-chip-fg), transparent 45%) !important;
+		--kit-icon-color: color-mix(in oklab, var(--kit-chip-fg), transparent 45%) !important;
 	}
 
 	.kit-chip[data-disabled='true'] :global(.kit-icon img),

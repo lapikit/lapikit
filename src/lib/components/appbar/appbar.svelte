@@ -12,10 +12,8 @@
 		's-class': sClass,
 		's-style': sStyle,
 		classContent,
-		light = false,
-		dark = false,
-		variant = 'outline',
-		rounded,
+		variant = 'filled',
+		rounded = 0,
 		background,
 		color,
 		density = 'default',
@@ -25,7 +23,7 @@
 	let safeVariant = $derived(
 		typeof variant === 'string' && (variant === 'outline' || variant === 'text')
 			? variant
-			: 'outline'
+			: 'filled'
 	);
 
 	let safeDensity = $derived(
@@ -70,8 +68,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-appbar-background:${background}` : '',
-			color ? `--kit-appbar-color:${color}` : '',
+			background ? `--kit-appbar-bg:${background}` : '',
+			color ? `--kit-appbar-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px') ? `--kit-appbar-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
@@ -87,8 +85,6 @@
 	{...restProps}
 	data-variant={safeVariant}
 	data-density={safeDensity}
-	data-light={light || undefined}
-	data-dark={dark || undefined}
 	data-rounded={rounded}
 >
 	{#if safeVariant === 'outline'}
@@ -102,13 +98,13 @@
 
 <style>
 	.kit-appbar {
-		--kit-appbar-background: var(--kit-surface-2);
-		--kit-appbar-color: var(--kit-fg);
+		--kit-appbar-bg: var(--kit-surface-2);
+		--kit-appbar-fg: var(--kit-fg);
 		--kit-appbar-radius: 1rem;
 		--kit-appbar-size: 4rem;
 		--kit-appbar-padding-x: 1rem;
 		--kit-appbar-padding-wrapper: 0;
-		--kit-appbar-border: color-mix(in oklab, var(--kit-appbar-color), transparent 88%);
+		--kit-appbar-bd: color-mix(in oklab, var(--kit-appbar-fg), transparent 88%);
 
 		display: flex;
 		align-items: center;
@@ -118,13 +114,13 @@
 		min-height: var(--kit-appbar-size);
 		padding-inline: var(--kit-appbar-padding-x);
 		border-radius: var(--kit-appbar-radius);
-		color: var(--kit-appbar-color);
-		background-color: var(--kit-appbar-background);
+		color: var(--kit-appbar-fg);
+		background-color: var(--kit-appbar-bg);
 		overflow: hidden;
 	}
 
 	.kit-appbar[data-variant='text'] {
-		--kit-appbar-border: transparent;
+		--kit-appbar-bd: transparent;
 	}
 
 	.kit-appbar[data-density='compact'] {
@@ -140,17 +136,6 @@
 	.kit-appbar[data-density='comfortable'] {
 		--kit-appbar-size: 4.5rem;
 		--kit-appbar-padding-x: 1.5rem;
-	}
-
-	.kit-appbar[data-light='true'] {
-		--kit-appbar-background: color-mix(in oklab, white 88%, var(--kit-surface-1));
-		--kit-appbar-color: var(--kit-fg);
-	}
-
-	.kit-appbar[data-dark='true'] {
-		--kit-appbar-background: color-mix(in oklab, black 72%, var(--kit-surface-3));
-		--kit-appbar-color: white;
-		--kit-appbar-border: color-mix(in oklab, white, transparent 78%);
 	}
 
 	.kit-appbar[data-rounded='0'] {
@@ -189,7 +174,7 @@
 	}
 
 	.kit-appbar .outline {
-		--outline-color: var(--kit-appbar-border);
+		--outline-color: var(--kit-appbar-bd);
 
 		pointer-events: none;
 	}

@@ -111,25 +111,19 @@
 	.kit-card {
 		--kit-card-bg: var(--kit-surface-2);
 		--kit-card-fg: var(--kit-fg);
-		--kit-card-outline-color: var(--kit-border);
+		--kit-card-bd: var(--kit-border);
 		--kit-card-radius: var(--kit-radius-2);
 		--kit-card-padding-compact: var(--kit-space-1);
 		--kit-card-padding-default: var(--kit-space-2);
 		--kit-card-padding-comfortable: var(--kit-space-3);
-
-		--card-shape: var(--kit-card-radius);
-		--card-bg: var(--kit-card-bg);
-		--card-fg: var(--kit-card-fg);
-		--card-hover-bg: color-mix(in oklab, var(--card-bg), var(--card-fg) 6%);
-		--card-active-bg: color-mix(in oklab, var(--card-bg), var(--card-fg) 10%);
-		--card-hover-fg: var(--card-fg);
-		--card-active-fg: var(--card-fg);
+		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), var(--kit-card-fg) 6%);
+		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), var(--kit-card-fg) 10%);
 
 		display: flex;
 		flex-direction: column;
 		gap: var(--kit-space-2);
-		background: var(--card-bg);
-		color: var(--card-fg);
+		background: var(--kit-card-bg);
+		color: var(--kit-card-fg);
 		border: 0;
 		border-radius: var(--kit-card-radius);
 		box-sizing: border-box;
@@ -183,27 +177,25 @@
 	}
 
 	.kit-card--outline {
-		--outline-color: var(--kit-accent);
-		--card-bg: transparent;
-		--card-fg: var(--kit-accent);
-		--card-hover-bg: color-mix(in oklab, var(--kit-accent), transparent 80%);
-		--card-active-bg: color-mix(in oklab, var(--kit-accent), transparent 92%);
-		--kit-card-outline-color: var(--outline-color);
+		--kit-card-bg: transparent;
+		--kit-card-fg: var(--kit-accent);
+		--kit-card-bd: var(--kit-accent);
+		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
+		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
 
 	.kit-card--filled {
-		--card-bg: var(--kit-accent);
-		--card-fg: white;
-		--card-hover-bg: color-mix(in oklab, var(--kit-accent), black 10%);
-		--card-active-bg: color-mix(in oklab, var(--kit-accent), black 16%);
+		--kit-card-bg: var(--kit-accent);
+		--kit-card-fg: white;
+		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
+		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
 	}
 
 	.kit-card--text {
-		background: transparent;
-		--card-bg: transparent;
-		--card-fg: var(--kit-accent);
-		--card-hover-bg: color-mix(in oklab, var(--kit-accent), transparent 80%);
-		--card-active-bg: color-mix(in oklab, var(--kit-accent), transparent 92%);
+		--kit-card-bg: transparent;
+		--kit-card-fg: var(--kit-accent);
+		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
+		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
 
 	.kit-card[data-interactive='true'][data-disabled='false'] {
@@ -212,28 +204,24 @@
 
 	.kit-card[data-interactive='true'][data-disabled='false']:hover {
 		translate: 0 -1px;
-		background: var(--card-hover-bg);
-		color: var(--card-hover-fg);
+		background: var(--kit-card-hover-bg);
 		box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12);
 	}
 
 	.kit-card--text[data-interactive='true'][data-disabled='false']:hover {
-		background: var(--card-hover-bg);
-		color: var(--card-hover-fg);
+		background: var(--kit-card-hover-bg);
 	}
 
 	.kit-card[data-interactive='true'][data-active='true'][data-disabled='false'],
 	.kit-card[data-interactive='true'][data-disabled='false']:active {
 		translate: 0 0;
-		background: var(--card-active-bg);
-		color: var(--card-active-fg);
+		background: var(--kit-card-active-bg);
 		box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1);
 	}
 
 	.kit-card--text[data-interactive='true'][data-active='true'][data-disabled='false'],
 	.kit-card--text[data-interactive='true'][data-disabled='false']:active {
-		background: var(--card-active-bg);
-		color: var(--card-active-fg);
+		background: var(--kit-card-active-bg);
 	}
 
 	.kit-card[data-interactive='true'][data-disabled='false']:focus-visible {
@@ -247,9 +235,7 @@
 	}
 
 	.kit-card .outline {
-		--outline-color: var(--kit-card-outline-color);
-		--btn-radius: var(--kit-card-radius);
-		pointer-events: none;
+		--outline-color: var(--kit-card-bd);
 	}
 
 	.kit-card__media {

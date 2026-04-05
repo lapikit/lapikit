@@ -14,8 +14,6 @@
 		activator = undefined,
 		indicator = undefined,
 		text = undefined,
-		dark = false,
-		light = false,
 		rounded = undefined,
 		color = undefined,
 		background = undefined,
@@ -51,8 +49,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			color ? `--kit-accordion-item-color:${color}` : '',
-			background ? `--kit-accordion-item-background:${background}` : ''
+			color ? `--kit-accordion-item-fg:${color}` : '',
+			background ? `--kit-accordion-item-bg:${background}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
@@ -79,8 +77,6 @@
 	{...restProps}
 	data-open={safeOpen}
 	data-disabled={disabled}
-	data-dark={dark}
-	data-light={light}
 	data-rounded={rounded}
 >
 	<button
@@ -132,11 +128,11 @@
 
 	.kit-accordion-item {
 		--kit-accordion-item-radius: var(--kit-accordion-radius, 8px);
-		--kit-accordion-item-color: var(--kit-accordion-color, var(--kit-fg));
-		--kit-accordion-item-background: var(--kit-surface-2);
-		--kit-accordion-item-border: color-mix(
+		--kit-accordion-item-fg: var(--kit-accordion-fg, var(--kit-fg));
+		--kit-accordion-item-bg: var(--kit-surface-2);
+		--kit-accordion-item-bd: color-mix(
 			in oklab,
-			var(--kit-accordion-item-background),
+			var(--kit-accordion-item-bg),
 			var(--kit-fg) 12%
 		);
 		--kit-accordion-item-trigger-y: 1rem;
@@ -146,9 +142,9 @@
 		max-width: 100%;
 		position: relative;
 		border-radius: var(--kit-accordion-item-radius);
-		background: var(--kit-accordion-item-background);
-		color: var(--kit-accordion-item-color);
-		border: 1px solid var(--kit-accordion-item-border);
+		background: var(--kit-accordion-item-bg);
+		color: var(--kit-accordion-item-fg);
+		border: 1px solid var(--kit-accordion-item-bd);
 		transition:
 			border-color 150ms ease,
 			background 150ms ease,
@@ -182,14 +178,6 @@
 
 	.kit-accordion-item[data-open='true'] {
 		box-shadow: 0 10px 28px color-mix(in oklab, var(--kit-fg), transparent 90%);
-	}
-
-	.kit-accordion-item[data-dark='true'] {
-		--kit-accordion-item-background: var(--kit-surface-3);
-	}
-
-	.kit-accordion-item[data-light='true'] {
-		--kit-accordion-item-background: var(--kit-surface-1);
 	}
 
 	.kit-accordion-item__trigger {

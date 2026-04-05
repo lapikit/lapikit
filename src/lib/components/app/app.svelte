@@ -43,61 +43,14 @@
 			'Segoe UI Symbol', 'Noto Color Emoji';
 	}
 
-	:root {
-		--kit-neutral-bg: color-mix(in oklab, var(--kit-neutral), var(--kit-bg) 85%);
-		--kit-neutral-bd: color-mix(in oklab, var(--kit-neutral), var(--kit-border) 70%);
-		--kit-neutral-fg: var(--kit-fg);
-
-		--kit-success-bg: color-mix(in oklab, var(--kit-success), var(--kit-bg) 85%);
-		--kit-success-bd: color-mix(in oklab, var(--kit-success), var(--kit-border) 70%);
-		--kit-success-fg: var(--kit-fg);
-
-		--kit-warning-bg: color-mix(in oklab, var(--kit-warning), var(--kit-bg) 85%);
-		--kit-warning-bd: color-mix(in oklab, var(--kit-warning), var(--kit-border) 70%);
-		--kit-warning-fg: var(--kit-fg);
-
-		--kit-danger-bg: color-mix(in oklab, var(--kit-danger), var(--kit-bg) 85%);
-		--kit-danger-bd: color-mix(in oklab, var(--kit-danger), var(--kit-border) 70%);
-		--kit-danger-fg: var(--kit-fg);
-
-		--kit-info-bg: color-mix(in oklab, var(--kit-info), var(--kit-bg) 85%);
-		--kit-info-bd: color-mix(in oklab, var(--kit-info), var(--kit-border) 70%);
-		--kit-info-fg: var(--kit-fg);
-	}
-
-	:root {
-		--kit-outline-w: 1px;
-		--btn-radius: 8px;
-
-		--kit-btn-gap: 8px;
-
-		--bg: #111827;
-		--fg: #ffffff;
-		--bg-hover: #0b1220;
-		--border: rgba(255, 255, 255, 0.08);
-		--focus: blue;
-		--font:
-			ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-			'Segoe UI Symbol', 'Noto Color Emoji';
-	}
-
 	:global(.outline) {
-		--container-shape-start-start: var(--btn-radius);
-		--container-shape-start-end: var(--btn-radius);
-		--container-shape-end-start: var(--btn-radius);
-		--container-shape-end-end: var(--btn-radius);
-
-		border-width: var(--kit-outline-w);
-		inset: 0;
-		border-style: solid;
 		position: absolute;
+		inset: 0;
+		border: 1px solid var(--outline-color);
+		border-radius: inherit;
 		box-sizing: border-box;
-		border-color: var(--outline-color);
 		z-index: 1;
-		border-start-start-radius: var(--container-shape-start-start);
-		border-start-end-radius: var(--container-shape-start-end);
-		border-end-start-radius: var(--container-shape-end-start);
-		border-end-end-radius: var(--container-shape-end-end);
+		pointer-events: none;
 	}
 
 	:global(.kit-ripple) {

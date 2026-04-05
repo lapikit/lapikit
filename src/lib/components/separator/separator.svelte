@@ -6,8 +6,6 @@
 	let {
 		ref = $bindable(),
 		is = 'hr',
-		light = false,
-		dark = false,
 		inset = false,
 		thickness,
 		orientation = 'horizontal',
@@ -72,8 +70,6 @@
 	style={mergedStyle}
 	role="separator"
 	aria-orientation={safeOrientation}
-	data-light={light || undefined}
-	data-dark={dark || undefined}
 	data-inset={inset || undefined}
 	data-orientation={safeOrientation}
 />
@@ -94,14 +90,6 @@
 		border-color: var(--kit-separator-color);
 		border-style: solid;
 		transition: inherit;
-	}
-
-	.kit-separator[data-light='true'] {
-		--kit-separator-color: color-mix(in oklab, var(--kit-fg), white 40%);
-	}
-
-	.kit-separator[data-dark='true'] {
-		--kit-separator-color: color-mix(in oklab, white, transparent 18%);
 	}
 
 	.kit-separator[data-inset]:not([data-orientation='vertical']) {

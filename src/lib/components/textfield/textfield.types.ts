@@ -4,8 +4,6 @@ import type { HTMLInputAttributes } from 'svelte/elements';
 
 export interface TextfieldProps extends Component {
 	ref?: HTMLElement | null;
-	dark?: boolean;
-	light?: boolean;
 	value?: string | number;
 	type?: 'text' | 'email' | 'password' | 'number';
 	placeholder?: string;

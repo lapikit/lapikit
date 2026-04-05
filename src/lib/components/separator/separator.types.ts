@@ -5,8 +5,6 @@ type Orientation = 'horizontal' | 'vertical';
 export interface SeparatorProps extends Base {
 	ref?: HTMLElement | null;
 	is?: 'div' | 'hr';
-	light?: boolean;
-	dark?: boolean;
 	inset?: boolean;
 	thickness?: string | number;
 	opacity?: string | number;

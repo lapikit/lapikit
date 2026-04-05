@@ -155,7 +155,6 @@
 		--kit-alert-px: 0.875rem;
 		--kit-alert-gap: 0.625rem;
 		--outline-color: var(--kit-alert-bd);
-		--btn-radius: var(--kit-alert-radius);
 
 		position: relative;
 		display: grid;
