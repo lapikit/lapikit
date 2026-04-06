@@ -74,8 +74,18 @@
 
 <style>
 	.kit-avatar {
-		--kit-avatar-size: 2.25rem;
-		--kit-avatar-font-size: 0.875rem;
+		--kit-avatar-size-xs: 1.75rem;
+		--kit-avatar-size-sm: 2rem;
+		--kit-avatar-size-md: 2.25rem;
+		--kit-avatar-size-lg: 2.5rem;
+		--kit-avatar-size-xl: 2.75rem;
+		--kit-avatar-font-xs: 0.75rem;
+		--kit-avatar-font-sm: 0.8125rem;
+		--kit-avatar-font-md: 0.875rem;
+		--kit-avatar-font-lg: 1rem;
+		--kit-avatar-font-xl: 1.125rem;
+		--kit-avatar-size: var(--kit-avatar-size-md);
+		--kit-avatar-font-size: var(--kit-avatar-font-md);
 		--kit-avatar-density-scale: 1;
 
 		display: inline-flex;
@@ -98,24 +108,24 @@
 	}
 
 	.kit-avatar[data-size='xs'] {
-		--kit-avatar-size: 1.75rem;
-		--kit-avatar-font-size: 0.75rem;
+		--kit-avatar-size: var(--kit-avatar-size-xs);
+		--kit-avatar-font-size: var(--kit-avatar-font-xs);
 	}
 	.kit-avatar[data-size='sm'] {
-		--kit-avatar-size: 2rem;
-		--kit-avatar-font-size: 0.8125rem;
+		--kit-avatar-size: var(--kit-avatar-size-sm);
+		--kit-avatar-font-size: var(--kit-avatar-font-sm);
 	}
 	.kit-avatar[data-size='md'] {
-		--kit-avatar-size: 2.25rem;
-		--kit-avatar-font-size: 0.875rem;
+		--kit-avatar-size: var(--kit-avatar-size-md);
+		--kit-avatar-font-size: var(--kit-avatar-font-md);
 	}
 	.kit-avatar[data-size='lg'] {
-		--kit-avatar-size: 2.5rem;
-		--kit-avatar-font-size: 1rem;
+		--kit-avatar-size: var(--kit-avatar-size-lg);
+		--kit-avatar-font-size: var(--kit-avatar-font-lg);
 	}
 	.kit-avatar[data-size='xl'] {
-		--kit-avatar-size: 2.75rem;
-		--kit-avatar-font-size: 1.125rem;
+		--kit-avatar-size: var(--kit-avatar-size-xl);
+		--kit-avatar-font-size: var(--kit-avatar-font-xl);
 	}
 
 	.kit-avatar[data-density='compact'] {

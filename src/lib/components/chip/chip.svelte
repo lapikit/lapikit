@@ -58,7 +58,7 @@
 	let componentClass = $derived(
 		useClassName({
 			baseClass: 'kit-chip',
-			className: `${className ?? ''} kit-chip--${safeVariant}`.trim(),
+			className: `${className ?? ''}`.trim(),
 			sClass,
 			classProps
 		})

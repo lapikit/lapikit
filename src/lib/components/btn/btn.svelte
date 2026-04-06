@@ -60,7 +60,7 @@
 	let componentClass = $derived(
 		useClassName({
 			baseClass: 'kit-btn',
-			className: `${className ?? ''} kit-btn--${safeVariant}`.trim(),
+			className: `${className ?? ''}`.trim(),
 			sClass,
 			classProps
 		})

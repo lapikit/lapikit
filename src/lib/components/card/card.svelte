@@ -64,7 +64,7 @@
 	let componentClass = $derived(
 		useClassName({
 			baseClass: 'kit-card',
-			className: `${className ?? ''} kit-card--${safeVariant}`.trim(),
+			className: `${className ?? ''}`.trim(),
 			sClass,
 			classProps
 		})
@@ -88,6 +88,7 @@
 	type={resolvedType}
 	disabled={resolvedDisabled}
 	tabindex={resolvedTabIndex}
+	data-variant={safeVariant}
 	data-density={safeDensity}
 	data-rounded={rounded}
 	data-interactive={isInteractive}
@@ -176,7 +177,14 @@
 		padding: var(--kit-card-padding-comfortable);
 	}
 
-	.kit-card--outline {
+	.kit-card[data-variant='filled'] {
+		--kit-card-bg: var(--kit-accent);
+		--kit-card-fg: white;
+		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
+		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
+	}
+
+	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
 		--kit-card-fg: var(--kit-accent);
 		--kit-card-bd: var(--kit-accent);
@@ -184,14 +192,7 @@
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
 
-	.kit-card--filled {
-		--kit-card-bg: var(--kit-accent);
-		--kit-card-fg: white;
-		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
-		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
-	}
-
-	.kit-card--text {
+	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
 		--kit-card-fg: var(--kit-accent);
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
@@ -208,7 +209,7 @@
 		box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12);
 	}
 
-	.kit-card--text[data-interactive='true'][data-disabled='false']:hover {
+	.kit-card[data-variant='text'][data-interactive='true'][data-disabled='false']:hover {
 		background: var(--kit-card-hover-bg);
 	}
 
@@ -219,8 +220,8 @@
 		box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1);
 	}
 
-	.kit-card--text[data-interactive='true'][data-active='true'][data-disabled='false'],
-	.kit-card--text[data-interactive='true'][data-disabled='false']:active {
+	.kit-card[data-variant='text'][data-interactive='true'][data-active='true'][data-disabled='false'],
+	.kit-card[data-variant='text'][data-interactive='true'][data-disabled='false']:active {
 		background: var(--kit-card-active-bg);
 	}
 
