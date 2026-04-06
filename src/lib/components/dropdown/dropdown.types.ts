@@ -15,8 +15,6 @@ export type ModelDropdownProps = {
 
 export interface DropdownProps extends Component {
 	ref?: HTMLElement | null;
-	dark?: boolean;
-	light?: boolean;
 	rounded?: RoundedType | string;
 	position?: 'top' | 'bottom' | 'left' | 'right';
 	openOnHover?: boolean;

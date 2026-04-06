@@ -147,15 +147,14 @@
 
 <style>
 	.kit-alert {
-		--kit-alert-bg: hsl(220 20% 96%);
-		--kit-alert-fg: hsl(222 20% 16%);
-		--kit-alert-bd: hsl(220 16% 85%);
+		--kit-alert-bg: var(--kit-surface-2);
+		--kit-alert-fg: var(--kit-fg);
+		--kit-alert-bd: var(--kit-border);
 		--kit-alert-radius: 8px;
 		--kit-alert-py: 0.75rem;
 		--kit-alert-px: 0.875rem;
 		--kit-alert-gap: 0.625rem;
 		--outline-color: var(--kit-alert-bd);
-		--btn-radius: var(--kit-alert-radius);
 
 		position: relative;
 		display: grid;
@@ -167,12 +166,6 @@
 		color: var(--kit-alert-fg);
 		background: var(--kit-alert-bg);
 		border: 1px solid var(--kit-alert-bd);
-	}
-
-	.kit-alert[data-variant='filled'] {
-		background: var(--kit-alert-bg);
-		color: var(--kit-alert-fg);
-		border-color: var(--kit-alert-bd);
 	}
 
 	.kit-alert[data-variant='outline'] {

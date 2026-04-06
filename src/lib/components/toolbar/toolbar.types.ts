@@ -11,8 +11,6 @@ export interface ToolbarProps extends Component {
 	variant?: Variant | Record<string, Variant>;
 	rounded?: RoundedType | string;
 	density?: Density | Record<string, Density>;
-	dark?: boolean;
-	light?: boolean;
 	color?: string;
 	orientation?: Orientation | Record<string, Orientation>;
 	background?: string;

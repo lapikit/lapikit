@@ -19,6 +19,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] - 2026-04-06
+
+## Updated
+
+- Accordion has connect to root variables for color and theme
+- Alert has connect to root variables for color and theme
+- App has connect to root variables for color and theme
+- Appbar has connect to root variables for color and theme
+- Avatar has connect to root variables for color and theme
+- Card has connect to root variables for color and theme
+- Chip has connect to root variables for color and theme
+- Dropdown has connect to root variables for color and theme
+- Icon has connect to root variables for color and theme
+- List has connect to root variables for color and theme
+- ListItem has connect to root variables for color and theme
+- Popover has connect to root variables for color and theme
+- Separator has connect to root variables for color and theme
+- Texfield has connect to root variables for color and theme
+- Toolbar has connect to root variables for color and theme
+- Tooltip has connect to root variables for color and theme
+
 ## [0.5.1] - 2026-04-04
 
 ## Updated

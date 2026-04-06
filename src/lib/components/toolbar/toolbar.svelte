@@ -12,8 +12,6 @@
 		's-class': sClass,
 		's-style': sStyle,
 		classContent,
-		light = false,
-		dark = false,
 		variant = 'text',
 		rounded,
 		background,
@@ -85,8 +83,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-toolbar-background:${background}` : '',
-			color ? `--kit-toolbar-color:${color}` : '',
+			background ? `--kit-toolbar-bg:${background}` : '',
+			color ? `--kit-toolbar-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px') ? `--kit-toolbar-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
@@ -105,8 +103,6 @@
 	data-density={safeDensity}
 	data-orientation={safeOrientation}
 	data-location={safeLocation}
-	data-light={light || undefined}
-	data-dark={dark || undefined}
 	data-rounded={rounded}
 >
 	{#if safeVariant === 'outline'}
@@ -120,9 +116,9 @@
 
 <style>
 	.kit-toolbar {
-		--kit-toolbar-background: var(--kit-surface-2);
-		--kit-toolbar-color: var(--kit-fg);
-		--kit-toolbar-border: color-mix(in oklab, var(--kit-toolbar-color), transparent 82%);
+		--kit-toolbar-bg: var(--kit-surface-2);
+		--kit-toolbar-fg: var(--kit-fg);
+		--kit-toolbar-bd: color-mix(in oklab, var(--kit-toolbar-fg), transparent 82%);
 		--kit-toolbar-radius: 1rem;
 		--kit-toolbar-gap: 0.5rem;
 		--kit-toolbar-padding-x: 0.75rem;
@@ -134,9 +130,9 @@
 		max-width: 100%;
 		box-sizing: border-box;
 		border-radius: var(--kit-toolbar-radius);
-		background: var(--kit-toolbar-background);
-		color: var(--kit-toolbar-color);
-		border: 1px solid var(--kit-toolbar-background);
+		background: var(--kit-toolbar-bg);
+		color: var(--kit-toolbar-fg);
+		border: 1px solid var(--kit-toolbar-bg);
 	}
 
 	.kit-toolbar[data-density='compact'] {
@@ -158,31 +154,20 @@
 	}
 
 	.kit-toolbar[data-variant='dash'] {
-		border: 1px dashed var(--kit-toolbar-border);
+		border: 1px dashed var(--kit-toolbar-bd);
 	}
 
 	.kit-toolbar[data-variant='text'],
 	.kit-toolbar[data-variant='outline'],
 	.kit-toolbar[data-variant='dash'] {
-		--kit-toolbar-background: transparent;
-		--kit-toolbar-color: var(--kit-accent);
-	}
-
-	.kit-toolbar[data-light='true'] {
-		--kit-toolbar-background: color-mix(in oklab, white 88%, var(--kit-surface-1));
-		--kit-toolbar-color: var(--kit-fg);
-	}
-
-	.kit-toolbar[data-dark='true'] {
-		--kit-toolbar-background: color-mix(in oklab, black 72%, var(--kit-surface-3));
-		--kit-toolbar-color: white;
-		--kit-toolbar-border: color-mix(in oklab, white, transparent 72%);
+		--kit-toolbar-bg: transparent;
+		--kit-toolbar-fg: var(--kit-accent);
 	}
 
 	.kit-toolbar .outline {
 		position: absolute;
 		inset: 0;
-		border: 1px solid var(--kit-toolbar-border);
+		border: 1px solid var(--kit-toolbar-bd);
 		border-radius: inherit;
 		pointer-events: none;
 	}

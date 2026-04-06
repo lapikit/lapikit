@@ -12,8 +12,6 @@
 		's-class': sClass,
 		's-style': sStyle,
 		text = undefined,
-		dark = false,
-		light = false,
 		color = undefined,
 		background = undefined,
 		rounded = undefined,
@@ -46,8 +44,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			color ? `--kit-accordion-color:${color}` : '',
-			background ? `--kit-accordion-background:${background}` : ''
+			color ? `--kit-accordion-fg:${color}` : '',
+			background ? `--kit-accordion-bg:${background}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
@@ -61,8 +59,6 @@
 	style={mergedStyle}
 	{...restProps}
 	data-text={text ? true : undefined}
-	data-dark={dark}
-	data-light={light}
 	data-spacer={spacer}
 	data-hide-icon={hideIcon}
 	data-rounded={rounded}
@@ -74,8 +70,8 @@
 	.kit-accordion {
 		--kit-accordion-radius: 8px;
 		--kit-accordion-gap: 0;
-		--kit-accordion-color: var(--kit-fg);
-		--kit-accordion-background: transparent;
+		--kit-accordion-fg: var(--kit-fg);
+		--kit-accordion-bg: transparent;
 
 		display: flex;
 		flex-wrap: wrap;
@@ -86,8 +82,8 @@
 		position: relative;
 		z-index: 1;
 		gap: var(--kit-accordion-gap);
-		color: var(--kit-accordion-color);
-		background: var(--kit-accordion-background);
+		color: var(--kit-accordion-fg);
+		background: var(--kit-accordion-bg);
 	}
 
 	.kit-accordion[data-spacer='true'] {
@@ -116,15 +112,6 @@
 
 	.kit-accordion[data-rounded='xl'] {
 		--kit-accordion-radius: 99999px;
-	}
-
-	.kit-accordion[data-dark='true'] {
-		--kit-accordion-background: var(--kit-surface-3);
-		--kit-accordion-color: var(--kit-fg);
-	}
-
-	.kit-accordion[data-light='true'] {
-		--kit-accordion-background: var(--kit-surface-1);
 	}
 
 	.kit-accordion[data-hide-icon='true'] :global(.kit-accordion-item__indicator) {

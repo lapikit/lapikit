@@ -14,8 +14,6 @@ export type ModelPopoverProps = {
 export interface PopoverProps extends Component {
 	ref?: HTMLElement | null;
 	open?: boolean;
-	dark?: boolean;
-	light?: boolean;
 	rounded?: RoundedType | string;
 	position?: 'top' | 'bottom' | 'left' | 'right';
 	color?: string;

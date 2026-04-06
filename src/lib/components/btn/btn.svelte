@@ -60,7 +60,7 @@
 	let componentClass = $derived(
 		useClassName({
 			baseClass: 'kit-btn',
-			className: `${className ?? ''} kit-btn--${safeVariant}`.trim(),
+			className: `${className ?? ''}`.trim(),
 			sClass,
 			classProps
 		})
@@ -212,10 +212,8 @@
 		--kit-btn-bg: var(--kit-surface-2);
 		--kit-btn-fg: var(--kit-fg);
 		--kit-btn-bd: var(--kit-border);
-		--kit-btn-bg--hover: color-mix(in oklab, var(--kit-btn-bg), var(--kit-fg) 6%);
-		--kit-btn-bg--active: color-mix(in oklab, var(--kit-btn-bg), var(--kit-fg) 10%);
-		--kit-btn-bd--hover: color-mix(in oklab, var(--kit-btn-bd), var(--kit-fg) 12%);
-		--kit-btn-font: var(--kit-font);
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), var(--kit-btn-fg) 6%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-bg), var(--kit-btn-fg) 10%);
 		--kit-btn-h-xs: 28px;
 		--kit-btn-h-sm: 32px;
 		--kit-btn-h-md: 40px;
@@ -226,10 +224,9 @@
 		--kit-btn-px-md: 16px;
 		--kit-btn-px-lg: 20px;
 		--kit-btn-px-xl: 24px;
-		--btn-density-scale: 1;
-		--btn-density-height-scale: 1;
-		--btn-radius: 8px;
-		--btn-shape: var(--btn-radius);
+		--kit-btn-density-scale: 1;
+		--kit-btn-density-h-scale: 1;
+		--kit-btn-radius: 8px;
 		--kit-btn-gap: 0.45em;
 
 		position: relative;
@@ -237,12 +234,12 @@
 		box-sizing: border-box;
 		align-items: center;
 		justify-content: center;
-		font-family: var(--kit-btn-font);
-		background: var(--btn-bg);
-		color: var(--btn-fg);
-		height: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
-		padding-inline: calc(var(--btn-px) * var(--btn-density-scale));
-		border-radius: var(--btn-radius);
+		font-family: var(--kit-font);
+		background: var(--kit-btn-bg);
+		color: var(--kit-btn-fg);
+		height: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale)));
+		padding-inline: calc(var(--kit-btn-px) * var(--kit-btn-density-scale));
+		border-radius: var(--kit-btn-radius);
 		text-decoration: none;
 		white-space: nowrap;
 		user-select: none;
@@ -254,35 +251,35 @@
 	}
 
 	.kit-btn:hover {
-		background: var(--btn-hover-bg);
-		color: var(--btn-hover-fg);
-		text-decoration: var(--btn-decoration);
+		background: var(--kit-btn-hover-bg);
+		color: var(--kit-btn-fg);
+		text-decoration: var(--kit-btn-decoration);
 	}
 
 	.kit-btn:has(> :is(input[type='checkbox'], input[type='radio']):checked) {
-		background: var(--btn-active-bg);
-		color: var(--btn-active-fg);
-		text-decoration: var(--btn-decoration);
+		background: var(--kit-btn-active-bg);
+		color: var(--kit-btn-fg);
+		text-decoration: var(--kit-btn-decoration);
 	}
 
 	.kit-btn:has(> :is(input[type='checkbox'], input[type='radio']):checked):hover {
-		background: var(--btn-hover-bg);
-		color: var(--btn-hover-fg);
-		text-decoration: var(--btn-decoration);
+		background: var(--kit-btn-hover-bg);
+		color: var(--kit-btn-fg);
+		text-decoration: var(--kit-btn-decoration);
 	}
 
 	.kit-btn:active,
 	.kit-btn[data-active='true'] {
-		background: var(--btn-active-bg);
-		color: var(--btn-active-fg);
-		text-decoration: var(--btn-decoration);
+		background: var(--kit-btn-active-bg);
+		color: var(--kit-btn-fg);
+		text-decoration: var(--kit-btn-decoration);
 		transform: translateY(1px);
 	}
 
 	.kit-btn[data-active='true']:hover {
-		background: var(--btn-hover-bg);
-		color: var(--btn-hover-fg);
-		text-decoration: var(--btn-decoration);
+		background: var(--kit-btn-hover-bg);
+		color: var(--kit-btn-fg);
+		text-decoration: var(--kit-btn-decoration);
 	}
 
 	:is(.kit-btn:focus-visible, .kit-btn:has(> input:focus-visible)) {
@@ -302,51 +299,45 @@
 	}
 
 	.kit-btn > :is(input[type='checkbox'], input[type='radio']):after {
-		--btn-content: attr(aria-label);
-		content: var(--btn-content);
+		content: attr(aria-label);
 		cursor: pointer;
 	}
 
 	/* variant */
 	.kit-btn[data-variant='filled'] {
-		/* default style*/
-		--btn-bg: var(--kit-accent);
-		--btn-fg: white;
-		--btn-hover-bg: color-mix(in oklab, var(--kit-accent), black 10%);
-		--btn-hover-fg: var(--btn-fg);
-		--btn-active-bg: color-mix(in oklab, var(--kit-accent), black 16%);
-		--btn-active-fg: var(--btn-fg);
+		--kit-btn-bg: var(--kit-accent);
+		--kit-btn-fg: white;
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), black 10%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-bg), black 16%);
 	}
 
 	.kit-btn[data-variant='outline'] {
 		--outline-color: var(--kit-accent);
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-accent);
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
 	}
 
-	.kit-btn[data-variant='outline'],
 	.kit-btn[data-variant='text'] {
-		--btn-bg: transparent;
-		--btn-fg: var(--kit-accent);
-		--btn-hover-bg: color-mix(in oklab, var(--kit-accent), transparent 80%);
-		--btn-hover-fg: var(--btn-fg);
-		--btn-active-bg: color-mix(in oklab, var(--kit-accent), transparent 92%);
-		--btn-active-fg: var(--btn-fg);
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-accent);
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
 	}
 
 	.kit-btn[data-variant='link'] {
-		--btn-bg: transparent;
-		--btn-fg: var(--kit-accent);
-		--btn-hover-fg: var(--btn-fg);
-		--btn-active-fg: var(--btn-fg);
-		--btn-decoration: underline;
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-accent);
+		--kit-btn-decoration: underline;
 		height: inherit;
 		padding: 0;
 	}
 
 	/* size */
 	.kit-btn[data-size='xs'] {
-		--btn-h: var(--kit-btn-h-xs);
-		--btn-height: var(--kit-btn-h-xs);
-		--btn-px: var(--kit-btn-px-xs);
+		--kit-btn-h: var(--kit-btn-h-xs);
+		--kit-btn-px: var(--kit-btn-px-xs);
 		font-size: 12px;
 	}
 	.kit-btn[data-size='xs'] :global(.kit-icon:not([data-size])) {
@@ -354,9 +345,8 @@
 	}
 
 	.kit-btn[data-size='sm'] {
-		--btn-h: var(--kit-btn-h-sm);
-		--btn-height: var(--kit-btn-h-sm);
-		--btn-px: var(--kit-btn-px-sm);
+		--kit-btn-h: var(--kit-btn-h-sm);
+		--kit-btn-px: var(--kit-btn-px-sm);
 		font-size: 13px;
 	}
 	.kit-btn[data-size='sm'] :global(.kit-icon:not([data-size])) {
@@ -364,9 +354,8 @@
 	}
 
 	.kit-btn[data-size='md'] {
-		--btn-h: var(--kit-btn-h-md);
-		--btn-height: var(--kit-btn-h-md);
-		--btn-px: var(--kit-btn-px-md);
+		--kit-btn-h: var(--kit-btn-h-md);
+		--kit-btn-px: var(--kit-btn-px-md);
 		font-size: 14px;
 	}
 	.kit-btn[data-size='md'] :global(.kit-icon:not([data-size])) {
@@ -374,9 +363,8 @@
 	}
 
 	.kit-btn[data-size='lg'] {
-		--btn-h: var(--kit-btn-h-lg);
-		--btn-height: var(--kit-btn-h-lg);
-		--btn-px: var(--kit-btn-px-lg);
+		--kit-btn-h: var(--kit-btn-h-lg);
+		--kit-btn-px: var(--kit-btn-px-lg);
 		font-size: 15px;
 	}
 	.kit-btn[data-size='lg'] :global(.kit-icon:not([data-size])) {
@@ -384,9 +372,8 @@
 	}
 
 	.kit-btn[data-size='xl'] {
-		--btn-h: var(--kit-btn-h-xl);
-		--btn-height: var(--kit-btn-h-xl);
-		--btn-px: var(--kit-btn-px-xl);
+		--kit-btn-h: var(--kit-btn-h-xl);
+		--kit-btn-px: var(--kit-btn-px-xl);
 		font-size: 16px;
 	}
 	.kit-btn[data-size='xl'] :global(.kit-icon:not([data-size])) {
@@ -395,52 +382,48 @@
 
 	/* density */
 	.kit-btn[data-density='default'] {
-		--btn-density-scale: 1;
-		--btn-density-height-scale: 1;
+		--kit-btn-density-scale: 1;
+		--kit-btn-density-h-scale: 1;
 	}
 
 	.kit-btn[data-density='compact'] {
-		--btn-density-scale: 0.9;
-		--btn-density-height-scale: 0.92;
+		--kit-btn-density-scale: 0.9;
+		--kit-btn-density-h-scale: 0.92;
 	}
 
 	.kit-btn[data-density='comfortable'] {
-		--btn-density-scale: 1.1;
-		--btn-density-height-scale: 1.08;
+		--kit-btn-density-scale: 1.1;
+		--kit-btn-density-h-scale: 1.08;
 	}
 
 	/* rounded */
 	.kit-btn[data-rounded='0'] {
-		--btn-radius: 0;
+		--kit-btn-radius: 0;
 	}
 
 	.kit-btn[data-rounded='xs'] {
-		--btn-radius: 2px;
+		--kit-btn-radius: 2px;
 	}
 
 	.kit-btn[data-rounded='sm'] {
-		--btn-radius: 4px;
+		--kit-btn-radius: 4px;
 	}
 
 	.kit-btn[data-rounded='md'] {
-		--btn-radius: 8px;
+		--kit-btn-radius: 8px;
 	}
 
 	.kit-btn[data-rounded='lg'] {
-		--btn-radius: 16px;
+		--kit-btn-radius: 16px;
 	}
 
 	.kit-btn[data-rounded='xl'] {
-		--btn-radius: 99999px;
+		--kit-btn-radius: 99999px;
 	}
 
 	.kit-btn[data-wide='true'] {
 		width: 100%;
 		max-width: 16rem;
-	}
-
-	.kit-btn .outline {
-		pointer-events: none;
 	}
 
 	.kit-btn__inner {
@@ -503,8 +486,8 @@
 	}
 
 	.kit-btn[data-icon='true'] {
-		width: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
-		min-width: max(28px, calc(var(--btn-h) * var(--btn-density-height-scale)));
+		width: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale)));
+		min-width: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale)));
 		padding-inline: 0;
 	}
 
@@ -514,16 +497,15 @@
 
 	.kit-btn[data-disabled='true'] {
 		pointer-events: none;
-		background: color-mix(in oklab, var(--btn-bg), transparent 70%);
-		color: color-mix(in oklab, var(--btn-fg), transparent 45%);
-
+		background: color-mix(in oklab, var(--kit-btn-bg), transparent 70%);
+		color: color-mix(in oklab, var(--kit-btn-fg), transparent 45%);
 		user-select: none;
 		cursor: not-allowed;
 	}
 
 	.kit-btn[data-disabled='true'] :global(.kit-icon) {
-		color: color-mix(in oklab, var(--btn-fg), transparent 45%) !important;
-		--kit-icon-color: color-mix(in oklab, var(--btn-fg), transparent 45%) !important;
+		color: color-mix(in oklab, var(--kit-btn-fg), transparent 45%) !important;
+		--kit-icon-color: color-mix(in oklab, var(--kit-btn-fg), transparent 45%) !important;
 	}
 
 	.kit-btn[data-disabled='true'] :global(.kit-icon img),

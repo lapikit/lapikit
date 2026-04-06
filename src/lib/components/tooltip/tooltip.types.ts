@@ -5,8 +5,6 @@ export interface TooltipProps extends Component {
 	ref?: HTMLElement | null;
 	open?: boolean;
 	forceMount?: boolean;
-	dark?: boolean;
-	light?: boolean;
 	rounded?: RoundedType | string;
 	label?: string;
 	location?: 'top' | 'bottom' | 'left' | 'right';

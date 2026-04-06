@@ -1,7 +1,7 @@
 import type { Component, RoundedType } from '$lib/@types';
 
 type Density = 'compact' | 'comfortable' | 'default';
-type Variant = 'outline' | 'text';
+type Variant = 'filled' | 'outline' | 'text';
 
 export interface AppbarProps extends Component {
 	ref?: HTMLElement | null;
@@ -9,8 +9,6 @@ export interface AppbarProps extends Component {
 	variant?: Variant;
 	rounded?: RoundedType | string;
 	density?: Density | Record<string, Density>;
-	dark?: boolean;
-	light?: boolean;
 	color?: string;
 	background?: string;
 	classContent?: string | string[] | undefined;

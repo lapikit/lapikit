@@ -9,8 +9,6 @@
 		ref = $bindable(),
 		children,
 		activator,
-		dark = false,
-		light = false,
 		rounded,
 		position = 'bottom',
 		closeOnClick = false,
@@ -54,8 +52,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-dropdown-background:${background}` : '',
-			color ? `--kit-dropdown-color:${color}` : '',
+			background ? `--kit-dropdown-bg:${background}` : '',
+			color ? `--kit-dropdown-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px')
 				? `--kit-dropdown-radius:${rounded}`
 				: ''
@@ -171,8 +169,6 @@
 		class={componentClass}
 		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
 		role="menu"
-		data-light={light || undefined}
-		data-dark={dark || undefined}
 		data-rounded={rounded}
 		data-position={axis.location ?? safePosition}
 		onmouseover={() => handleMouseEvent('open', activatorRef)}
@@ -190,10 +186,10 @@
 
 <style>
 	.kit-dropdown-content {
-		--kit-dropdown-background: var(--kit-surface-1);
-		--kit-dropdown-color: var(--kit-fg);
+		--kit-dropdown-bg: var(--kit-surface-1);
+		--kit-dropdown-fg: var(--kit-fg);
 		--kit-dropdown-radius: 12px;
-		--kit-dropdown-border: color-mix(in oklab, var(--kit-fg), transparent 88%);
+		--kit-dropdown-bd: color-mix(in oklab, var(--kit-fg), transparent 88%);
 		--kit-dropdown-shadow: 0 18px 40px -18px color-mix(in oklab, black 24%, transparent);
 
 		position: fixed;
@@ -201,24 +197,13 @@
 		min-width: 12rem;
 		max-width: min(22rem, calc(100vw - 1rem));
 		padding: 0.375rem;
-		border: 1px solid var(--kit-dropdown-border);
+		border: 1px solid var(--kit-dropdown-bd);
 		border-radius: var(--kit-dropdown-radius);
-		background: var(--kit-dropdown-background);
-		color: var(--kit-dropdown-color);
+		background: var(--kit-dropdown-bg);
+		color: var(--kit-dropdown-fg);
 		box-shadow: var(--kit-dropdown-shadow);
 		transform-origin: top left;
 		animation: kit-dropdown-enter 140ms ease;
-	}
-
-	.kit-dropdown-content[data-light='true'] {
-		--kit-dropdown-background: color-mix(in oklab, white 94%, var(--kit-surface-1));
-		--kit-dropdown-color: var(--kit-fg);
-	}
-
-	.kit-dropdown-content[data-dark='true'] {
-		--kit-dropdown-background: color-mix(in oklab, black 78%, var(--kit-surface-3));
-		--kit-dropdown-color: white;
-		--kit-dropdown-border: color-mix(in oklab, white, transparent 80%);
 	}
 
 	.kit-dropdown-content[data-rounded='0'] {

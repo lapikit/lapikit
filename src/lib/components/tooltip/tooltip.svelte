@@ -12,8 +12,6 @@
 		open = $bindable(false),
 		forceMount = false,
 		label,
-		dark = false,
-		light = false,
 		rounded,
 		color,
 		background,
@@ -73,8 +71,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-tooltip-background:${background}` : '',
-			color ? `--kit-tooltip-color:${color}` : '',
+			background ? `--kit-tooltip-bg:${background}` : '',
+			color ? `--kit-tooltip-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px') ? `--kit-tooltip-radius:${rounded}` : ''
 		]
 			.filter(Boolean)
@@ -204,8 +202,6 @@
 			data-density={safeDensity}
 			data-location={axis.location ?? safeLocation}
 			data-variant={safeVariant}
-			data-light={light || undefined}
-			data-dark={dark || undefined}
 			data-rounded={rounded}
 			{...restProps}
 		>
@@ -241,10 +237,10 @@
 	}
 
 	.kit-tooltip__content {
-		--kit-tooltip-background: var(--kit-surface-3);
-		--kit-tooltip-color: var(--kit-fg);
+		--kit-tooltip-bg: var(--kit-surface-3);
+		--kit-tooltip-fg: var(--kit-fg);
 		--kit-tooltip-radius: 8px;
-		--kit-tooltip-border: color-mix(in oklab, var(--kit-tooltip-background), black 8%);
+		--kit-tooltip-bd: color-mix(in oklab, var(--kit-tooltip-bg), black 8%);
 		--kit-tooltip-py: 0.15rem;
 		--kit-tooltip-px: 0.625rem;
 
@@ -253,10 +249,10 @@
 		width: max-content;
 		max-width: min(20rem, calc(100vw - 1rem));
 		padding: var(--kit-tooltip-py) var(--kit-tooltip-px);
-		border: 1px solid var(--kit-tooltip-border);
+		border: 1px solid var(--kit-tooltip-bd);
 		border-radius: var(--kit-tooltip-radius);
-		background: var(--kit-tooltip-background);
-		color: var(--kit-tooltip-color);
+		background: var(--kit-tooltip-bg);
+		color: var(--kit-tooltip-fg);
 		font-size: 0.875rem;
 		overflow-wrap: break-word;
 		box-shadow: 0 16px 29px -10px color-mix(in oklab, black 18%, transparent);
@@ -271,17 +267,6 @@
 	.kit-tooltip__content[data-density='comfortable'] {
 		--kit-tooltip-py: 0.35rem;
 		--kit-tooltip-px: 0.75rem;
-	}
-
-	.kit-tooltip__content[data-light='true'] {
-		--kit-tooltip-background: color-mix(in oklab, white 92%, var(--kit-surface-1));
-		--kit-tooltip-color: var(--kit-fg);
-	}
-
-	.kit-tooltip__content[data-dark='true'] {
-		--kit-tooltip-background: color-mix(in oklab, black 76%, var(--kit-surface-3));
-		--kit-tooltip-color: white;
-		--kit-tooltip-border: color-mix(in oklab, white, transparent 78%);
 	}
 
 	.kit-tooltip__content[data-rounded='0'] {
@@ -318,12 +303,12 @@
 
 	.kit-tooltip__content[data-variant='arrow'][data-location='bottom']::after {
 		bottom: 100%;
-		border-color: transparent transparent var(--kit-tooltip-background) transparent;
+		border-color: transparent transparent var(--kit-tooltip-bg) transparent;
 	}
 
 	.kit-tooltip__content[data-variant='arrow'][data-location='top']::after {
 		top: 100%;
-		border-color: var(--kit-tooltip-background) transparent transparent transparent;
+		border-color: var(--kit-tooltip-bg) transparent transparent transparent;
 	}
 
 	.kit-tooltip__content[data-variant='arrow'][data-location='left']::after,
@@ -335,12 +320,12 @@
 
 	.kit-tooltip__content[data-variant='arrow'][data-location='right']::after {
 		right: 100%;
-		border-color: transparent var(--kit-tooltip-background) transparent transparent;
+		border-color: transparent var(--kit-tooltip-bg) transparent transparent;
 	}
 
 	.kit-tooltip__content[data-variant='arrow'][data-location='left']::after {
 		left: 100%;
-		border-color: transparent transparent transparent var(--kit-tooltip-background);
+		border-color: transparent transparent transparent var(--kit-tooltip-bg);
 	}
 
 	.kit-tooltip__content[data-location='top'] {

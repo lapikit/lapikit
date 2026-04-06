@@ -16,8 +16,6 @@
 		size = 'md',
 		variant = 'filled',
 		placeholder,
-		light = false,
-		dark = false,
 		counter = false,
 		min,
 		max,
@@ -88,8 +86,8 @@
 	let mergedStyle = $derived(
 		[
 			componentStyle,
-			background ? `--kit-textfield-background:${background}` : '',
-			color ? `--kit-textfield-color:${color}` : '',
+			background ? `--kit-textfield-bg:${background}` : '',
+			color ? `--kit-textfield-fg:${color}` : '',
 			typeof rounded === 'string' && rounded.includes('px')
 				? `--kit-textfield-radius:${rounded}`
 				: ''
@@ -153,8 +151,6 @@
 	data-size={safeSize}
 	data-variant={safeVariant}
 	data-density={safeDensity}
-	data-light={light || undefined}
-	data-dark={dark || undefined}
 	data-disabled={disabled}
 	data-readonly={readonly}
 	data-error={error}
@@ -288,9 +284,9 @@
 	}
 
 	.kit-textfield {
-		--kit-textfield-background: var(--kit-surface-2);
-		--kit-textfield-color: var(--kit-fg);
-		--kit-textfield-border: color-mix(in oklab, var(--kit-textfield-color), transparent 84%);
+		--kit-textfield-bg: var(--kit-surface-2);
+		--kit-textfield-fg: var(--kit-fg);
+		--kit-textfield-bd: color-mix(in oklab, var(--kit-textfield-fg), transparent 84%);
 		--kit-textfield-radius: 8px;
 		--kit-textfield-font-size: 14px;
 		--kit-textfield-gap-base: 8px;
@@ -372,27 +368,16 @@
 	}
 
 	.kit-textfield[data-variant='filled'] .kit-textfield__field {
-		background: var(--kit-textfield-background);
+		background: var(--kit-textfield-bg);
 	}
 
 	.kit-textfield[data-variant='outline'] .kit-textfield__field {
-		background: color-mix(in oklab, var(--kit-textfield-background), transparent 90%);
+		background: color-mix(in oklab, var(--kit-textfield-bg), transparent 90%);
 	}
 
 	.kit-textfield[data-variant='text'] .kit-textfield__field {
 		background: transparent;
 		border-radius: 0;
-	}
-
-	.kit-textfield[data-light='true'] {
-		--kit-textfield-background: color-mix(in oklab, white 88%, var(--kit-surface-1));
-		--kit-textfield-color: var(--kit-fg);
-	}
-
-	.kit-textfield[data-dark='true'] {
-		--kit-textfield-background: color-mix(in oklab, black 72%, var(--kit-surface-3));
-		--kit-textfield-color: white;
-		--kit-textfield-border: color-mix(in oklab, white, transparent 74%);
 	}
 
 	.kit-textfield[data-disabled='true'] {
@@ -469,7 +454,7 @@
 		min-width: 0;
 		padding: var(--kit-textfield-py) var(--kit-textfield-px);
 		border-radius: var(--kit-textfield-radius);
-		color: var(--kit-textfield-color);
+		color: var(--kit-textfield-fg);
 	}
 
 	.kit-textfield__prepend-inner,
@@ -532,7 +517,7 @@
 	}
 
 	.kit-textfield .outline {
-		--outline-color: var(--kit-textfield-border);
+		--outline-color: var(--kit-textfield-bd);
 		top: 0;
 		bottom: 0;
 	}
@@ -540,7 +525,7 @@
 	.kit-textfield .line {
 		bottom: 0;
 		height: 1px;
-		background: var(--kit-textfield-border);
+		background: var(--kit-textfield-bd);
 	}
 
 	.kit-textfield[data-error='true'] .outline {
