@@ -125,6 +125,8 @@ export const decodeSourceMap = (
 	const hasLapikitSnippet = lapikitSnippets.some((name) => newCode.includes(`{#snippet ${name}`));
 	const patchedCode = newCode.replace(snippetPattern, '// @ts-ignore\n$1');
 
+	console.log('CODE:', patchedCode);
+
 	return {
 		code: patchedCode,
 		changed: changed || hasLapikitSnippet,
