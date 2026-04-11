@@ -1,4 +1,5 @@
 import type { ComponentInfo, KitComponentScan } from './@types/index.js';
+import { lapikitSnippets } from './constants.js';
 
 export const decodeSourceMap = (
 	content: string,
@@ -119,9 +120,14 @@ export const decodeSourceMap = (
 		index = tagEnd + 1;
 	}
 
+	const newCode = changed ? parts.join('') : content;
+	const snippetPattern = new RegExp(`(\\{#snippet\\s+(${lapikitSnippets.join('|')})\\s*\\()`, 'g');
+	const hasLapikitSnippet = lapikitSnippets.some((name) => newCode.includes(`{#snippet ${name}`));
+	const patchedCode = newCode.replace(snippetPattern, '// @ts-ignore\n$1');
+
 	return {
-		code: changed ? parts.join('') : content,
-		changed,
+		code: patchedCode,
+		changed: changed || hasLapikitSnippet,
 		importedComponents
 	};
 };

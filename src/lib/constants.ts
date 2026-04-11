@@ -34,6 +34,16 @@ export const lapikitComponents: readonly string[] = [
 
 export const lapikitLabsComponents: readonly string[] = ['sheet'] as const;
 
+export const lapikitSnippets = [
+	'activator',
+	'indicator',
+	'append',
+	'prepend',
+	'close',
+	'load',
+	'tooltip'
+];
+
 export const lapikitPlugins = {
 	repl: {
 		components: ['repl'],
