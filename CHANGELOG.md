@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.3]
 
+**New package [eslint-config-lapikit](https://www.npmjs.com/package/eslint-config-lapikit)** for share eslint config for lapikit and all project with lapikit, with support for svelte and typescript.
+
 ### Fixed
 
 - Fix no export ModelDropdownProps for component Dropdown with use props in your project
