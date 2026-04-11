@@ -1,3 +1,6 @@
+// types
+export type { ModelDropdownProps } from './dropdown/dropdown.types';
+
 // components
 export { default as KitApp } from './app/app.svelte';
 export { default as KitAppbar } from './appbar/appbar.svelte';
