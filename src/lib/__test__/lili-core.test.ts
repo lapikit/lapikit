@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { componentName, liliCore } from '$lib/framework';
-import { lapikitImportsLabsRef } from '$lib/constants';
+import { lapikitImportsLabsRef, lapikitImportsRef } from '$lib/constants';
 
 describe('liliCore', () => {
 	it('converts kit tags with multiline attributes and injects imports', () => {
@@ -35,6 +35,21 @@ describe('liliCore', () => {
 		expect(componentName('accordion-item')).toBe('KitAccordionItem');
 		expect(componentName('aspect-ratio')).toBe('KitAspectRatio');
 		expect(componentName('list')).toBe('KitList');
+	});
+
+	it('generates a single import for kit:list and kit:list-item without duplicates', () => {
+		const preprocess = liliCore();
+		const input = `<script></script>\n<kit:list>\n\t<kit:list-item />\n</kit:list>`;
+
+		const result = preprocess.markup({ content: input });
+		const code = result?.code ?? '';
+
+		const matches = [...code.matchAll(/import\s*\{[^}]*KitList[^}]*\}/g)];
+		expect(matches).toHaveLength(1);
+		expect(code).toContain('KitList,');
+		expect(code).toContain('KitListItem');
+		expect(code).toContain(`from '${lapikitImportsRef}'`);
+		expect(code).not.toContain('KitList-item');
 	});
 
 	it('does nothing when kit tags exist only inside script or style', () => {
