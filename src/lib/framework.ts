@@ -14,7 +14,8 @@ import {
  * @returns The component name with "Kit" prefix and the first letter capitalized
  */
 export function componentName(shortName: string): string {
-	return 'Kit' + shortName.charAt(0).toUpperCase() + shortName.slice(1);
+	const pascal = shortName.replace(/(^|-)([a-z])/g, (_, __, letter) => letter.toUpperCase());
+	return 'Kit' + pascal;
 }
 
 export function liliCore(options?: LapikitPreprocessOptions) {
