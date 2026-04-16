@@ -30,6 +30,13 @@ describe('liliCore', () => {
 		expect(result?.code).toContain(`import { ${sheetName} } from '${lapikitImportsLabsRef}';`);
 	});
 
+	it('converts hyphenated component names to PascalCase', () => {
+		expect(componentName('list-item')).toBe('KitListItem');
+		expect(componentName('accordion-item')).toBe('KitAccordionItem');
+		expect(componentName('aspect-ratio')).toBe('KitAspectRatio');
+		expect(componentName('list')).toBe('KitList');
+	});
+
 	it('does nothing when kit tags exist only inside script or style', () => {
 		const preprocess = liliCore();
 		const input = `<script>\n\tconst template = '<kit:sheet />';\n</script>\n\n<style>\n\t.example::before { content: "<kit:sheet />"; }\n</style>`;
