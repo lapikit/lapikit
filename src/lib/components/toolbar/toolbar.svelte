@@ -12,7 +12,7 @@
 		's-class': sClass,
 		's-style': sStyle,
 		classContent,
-		variant = 'text',
+		variant = 'filled',
 		rounded,
 		background,
 		color,
@@ -24,9 +24,9 @@
 
 	let safeVariant = $derived(
 		typeof variant === 'string' &&
-			(variant === 'outline' || variant === 'text' || variant === 'dash')
+			(variant === 'filled' || variant === 'outline' || variant === 'text' || variant === 'dash')
 			? variant
-			: 'text'
+			: 'filled'
 	);
 
 	let safeDensity = $derived(
