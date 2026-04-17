@@ -106,7 +106,7 @@
 		grid-template-columns: auto minmax(0, 1fr) auto;
 		align-items: center;
 		gap: var(--kit-list-item-gap, 0.625rem);
-		min-height: var(--kit-list-item-h, 2.75rem);
+		min-height: calc(var(--kit-list-item-h, 2.75rem) + var(--kit-list-density-offset, 0rem));
 		padding-inline: var(--kit-list-item-px, 0.875rem);
 		border: 0;
 		border-radius: var(--kit-list-item-radius);

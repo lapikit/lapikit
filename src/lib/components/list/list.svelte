@@ -118,6 +118,7 @@
 		--kit-list-item-px: var(--kit-list-item-px-md);
 		--kit-list-item-gap: var(--kit-list-item-gap-md);
 		--kit-list-item-font: var(--kit-list-item-font-md);
+		--kit-list-density-offset: 0rem;
 
 		display: flex;
 		flex-direction: column;
@@ -169,11 +170,11 @@
 	}
 
 	.kit-list[data-density='compact'] {
-		--kit-list-item-h: calc(var(--kit-list-item-h) - 0.25rem);
+		--kit-list-density-offset: -0.25rem;
 	}
 
 	.kit-list[data-density='comfortable'] {
-		--kit-list-item-h: calc(var(--kit-list-item-h) + 0.25rem);
+		--kit-list-density-offset: 0.25rem;
 	}
 
 	.kit-list[data-rounded='0'] {
