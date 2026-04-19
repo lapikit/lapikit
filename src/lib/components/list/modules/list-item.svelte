@@ -146,6 +146,10 @@
 		background: var(--kit-list-item-bg, transparent);
 	}
 
+	:global(.kit-list[data-variant='filled']) .kit-list-item[data-active='true'] {
+		background: color-mix(in oklab, currentColor 12%, transparent);
+	}
+
 	:global(.kit-list[data-variant='outline']) .kit-list-item::before {
 		content: '';
 		position: absolute;
