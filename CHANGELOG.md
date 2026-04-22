@@ -19,6 +19,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.5] - 2026-04-22
+
+### Added
+
+- New type `ModelAccordionItemProps` for snippet activator props to accordion components.
+
+### Fixed
+
+- Conflic CSS background on component Accordion
+- Rename bad import `accordionIten` to `accordion-item`
+- Fix filled variant not working on Toolbar component
+- Fix density component List not working
+- Fix state active on List Item not working on CSS render
+
 ## [0.5.4] - 2026-04-16
 
 ### Fixed
