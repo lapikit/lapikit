@@ -14,10 +14,6 @@ export interface AlertProps extends Component {
 	density?: AlertDensity;
 	rounded?: RoundedType;
 	tone?: AlertTone;
-	info?: boolean;
-	success?: boolean;
-	warning?: boolean;
-	error?: boolean;
 	color?: string;
 	background?: string;
 	prepend?: Snippet;

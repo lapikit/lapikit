@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import type { AlertDensity, AlertProps, AlertTone, AlertVariant } from './alert.types.ts';
+	import type { AlertProps, AlertTone, AlertVariant, AlertDensity } from './alert.types.ts';
 
 	function resolveVariant(value: AlertVariant | undefined): AlertVariant {
 		return value === 'filled' || value === 'outline' || value === 'text' ? value : 'filled';
@@ -13,25 +13,8 @@
 			: 'default';
 	}
 
-	function resolveTone({
-		tone,
-		info,
-		success,
-		warning,
-		error
-	}: {
-		tone?: AlertTone;
-		info?: boolean;
-		success?: boolean;
-		warning?: boolean;
-		error?: boolean;
-	}): AlertTone {
-		if (tone && ['info', 'success', 'warning', 'error'].includes(tone)) return tone;
-		if (error) return 'error';
-		if (warning) return 'warning';
-		if (success) return 'success';
-		if (info) return 'info';
-		return 'default';
+	function resolveTone(value: AlertTone | undefined): AlertTone {
+		return value && ['info', 'success', 'warning', 'error'].includes(value) ? value : 'default';
 	}
 
 	let {
@@ -48,10 +31,6 @@
 		density = 'default',
 		rounded = 'md',
 		tone = 'default',
-		info = false,
-		success = false,
-		warning = false,
-		error = false,
 		color = undefined,
 		background = undefined,
 		prepend = undefined,
@@ -83,7 +62,7 @@
 
 	let safeVariant = $derived(resolveVariant(variant));
 	let safeDensity = $derived(resolveDensity(density));
-	let safeTone = $derived(resolveTone({ tone, info, success, warning, error }));
+	let safeTone = $derived(resolveTone(tone));
 	let mergedStyle = $derived(
 		[
 			baseStyle,
