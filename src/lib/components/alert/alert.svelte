@@ -26,7 +26,7 @@
 		warning?: boolean;
 		error?: boolean;
 	}): AlertTone {
-		if (tone && ['default', 'info', 'success', 'warning', 'error'].includes(tone)) return tone;
+		if (tone && ['info', 'success', 'warning', 'error'].includes(tone)) return tone;
 		if (error) return 'error';
 		if (warning) return 'warning';
 		if (success) return 'success';
