@@ -1,5 +1,6 @@
 // types
 export type { ModelDropdownProps } from './dropdown/dropdown.types';
+export type { ModelAccordionItemProps } from './accordion/accordion.types';
 
 // components
 export { default as KitApp } from './app/app.svelte';

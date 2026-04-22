@@ -23,7 +23,7 @@ export const lapikitComponents: readonly string[] = [
 	'dialog',
 	'modal',
 	'accordion',
-	'accordionItem',
+	'accordion-item',
 	'alert',
 	'aspect-ratio',
 	'spacer',

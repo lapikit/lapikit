@@ -1,6 +1,10 @@
 import type { RoundedType, Component } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
+export type ModelAccordionItemProps = {
+	open: boolean;
+};
+
 export interface AccordionProps extends Component {
 	ref?: HTMLElement | null;
 	is?: 'div';

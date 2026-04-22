@@ -1,6 +1,6 @@
 import type { Component, PropValue, RoundedType } from '$lib/@types';
 
-type Variant = 'outline' | 'text' | 'dash';
+type Variant = 'filled' | 'outline' | 'text' | 'dash';
 type Density = 'compact' | 'comfortable' | 'default';
 type Orientation = 'horizontal' | 'vertical';
 type Location = 'top' | 'bottom';

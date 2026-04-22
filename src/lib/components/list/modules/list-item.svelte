@@ -106,7 +106,7 @@
 		grid-template-columns: auto minmax(0, 1fr) auto;
 		align-items: center;
 		gap: var(--kit-list-item-gap, 0.625rem);
-		min-height: var(--kit-list-item-h, 2.75rem);
+		min-height: calc(var(--kit-list-item-h, 2.75rem) + var(--kit-list-density-offset, 0rem));
 		padding-inline: var(--kit-list-item-px, 0.875rem);
 		border: 0;
 		border-radius: var(--kit-list-item-radius);
@@ -144,6 +144,10 @@
 
 	:global(.kit-list[data-variant='filled']) .kit-list-item {
 		background: var(--kit-list-item-bg, transparent);
+	}
+
+	:global(.kit-list[data-variant='filled']) .kit-list-item[data-active='true'] {
+		background: color-mix(in oklab, currentColor 12%, transparent);
 	}
 
 	:global(.kit-list[data-variant='outline']) .kit-list-item::before {
