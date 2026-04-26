@@ -1,5 +1,5 @@
 // types
-export type { ModelDropdownProps } from './dropdown/dropdown.types';
+export type { ModelDropdownProps, ModelDropdownHandleProps } from './dropdown/dropdown.types';
 export type { ModelAccordionItemProps } from './accordion/accordion.types';
 
 // components
