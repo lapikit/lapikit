@@ -1,6 +1,7 @@
 // types
 export type { ModelDropdownProps, ModelDropdownHandleProps } from './dropdown/dropdown.types';
 export type { ModelAccordionItemProps } from './accordion/accordion.types';
+export type { ModelPopoverProps } from './popover/popover.types';
 
 // components
 export { default as KitApp } from './app/app.svelte';
