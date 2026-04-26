@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import type { AlertDensity, AlertProps, AlertTone, AlertVariant } from './alert.types.ts';
+	import type { AlertProps, AlertTone, AlertVariant, AlertDensity } from './alert.types.ts';
 
 	function resolveVariant(value: AlertVariant | undefined): AlertVariant {
 		return value === 'filled' || value === 'outline' || value === 'text' ? value : 'filled';
@@ -13,25 +13,8 @@
 			: 'default';
 	}
 
-	function resolveTone({
-		tone,
-		info,
-		success,
-		warning,
-		error
-	}: {
-		tone?: AlertTone;
-		info?: boolean;
-		success?: boolean;
-		warning?: boolean;
-		error?: boolean;
-	}): AlertTone {
-		if (tone && ['default', 'info', 'success', 'warning', 'error'].includes(tone)) return tone;
-		if (error) return 'error';
-		if (warning) return 'warning';
-		if (success) return 'success';
-		if (info) return 'info';
-		return 'default';
+	function resolveTone(value: AlertTone | undefined): AlertTone {
+		return value && ['info', 'success', 'warning', 'error'].includes(value) ? value : 'default';
 	}
 
 	let {
@@ -48,10 +31,6 @@
 		density = 'default',
 		rounded = 'md',
 		tone = 'default',
-		info = false,
-		success = false,
-		warning = false,
-		error = false,
 		color = undefined,
 		background = undefined,
 		prepend = undefined,
@@ -83,7 +62,7 @@
 
 	let safeVariant = $derived(resolveVariant(variant));
 	let safeDensity = $derived(resolveDensity(density));
-	let safeTone = $derived(resolveTone({ tone, info, success, warning, error }));
+	let safeTone = $derived(resolveTone(tone));
 	let mergedStyle = $derived(
 		[
 			baseStyle,
@@ -171,7 +150,7 @@
 	.kit-alert[data-variant='outline'] {
 		background: transparent;
 		color: var(--kit-alert-fg);
-		border-color: transparent;
+		border-color: var(--kit-alert-bd);
 	}
 
 	.kit-alert[data-variant='text'] {
@@ -185,27 +164,46 @@
 	}
 
 	.kit-alert[data-tone='info'] {
+		--kit-alert-tone-accent: hsl(var(--kit-h-info, 205) 60% 42%);
 		--kit-alert-bg: hsl(var(--kit-h-info, 205) 90% 95%);
 		--kit-alert-fg: hsl(var(--kit-h-info, 205) 36% 24%);
 		--kit-alert-bd: hsl(var(--kit-h-info, 205) 45% 78%);
 	}
 
 	.kit-alert[data-tone='success'] {
+		--kit-alert-tone-accent: hsl(var(--kit-h-success, 145) 50% 38%);
 		--kit-alert-bg: hsl(var(--kit-h-success, 145) 58% 93%);
 		--kit-alert-fg: hsl(var(--kit-h-success, 145) 38% 23%);
 		--kit-alert-bd: hsl(var(--kit-h-success, 145) 30% 75%);
 	}
 
 	.kit-alert[data-tone='warning'] {
+		--kit-alert-tone-accent: hsl(var(--kit-h-warning, 35) 80% 38%);
 		--kit-alert-bg: hsl(var(--kit-h-warning, 35) 95% 92%);
 		--kit-alert-fg: hsl(var(--kit-h-warning, 35) 55% 24%);
 		--kit-alert-bd: hsl(var(--kit-h-warning, 35) 55% 72%);
 	}
 
 	.kit-alert[data-tone='error'] {
+		--kit-alert-tone-accent: hsl(var(--kit-h-danger, 5) 65% 45%);
 		--kit-alert-bg: hsl(var(--kit-h-danger, 5) 90% 94%);
 		--kit-alert-fg: hsl(var(--kit-h-danger, 5) 48% 28%);
 		--kit-alert-bd: hsl(var(--kit-h-danger, 5) 55% 78%);
+	}
+
+	.kit-alert[data-variant='outline'][data-tone='info'],
+	.kit-alert[data-variant='outline'][data-tone='success'],
+	.kit-alert[data-variant='outline'][data-tone='warning'],
+	.kit-alert[data-variant='outline'][data-tone='error'] {
+		--kit-alert-fg: var(--kit-alert-tone-accent);
+		--kit-alert-bd: var(--kit-alert-tone-accent);
+	}
+
+	.kit-alert[data-variant='text'][data-tone='info'],
+	.kit-alert[data-variant='text'][data-tone='success'],
+	.kit-alert[data-variant='text'][data-tone='warning'],
+	.kit-alert[data-variant='text'][data-tone='error'] {
+		--kit-alert-fg: var(--kit-alert-tone-accent);
 	}
 
 	.kit-alert[data-density='compact'] {
