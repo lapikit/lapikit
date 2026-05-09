@@ -13,6 +13,11 @@ export type ModelDropdownProps = {
 	toggle: (element: HTMLElement | PointerEvent | null) => void;
 };
 
+export type ModelDropdownHandleProps = (
+	state: 'open' | 'close',
+	element: HTMLElement | PointerEvent | null
+) => void;
+
 export interface DropdownProps extends Component {
 	ref?: HTMLElement | null;
 	rounded?: RoundedType | string;
