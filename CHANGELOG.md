@@ -64,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.2] - 2026-04-06
 
-## Updated
+### Updated
 
 - Accordion has connect to root variables for color and theme
 - Alert has connect to root variables for color and theme
@@ -85,7 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.1] - 2026-04-04
 
-## Updated
+### Updated
 
 - Update CI npx lapikit with new preprocessor Lili
 - Remove dependency on prompts package for install lapikit, use native confirm function
@@ -100,11 +100,11 @@ Lili preprocessor has stable for all components, new components and new features
 - New components is available with new preprocessor Lili
 - New features for all components with new preprocessor Lili
 
-## Updated
+### Updated
 
 - Legacy components are still available but not maintained, use new components with new preprocessor Lili for more stability and new features
 
-## Fixed
+### Fixed
 
 - Bugfix stability for all components with new preprocessor Lili
 
