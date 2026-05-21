@@ -7,7 +7,7 @@
 </div>
 
 <style>
-	:root {
+	.kit-application {
 		color-scheme: light;
 
 		--kit-h-neutral: 220;
