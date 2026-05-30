@@ -97,3 +97,19 @@ jobs:
       contents: write
     uses: ./.github/workflows/tag.yml
     secrets: inherit
+
+  trigger-lapikit-dev:
+    name: Trigger lapikit.dev
+    runs-on: ubuntu-latest
+    needs: generate-release-notes
+    steps:
+      - name: Dispatch to lapikit.dev
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PAT_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'lapikit',
+              repo: 'lapikit.dev',
+              event_type: 'lapikit-updated'
+            })

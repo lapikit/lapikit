@@ -1,6 +1,6 @@
 {
 	"name": "lapikit",
-	"version": "0.5.8",
+	"version": "0.5.9",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
