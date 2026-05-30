@@ -1,23 +1,13 @@
----
-title: Changelog
-subtitle: 'Lapikit changelog: latest added, fixes and improvements'
-description: Find all the changes in the Lapikit release notes
-head:
-  title: changelog
-  description: 'Follow the latest Lapikit developments, updates and fixes. Transparency and continuous improvement for your components.'
-state:
-  section: base
-  published: true
-  order: -1
-keywords:
-  - version
-  - npm
----
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.5.9] - 2026-05-30
+
+### Fixed
+
+- Bug fix list item size not working
 
 ## [0.5.8] - 2026-05-21
 
