@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0]
+
+**Warning** All legacy lapikit code are deleted !
+
+### Added
+
+- New actions `useTheme` and `useAccordion` on current lapikit core
+- Integrate stored values for **Modal**
+
+### Updated
+
+- All current path **lapikit/components**, **lapikit/actions**,**lapikit/preprocess**, **lapikit** are updated with current lapikit project
+- All labs path are removed (**/labs/components** is saved for future components)
+- All legacy path are removed **lapikit/vite**, **lapikit/styles**, **lapikit/themes**, **lapikit/stores**, **lapikit/core/colors**
+
+### Fixed
+
+- All legacy code are removed, for fixe conflict on load CSS and components paths
+- Fix legacy path on actions
+
 ## [0.5.9] - 2026-05-30
 
 ### Fixed

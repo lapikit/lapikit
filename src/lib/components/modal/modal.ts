@@ -1,7 +1,6 @@
-import { disabledScroll } from '$lib/@legacy/internal/helpers/scroll.js';
+import type { ModalState } from '$lib/@types';
+import { disabledScroll } from '$lib/utils';
 import { writable, type Writable } from 'svelte/store';
-
-type ModalState = boolean | 'persistent';
 
 // presets
 const refModal: ModalState = false;

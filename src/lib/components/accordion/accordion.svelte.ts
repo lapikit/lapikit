@@ -1,7 +1,4 @@
-type AccordionOptions = {
-	multiple?: boolean;
-	readOnly?: boolean;
-};
+import type { AccordionOptions } from '$lib/@types';
 
 export function useAccordion({ multiple = false, readOnly = false }: AccordionOptions = {}) {
 	// state

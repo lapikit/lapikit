@@ -4,3 +4,4 @@ export * from './props.js';
 export * from './events.js';
 export * from './animations.js';
 export * from './core.js';
+export * from './actions.js';
