@@ -1,7 +1,12 @@
-import { theme } from '$lib/@legacy/stores/themes.js';
+import { writable, type Writable } from 'svelte/store';
 
 // states
 const isBrowser = typeof window !== 'undefined';
+
+// presets
+const themeRef: string = 'light';
+
+export const theme: Writable<string> = writable(themeRef);
 
 export function useTheme(name: string, key: string = '@lapikit/theme') {
 	theme.update(() => {

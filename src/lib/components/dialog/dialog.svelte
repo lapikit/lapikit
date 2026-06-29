@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { disabledScroll } from '$lib/@legacy/internal/helpers/scroll';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useStyles, disabledScroll } from '$lib/utils';
 	import type { DialogDensity, DialogPosition, DialogProps, DialogSize } from './dialog.types.ts';
 
 	function resolveSize(value: DialogSize | undefined): DialogSize {

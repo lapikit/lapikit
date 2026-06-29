@@ -42,3 +42,9 @@ export function clickOutside(node: HTMLElement, options: ClickOutsideOptions) {
 		}
 	};
 }
+
+export function disabledScroll(state: boolean) {
+	if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+		document.body.style.overflow = state ? 'hidden' : '';
+	}
+}

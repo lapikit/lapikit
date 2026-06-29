@@ -3,7 +3,7 @@
 	import { get } from 'svelte/store';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { useClassName, useStyles } from '$lib/utils';
-	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from '$lib/@legacy/stores';
+	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from './modal.ts';
 	import type { ModalDensity, ModalPosition, ModalProps, ModalSize } from './modal.types.ts';
 
 	function resolveSize(value: ModalSize | undefined): ModalSize {

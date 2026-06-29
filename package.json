@@ -1,6 +1,6 @@
 {
 	"name": "lapikit",
-	"version": "0.5.9",
+	"version": "0.6.0",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
@@ -43,51 +43,30 @@
 	"bin": {
 		"lapikit": "bin/index.js"
 	},
-	"svelte": "./dist/@legacy/index.js",
-	"types": "./dist/@legacy/index.d.ts",
+	"svelte": "./dist/entry-bundler.js",
+	"types": "./dist/entry-bundler.d.ts",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/@legacy/index.d.ts",
-			"svelte": "./dist/@legacy/index.js"
+			"types": "./dist/entry-bundler.d.ts",
+			"svelte": "./dist/entry-bundler.js"
 		},
-		"./components": {
-			"svelte": "./dist/@legacy/components/index.js",
-			"default": "./dist/@legacy/components/index.js"
-		},
-		"./vite": {
-			"default": "./dist/@legacy/internal/plugins/vite.js"
-		},
-		"./stores": {
-			"default": "./dist/@legacy/stores/index.js"
-		},
-		"./actions": {
-			"default": "./dist/@legacy/actions/index.js"
-		},
-		"./core/colors": {
-			"default": "./dist/@legacy/internal/core/standard-colors.js"
-		},
-		"./styles": {
-			"types": "./dist/@legacy/styles.css.d.ts",
-			"default": "./dist/@legacy/styles.css"
-		},
-		"./themes": {
-			"types": "./dist/@legacy/themes.css.d.ts",
-			"default": "./dist/@legacy/themes.css"
-		},
-		"./labs/preprocess": {
+		"./preprocess": {
 			"types": "./dist/entry-bundler.d.ts",
 			"default": "./dist/entry-bundler.js"
 		},
-		"./labs/components": {
+		"./components": {
 			"types": "./dist/components/index.d.ts",
 			"svelte": "./dist/components/index.js",
 			"default": "./dist/components/index.js"
 		},
-		"./labs/labs/components": {
+		"./labs/components": {
 			"types": "./dist/labs/index.d.ts",
 			"svelte": "./dist/labs/index.js",
 			"default": "./dist/labs/index.js"
+		},
+		"./actions": {
+			"default": "./dist/actions.js"
 		}
 	},
 	"peerDependencies": {

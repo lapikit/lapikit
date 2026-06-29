@@ -1,5 +1,5 @@
-export const lapikitImportsRef = 'lapikit/labs/components';
-export const lapikitImportsLabsRef = 'lapikit/labs/labs/components';
+export const lapikitImportsRef = 'lapikit/components';
+export const lapikitImportsLabsRef = 'lapikit/labs/components';
 
 export const lapikitComponents: readonly string[] = [
 	'app',
