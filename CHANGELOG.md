@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Warning** All legacy lapikit code are deleted !
 
+Optimized package size: 416,67kB _(0.5.9)_ to 214,3kB _(0.6.0)_ it's 48,6% lighter !
+
 ### Added
 
 - New actions `useTheme` and `useAccordion` on current lapikit core
