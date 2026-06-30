@@ -178,7 +178,7 @@
 		padding: var(--kit-space-default);
 	}
 	.kit-card[data-density='comfortable'] {
-		padding: var(---kit-space-comfortable);
+		padding: var(--kit-space-comfortable);
 	}
 
 	/** 
@@ -194,15 +194,15 @@
 	}
 	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
-		--kit-card-bd: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-surface);
+		--kit-card-bd: var(--kit-color-surface);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
 	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-surface);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
