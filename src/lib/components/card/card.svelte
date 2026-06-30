@@ -110,9 +110,10 @@
 
 <style>
 	.kit-card {
-		--kit-card-bg: var(--kit-surface-2);
-		--kit-card-fg: var(--kit-fg);
-		--kit-card-bd: var(--kit-border);
+		--kit-card-bg: var(--kit-color-surface);
+		--kit-card-fg: var(--kit-color-label);
+		--kit-card-bd: var(--kit-color-surface);
+
 		--kit-card-radius: var(--kit-radius-2);
 		--kit-card-padding-compact: var(--kit-space-1);
 		--kit-card-padding-default: var(--kit-space-2);
