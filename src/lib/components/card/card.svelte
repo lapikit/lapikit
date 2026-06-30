@@ -114,11 +114,12 @@
 <style>
 	.kit-card {
 		display: flex;
+		position: relative;
 		flex-direction: column;
 		gap: var(--kit-space-2);
+		border-radius: var(--kit-card-radius);
 		border: 0;
 		box-sizing: border-box;
-		position: relative;
 		transition:
 			background 140ms ease,
 			color 140ms ease,
