@@ -29,7 +29,10 @@
 	);
 
 	let safeDensity = $derived(
-		density === 'compact' || density === 'default' || density === 'comfortable'
+		density === 'none' ||
+			density === 'compact' ||
+			density === 'default' ||
+			density === 'comfortable'
 			? density
 			: 'default'
 	);
@@ -110,24 +113,10 @@
 
 <style>
 	.kit-card {
-		--kit-card-bg: var(--kit-color-surface);
-		--kit-card-fg: var(--kit-color-label);
-		--kit-card-bd: var(--kit-color-surface);
-
-		--kit-card-radius: var(--kit-radius-2);
-		--kit-card-padding-compact: var(--kit-space-1);
-		--kit-card-padding-default: var(--kit-space-2);
-		--kit-card-padding-comfortable: var(--kit-space-3);
-		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), var(--kit-card-fg) 6%);
-		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), var(--kit-card-fg) 10%);
-
 		display: flex;
 		flex-direction: column;
 		gap: var(--kit-space-2);
-		background: var(--kit-card-bg);
-		color: var(--kit-card-fg);
 		border: 0;
-		border-radius: var(--kit-card-radius);
 		box-sizing: border-box;
 		position: relative;
 		transition:
@@ -149,35 +138,50 @@
 		text-align: inherit;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-card[data-rounded='0'] {
-		--kit-card-radius: 0;
+		--kit-card-radius: var(--kit-shape-none);
 	}
 	.kit-card[data-rounded='xs'] {
-		--kit-card-radius: 4px;
+		--kit-card-radius: var(--kit-shape-xs);
 	}
 	.kit-card[data-rounded='sm'] {
-		--kit-card-radius: 6px;
+		--kit-card-radius: var(--kit-shape-sm);
 	}
 	.kit-card[data-rounded='md'] {
-		--kit-card-radius: 10px;
+		--kit-card-radius: var(--kit-shape-md);
 	}
 	.kit-card[data-rounded='lg'] {
-		--kit-card-radius: 14px;
+		--kit-card-radius: var(--kit-shape-lg);
 	}
 	.kit-card[data-rounded='xl'] {
-		--kit-card-radius: 18px;
+		--kit-card-radius: var(--kit-shape-xl);
 	}
 
+	/** 
+	 * density
+	 * @link https://lapikit.dev/docs/components/card#density 
+	 */
+	.kit-card[data-density='none'] {
+		padding: 0;
+	}
 	.kit-card[data-density='compact'] {
-		padding: var(--kit-card-padding-compact);
+		padding: var(--kit-space-compact);
 	}
 	.kit-card[data-density='default'] {
-		padding: var(--kit-card-padding-default);
+		padding: var(--kit-space-default);
 	}
 	.kit-card[data-density='comfortable'] {
-		padding: var(--kit-card-padding-comfortable);
+		padding: var(---kit-space-comfortable);
 	}
 
+	/** 
+	 * variant
+	 * @link https://lapikit.dev/docs/components/card#variants
+	 */
 	.kit-card[data-variant='filled'] {
 		--kit-card-bg: var(--kit-color-surface);
 		--kit-card-fg: var(--kit-color-label);
@@ -185,7 +189,6 @@
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
 	}
-
 	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
 		--kit-card-fg: var(--kit-color-label);
@@ -194,7 +197,6 @@
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
-
 	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
 		--kit-card-fg: var(--kit-color-label);

@@ -1,4 +1,4 @@
-import type { Component, RoundedType } from '$lib/@types';
+import type { Component, DensityType, RoundedType } from '$lib/@types';
 
 export interface CardProps extends Component {
 	ref?: HTMLElement | null;
@@ -6,7 +6,7 @@ export interface CardProps extends Component {
 	href?: string;
 	type?: 'button' | 'submit' | 'reset';
 	variant?: 'filled' | 'outline' | 'text';
-	density?: 'compact' | 'default' | 'comfortable';
+	density?: DensityType;
 	rounded?: RoundedType;
 	interactive?: boolean;
 	active?: boolean;

@@ -87,6 +87,19 @@
 		--kit-focus: var(--kit-color-focus); */
 	}
 
+	.kit-application {
+		--kit-shape-none: 0;
+		--kit-shape-xs: 4px;
+		--kit-shape-sm: 6px;
+		--kit-shape-md: 10px;
+		--kit-shape-lg: 14px;
+		--kit-shape-xl: 18px;
+
+		--kit-space-compact: 6px;
+		--kit-space-default: 10px;
+		--kit-space-comfortable: 14px;
+	}
+
 	/* Light — explicit override (same values as defaults, forces color-scheme) */
 	.light {
 		color-scheme: light;
