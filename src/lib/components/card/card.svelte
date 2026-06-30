@@ -117,6 +117,8 @@
 		position: relative;
 		flex-direction: column;
 		gap: var(--kit-space-2);
+		background: var(--kit-card-bg);
+		color: var(--kit-card-fg);
 		border-radius: var(--kit-card-radius);
 		border: 0;
 		box-sizing: border-box;
