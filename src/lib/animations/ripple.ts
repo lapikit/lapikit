@@ -118,10 +118,13 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 
 			cancelEvents.forEach((event) => el.removeEventListener(event, removeRipple));
 
-			timeoutId = setTimeout(() => {
-				ripple.remove();
-				activeRipples.delete(cleanup);
-			}, resolveDuration(options) || 1000);
+			timeoutId = setTimeout(
+				() => {
+					ripple.remove();
+					activeRipples.delete(cleanup);
+				},
+				resolveDuration(options) || 1000
+			);
 		}
 
 		activeRipples.add(cleanup);
