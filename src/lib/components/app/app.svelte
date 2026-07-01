@@ -176,13 +176,10 @@
 		position: absolute;
 		border-radius: 50%;
 		pointer-events: none;
-		-webkit-transition: 0.6s;
 		transition: 0.6s;
-		-webkit-animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
-			cubic-bezier(0.4, 0, 0.2, 1);
 		animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
 			cubic-bezier(0.4, 0, 0.2, 1);
-		border-radius: var(--system-ripple-radius);
+		border-radius: 50%;
 	}
 
 	:global(.kit-ripple--center) {

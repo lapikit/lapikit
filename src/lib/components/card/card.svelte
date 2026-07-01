@@ -21,6 +21,8 @@
 		active = false,
 		disabled = false,
 		noRipple,
+		color,
+		background,
 		...rest
 	}: CardProps = $props();
 
@@ -102,6 +104,8 @@
 		component: 'card',
 		disabled: noRipple || disabled || !isInteractive
 	}}
+	style:--kit-card-fg={color}
+	style:--kit-card-bg={background}
 	{...restProps}
 >
 	{#if safeVariant === 'outline'}
@@ -116,7 +120,7 @@
 		display: flex;
 		position: relative;
 		flex-direction: column;
-		gap: var(--kit-space-2);
+		gap: var(--kit-card-gap);
 		background: var(--kit-card-bg);
 		color: var(--kit-card-fg);
 		border-radius: var(--kit-card-radius);
@@ -172,12 +176,15 @@
 		padding: 0;
 	}
 	.kit-card[data-density='compact'] {
+		--kit-card-gap: var(--kit-space-compact);
 		padding: var(--kit-space-compact);
 	}
 	.kit-card[data-density='default'] {
+		--kit-card-gap: var(--kit-space-default);
 		padding: var(--kit-space-default);
 	}
 	.kit-card[data-density='comfortable'] {
+		--kit-card-gap: var(--kit-space-comfortable);
 		padding: var(--kit-space-comfortable);
 	}
 
@@ -194,15 +201,15 @@
 	}
 	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-surface);
-		--kit-card-bd: var(--kit-color-surface);
+		--kit-card-fg: var(--kit-color-label);
+		--kit-card-bd: var(--kit-card-fg);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
 	}
 	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-surface);
+		--kit-card-fg: var(--kit-color-label);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
@@ -246,38 +253,5 @@
 
 	.kit-card .outline {
 		--outline-color: var(--kit-card-bd);
-	}
-
-	.kit-card__media {
-		overflow: hidden;
-		border-radius: calc(var(--kit-card-radius) - 2px);
-	}
-
-	.kit-card__header {
-		font-weight: 600;
-		line-height: 1.3;
-	}
-
-	.kit-card__body {
-		display: block;
-		line-height: 1.45;
-	}
-
-	.kit-card__footer {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--kit-space-2);
-		flex-wrap: wrap;
-	}
-
-	.kit-card__footer-content {
-		color: var(--kit-muted);
-	}
-
-	.kit-card__actions {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--kit-space-1);
 	}
 </style>
