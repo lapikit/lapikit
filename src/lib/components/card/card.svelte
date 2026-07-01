@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useIsInteractive, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { ripple } from '$lib/animations';
 	import type { CardProps } from './card.types.ts';
@@ -26,45 +26,15 @@
 		...rest
 	}: CardProps = $props();
 
-	let safeVariant = $derived(
-		variant === 'filled' || variant === 'outline' || variant === 'text' ? variant : 'filled'
-	);
-
-	let safeDensity = $derived(
-		density === 'none' ||
-			density === 'compact' ||
-			density === 'default' ||
-			density === 'comfortable'
-			? density
-			: 'default'
-	);
-
-	let safeIs = $derived(
-		is === 'div' ||
-			is === 'article' ||
-			is === 'section' ||
-			is === 'aside' ||
-			is === 'a' ||
-			is === 'button'
-			? is
-			: 'article'
-	);
-	let tag = $derived((href && 'a') || safeIs || 'article');
-	let hasEventHandler = $derived(
-		typeof rest.onclick === 'function' ||
-			typeof rest.onpointerdown === 'function' ||
-			typeof rest.onkeydown === 'function'
-	);
-	let isInteractive = $derived(interactive || tag === 'a' || tag === 'button' || hasEventHandler);
+	let tag = $derived((href && 'a') || is);
+	let isInteractive = $derived(useIsInteractive(rest, tag, ['a', 'button'], interactive));
 	let isDisabled = $derived(!!disabled);
 	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
 	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
 	let resolvedDisabled = $derived(tag === 'button' ? isDisabled : undefined);
 	let resolvedTabIndex = $derived(tag === 'a' && isDisabled ? -1 : undefined);
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
-	);
+	let { classProps, styleProps, restProps } = $derived(makeComponentProps(rest));
 
 	let componentClass = $derived(
 		useClassName({
@@ -93,8 +63,8 @@
 	type={resolvedType}
 	disabled={resolvedDisabled}
 	tabindex={resolvedTabIndex}
-	data-variant={safeVariant}
-	data-density={safeDensity}
+	data-variant={variant}
+	data-density={density}
 	data-rounded={rounded}
 	data-interactive={isInteractive}
 	data-active={active}
@@ -104,11 +74,11 @@
 		component: 'card',
 		disabled: noRipple || disabled || !isInteractive
 	}}
-	style:--kit-card-fg={color}
-	style:--kit-card-bg={background}
+	style:--kit-card-fg={color && `var(--kit-color-${color})`}
+	style:--kit-card-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
-	{#if safeVariant === 'outline'}
+	{#if variant === 'outline'}
 		<span class="outline"></span>
 	{/if}
 

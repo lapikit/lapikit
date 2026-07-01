@@ -69,6 +69,31 @@ export function useClassName({
 }
 
 /**
+ * useIsInteractive - Utility to determine whether a component should behave as interactive:
+ * either explicitly flagged, rendered as an interactive tag (e.g. 'a', 'button'), or given
+ * one of the standard interactive event handlers (onclick, onpointerdown, onkeydown).
+ * @param props - The rest/spread props object of a component.
+ * @param tag - The resolved element tag the component renders as.
+ * @param interactiveTags - The tags considered interactive for this component (e.g. ['a', 'button']).
+ * @param interactive - Explicit interactive flag passed to the component.
+ * @returns True if the component should behave as interactive.
+ */
+const interactiveEventKeys = ['onclick', 'onpointerdown', 'onkeydown'] as const;
+
+export function useIsInteractive(
+	props: Record<string, unknown>,
+	tag: string,
+	interactiveTags: readonly string[],
+	interactive = false
+): boolean {
+	return (
+		interactive ||
+		interactiveTags.includes(tag) ||
+		interactiveEventKeys.some((key) => typeof props[key] === 'function')
+	);
+}
+
+/**
  * useStyles - Utility to compute style declarations for a component (optimized pure function).
  * @param styleAttr - Inline style attribute as a string.
  * @param sStyle - The s-style property which is an object of style key-value pairs.
