@@ -9,15 +9,15 @@ const execFileAsync = promisify(execFile);
 
 const INSTALL_ARGS = {
 	npm: ['install', '--save-dev'],
-	yarn: ['add', '--dev'],
+	yarn: ['add', '-D'],
 	pnpm: ['add', '--save-dev'],
-	bun: ['add', '--dev']
+	bun: ['add', '-D']
 };
 
 export async function installDependency(pkgManager, packageName, cwd) {
 	const args = INSTALL_ARGS[pkgManager];
 	if (!args) throw new Error(`Unsupported package manager: ${pkgManager}`);
-	await execFileAsync(pkgManager, [...args, packageName], { cwd });
+	await execFileAsync(pkgManager, [...args, packageName], { cwd, stdio: 'inherit' });
 }
 
 function findMatchingDelimiter(content, openIndex, openChar, closeChar) {
@@ -101,9 +101,9 @@ export async function findSvelteConfigFile(projectPath) {
 
 export async function addLiliPreprocess(svelteConfigFile) {
 	let content = await fs.readFile(svelteConfigFile, 'utf-8');
-	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/labs/preprocess';`;
+	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
 
-	if (content.includes(`from 'lapikit/labs/preprocess'`)) {
+	if (content.includes(`from 'lapikit/preprocess'`)) {
 		terminal('info', `lapikitPreprocess already imported in ${svelteConfigFile}`);
 		return;
 	}
@@ -154,9 +154,9 @@ function findSveltekitPluginCall(content) {
 
 export async function addLiliPreprocessToViteConfig(viteConfigFile) {
 	let content = await fs.readFile(viteConfigFile, 'utf-8');
-	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/labs/preprocess';`;
+	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
 
-	if (content.includes(`from 'lapikit/labs/preprocess'`)) {
+	if (content.includes(`from 'lapikit/preprocess'`)) {
 		terminal('info', `lapikitPreprocess already imported in ${viteConfigFile}`);
 		return;
 	}
@@ -193,8 +193,8 @@ export async function resolveSveltePreprocessTarget(projectPath) {
 		return { file: svelteConfigFile, add: addLiliPreprocess };
 	} catch {
 		throw new Error(
-			'No svelte.config file found, and no sveltekit({ ... }) plugin config found in vite.config. ' +
-				"Add lapikitPreprocess() manually: import { lapikitPreprocess } from 'lapikit/labs/preprocess'; " +
+			'No svelte.config file found, and no sveltekit({ ... }) plugin config found in vite.config.(js|ts) ' +
+				"Add lapikitPreprocess() manually: import { lapikitPreprocess } from 'lapikit/preprocess'; " +
 				'then add it to your preprocess array.'
 		);
 	}
