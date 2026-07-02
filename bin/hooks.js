@@ -42,13 +42,44 @@ function insertImportLine(content, importLine) {
 	return lines.join('\n');
 }
 
+function buildPreprocessCall(pluginKeys = []) {
+	if (!pluginKeys.length) return `lapikitPreprocess()`;
+	const plugins = pluginKeys.map((key) => `'${key}'`).join(', ');
+	return `lapikitPreprocess({ plugins: [${plugins}] })`;
+}
+
+// `lapikitPreprocess` is already imported and called in `content` — merge
+// `pluginKeys` into the existing call instead of skipping the update, so
+// re-running the installer after selecting a new addon actually adds it.
+// Returns the updated content, or null if there is nothing to change.
+function mergeExistingPreprocessCall(content, pluginKeys) {
+	if (!pluginKeys.length) return null;
+
+	const callMatch = content.match(/lapikitPreprocess\s*\(\s*(\{[\s\S]*?\})?\s*\)/);
+	if (!callMatch) return null;
+
+	const [fullMatch, optionsSource] = callMatch;
+	const existingKeys = optionsSource
+		? [...optionsSource.matchAll(/'([^']+)'|"([^"]+)"/g)].map((m) => m[1] ?? m[2])
+		: [];
+
+	const merged = [...new Set([...existingKeys, ...pluginKeys])];
+	if (merged.length === existingKeys.length) return null;
+
+	const newCall = buildPreprocessCall(merged);
+	return (
+		content.slice(0, callMatch.index) + newCall + content.slice(callMatch.index + fullMatch.length)
+	);
+}
+
 // `objectSource` is a `{ ... }` slice (e.g. the svelte.config default export,
 // or the options object passed to the sveltekit() vite plugin).
-function injectPreprocessEntry(objectSource) {
+function injectPreprocessEntry(objectSource, pluginKeys = []) {
+	const call = buildPreprocessCall(pluginKeys);
 	const preprocessMatch = objectSource.match(/preprocess\s*:\s*(\[|[^,\n\]{}]+)/);
 
 	if (!preprocessMatch) {
-		return objectSource.replace('{', `{\n\tpreprocess: [lapikitPreprocess()],`);
+		return objectSource.replace('{', `{\n\t\t\tpreprocess: [${call}],`);
 	}
 
 	if (preprocessMatch[1] === '[') {
@@ -59,7 +90,7 @@ function injectPreprocessEntry(objectSource) {
 
 		let newInner;
 		if (!trimmed) {
-			newInner = `lapikitPreprocess()`;
+			newInner = call;
 		} else if (inner.includes('\n')) {
 			const firstItemMatch = inner.match(/\n(\s*)\S/);
 			const indent = firstItemMatch ? firstItemMatch[1] : '\t\t';
@@ -67,10 +98,10 @@ function injectPreprocessEntry(objectSource) {
 			const closingIndent = closingMatch ? closingMatch[1] : '\t';
 			const innerTrimmed = inner.trimEnd();
 			const sep = innerTrimmed.endsWith(',') ? '' : ',';
-			newInner = `${innerTrimmed}${sep}\n${indent}lapikitPreprocess()\n${closingIndent}`;
+			newInner = `${innerTrimmed}${sep}\n${indent}${call}\n${closingIndent}`;
 		} else {
 			const sep = trimmed.endsWith(',') ? ' ' : ', ';
-			newInner = `${trimmed}${sep}lapikitPreprocess()`;
+			newInner = `${trimmed}${sep}${call}`;
 		}
 
 		return (
@@ -81,7 +112,7 @@ function injectPreprocessEntry(objectSource) {
 	const val = preprocessMatch[1].trim();
 	return (
 		objectSource.slice(0, preprocessMatch.index) +
-		`preprocess: [${val}, lapikitPreprocess()]` +
+		`preprocess: [${val}, ${call}]` +
 		objectSource.slice(preprocessMatch.index + preprocessMatch[0].length)
 	);
 }
@@ -99,12 +130,18 @@ export async function findSvelteConfigFile(projectPath) {
 	throw new Error('No svelte.config file found');
 }
 
-export async function addLiliPreprocess(svelteConfigFile) {
+export async function addLiliPreprocess(svelteConfigFile, pluginKeys = []) {
 	let content = await fs.readFile(svelteConfigFile, 'utf-8');
 	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
 
 	if (content.includes(`from 'lapikit/preprocess'`)) {
-		terminal('info', `lapikitPreprocess already imported in ${svelteConfigFile}`);
+		const updated = mergeExistingPreprocessCall(content, pluginKeys);
+		if (!updated) {
+			terminal('warn', `lapikitPreprocess already imported in ${svelteConfigFile}`);
+			return;
+		}
+		await fs.writeFile(svelteConfigFile, updated);
+		terminal('success', `lapikitPreprocess plugins updated in ${svelteConfigFile}`);
 		return;
 	}
 
@@ -120,7 +157,7 @@ export async function addLiliPreprocess(svelteConfigFile) {
 	}
 
 	const objectSource = content.slice(openBraceIndex, closeBraceIndex + 1);
-	const updatedObject = injectPreprocessEntry(objectSource);
+	const updatedObject = injectPreprocessEntry(objectSource, pluginKeys);
 	content = content.slice(0, openBraceIndex) + updatedObject + content.slice(closeBraceIndex + 1);
 	content = insertImportLine(content, lapikitImport);
 
@@ -152,12 +189,18 @@ function findSveltekitPluginCall(content) {
 	return { openBraceIndex, closeBraceIndex };
 }
 
-export async function addLiliPreprocessToViteConfig(viteConfigFile) {
+export async function addLiliPreprocessToViteConfig(viteConfigFile, pluginKeys = []) {
 	let content = await fs.readFile(viteConfigFile, 'utf-8');
 	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
 
 	if (content.includes(`from 'lapikit/preprocess'`)) {
-		terminal('info', `lapikitPreprocess already imported in ${viteConfigFile}`);
+		const updated = mergeExistingPreprocessCall(content, pluginKeys);
+		if (!updated) {
+			terminal('warn', `lapikitPreprocess already imported in ${viteConfigFile}`);
+			return;
+		}
+		await fs.writeFile(viteConfigFile, updated);
+		terminal('success', `lapikitPreprocess plugins updated in ${viteConfigFile}`);
 		return;
 	}
 
@@ -168,7 +211,7 @@ export async function addLiliPreprocessToViteConfig(viteConfigFile) {
 
 	const { openBraceIndex, closeBraceIndex } = pluginCall;
 	const objectSource = content.slice(openBraceIndex, closeBraceIndex + 1);
-	const updatedObject = injectPreprocessEntry(objectSource);
+	const updatedObject = injectPreprocessEntry(objectSource, pluginKeys);
 	content = content.slice(0, openBraceIndex) + updatedObject + content.slice(closeBraceIndex + 1);
 	content = insertImportLine(content, lapikitImport);
 
@@ -218,15 +261,17 @@ export async function addLapikitEslintConfig(eslintConfigFile) {
 	const lapikitImport = `import lapikitConfig from 'eslint-config-lapikit';`;
 
 	if (content.includes(`from 'eslint-config-lapikit'`)) {
-		terminal('info', `eslint-config-lapikit already imported in ${eslintConfigFile}`);
+		terminal('warn', `eslint-config-lapikit already imported in ${eslintConfigFile}`);
 		return;
 	}
 
 	content = insertImportLine(content, lapikitImport);
 
 	// Matches `export default [...]` as well as wrapped forms like
-	// `export default defineConfig([...])`.
-	const exportArrayPattern = /export\s+default\s*(?:\w+\s*\(\s*)?\[/;
+	// `export default defineConfig([...])`, `export default defineConfig(a, b)`
+	// (rest-args form, no array) and member-expression wrappers like
+	// `export default ts.config(...)`.
+	const exportArrayPattern = /export\s+default\s*(?:\[|[\w.]+\s*\()/;
 	if (!exportArrayPattern.test(content)) {
 		throw new Error(
 			`Could not find "export default [...]" in ${eslintConfigFile}. Please add "...lapikitConfig" manually.`

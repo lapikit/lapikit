@@ -7,7 +7,8 @@ import {
 	addLapikitEslintConfig
 } from './hooks.js';
 
-const ADDONS = [{ title: '@lapikit/repl', value: '@lapikit/repl' }];
+const ADDONS = [{ title: '@lapikit/repl', value: '@lapikit/repl', key: 'repl' }];
+
 const PKG_MANAGER = [
 	{ title: 'npm', value: 'npm' },
 	{ title: 'yarn', value: 'yarn' },
@@ -17,6 +18,10 @@ const PKG_MANAGER = [
 
 async function run() {
 	const rl = createRL();
+	const config = {
+		installEslintConfig: false,
+		addons: []
+	};
 
 	console.log(ansi.color.blue(' ██╗      █████╗ ██████╗ ██╗██╗  ██╗██╗████████╗'));
 	console.log(ansi.color.blue(' ██║     ██╔══██╗██╔══██╗██║██║ ██╔╝██║╚══██╔══╝'));
@@ -25,12 +30,9 @@ async function run() {
 	console.log(ansi.color.blue(' ██████╗ ██║  ██║██║     ██║██║  ██╗██║   ██║   '));
 	console.log(ansi.color.blue(' ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝   ╚═╝   '));
 
-	terminal('none', `${ansi.bold.blue('Lapikit')} - Components Library for Svelte\n\n`);
-
-	const config = {
-		installEslintConfig: false,
-		addons: []
-	};
+	terminal('none', `${ansi.bold.blue('Lapikit')} - Components Library for Svelte`);
+	terminal('none', `Developed by ${ansi.bold.blue('Nycolaide')}`);
+	terminal('none', `Documentation: https://lapikit.dev\n`);
 
 	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
 	if (!confirm) {
@@ -42,28 +44,30 @@ async function run() {
 	config.pkgManager = await select(rl, 'Select package manager:', PKG_MANAGER);
 	config.addons = await multiselect(rl, 'Select addons to install:', ADDONS);
 
-	console.log('\n');
-	terminal('info', 'Configuration summary:');
-	console.log(`  - Install eslint-config-lapikit: ${config.installEslintConfig ? 'yes' : 'no'}`);
-	console.log(`  - Package manager: ${config.pkgManager}`);
-	console.log(`  - Addons: ${config.addons.length ? config.addons.join(', ') : 'none'}`);
-	console.log('\n');
-
 	await runSteps(config, process.cwd());
-
-	// TODO: use `config.addons` to launch addons installation processes
 }
 
 function buildSteps(config, projectPath) {
-	const steps = [
-		{
-			label: 'Add lapikitPreprocess to your project',
-			run: async () => {
-				const target = await resolveSveltePreprocessTarget(projectPath);
-				await target.add(target.file);
-			}
+	const pluginKeys = config.addons
+		.map((value) => ADDONS.find((addon) => addon.value === value)?.key)
+		.filter(Boolean);
+
+	const steps = [];
+
+	steps.push({
+		label: 'Add lapikitPreprocess to your project',
+		run: async () => {
+			const target = await resolveSveltePreprocessTarget(projectPath);
+			await target.add(target.file, pluginKeys);
 		}
-	];
+	});
+
+	for (const addonValue of config.addons) {
+		steps.push({
+			label: `Install ${addonValue} (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, addonValue, projectPath)
+		});
+	}
 
 	if (config.installEslintConfig) {
 		steps.push({
@@ -88,34 +92,26 @@ async function runSteps(config, projectPath) {
 
 	for (let i = 0; i < steps.length; i++) {
 		const step = steps[i];
-		terminal('info', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
-
+		// terminal('info', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
 		try {
 			await step.run();
 			results.push({ label: step.label, ok: true });
+			terminal('success', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
 		} catch (error) {
-			terminal('warn', `Warning: ${error.message}`);
+			// terminal('warn', `Warning: ${error.message}`);
 			results.push({ label: step.label, ok: false, error: error.message });
+			terminal(
+				'error',
+				`${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label} - ${error.message}`
+			);
 		}
 	}
-
-	console.log('\n');
-	terminal('info', 'Installation summary:');
-	for (const result of results) {
-		const icon = result.ok ? ansi.color.green('✓') : ansi.color.red('✗');
-		console.log(`  ${icon} ${result.label}`);
-	}
-	console.log('\n');
 
 	return results;
 }
 
 run()
 	.then(() => {
-		terminal('none', `\n\nThank's for installing Lapikit!\n`);
-		terminal('none', `Website: https://lapikit.dev`);
-		terminal('none', `Github: https://github.com/lapikit/lapikit`);
-		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
 		process.exit(0);
 	})
 	.catch((error) => {
