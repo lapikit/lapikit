@@ -1,31 +1,36 @@
 #!/usr/bin/env node
-import { ansi, terminal, createRL, toggle } from './helpers.js';
-import { addLiliPreprocess, findSvelteConfigFile } from './hooks.js';
+import { ansi, terminal, createRL, toggle, select, multiselect } from './helpers.js';
+import {
+	resolveSveltePreprocessTarget,
+	installDependency,
+	findEslintConfigFile,
+	addLapikitEslintConfig
+} from './hooks.js';
+
+const ADDONS = [{ title: '@lapikit/repl', value: '@lapikit/repl' }];
+const PKG_MANAGER = [
+	{ title: 'npm', value: 'npm' },
+	{ title: 'yarn', value: 'yarn' },
+	{ title: 'pnpm', value: 'pnpm' },
+	{ title: 'bun', value: 'bun' }
+];
 
 async function run() {
 	const rl = createRL();
 
-	console.log('  _                 _ _    _ _   ');
-	console.log(' | |               (_) |  (_) |  ');
-	console.log(' | |     __ _ _ __  _| | ___| |_ ');
-	console.log(" | |    / _` | '_ \\| | |/ / | __|");
-	console.log(' | |___| (_| | |_) | |   <| | |_ ');
-	console.log(' |______\\__,_| .__/|_|_|\\_\\_|\\__|');
-	console.log('             | |                 ');
-	console.log('             |_|                 \n');
+	console.log(ansi.color.blue(' ██╗      █████╗ ██████╗ ██╗██╗  ██╗██╗████████╗'));
+	console.log(ansi.color.blue(' ██║     ██╔══██╗██╔══██╗██║██║ ██╔╝██║╚══██╔══╝'));
+	console.log(ansi.color.blue(' ██║     ███████║██████╔╝██║█████╔╝ ██║   ██║   '));
+	console.log(ansi.color.blue(' ██║     ██╔══██║██╔═══╝ ██║██╔═██╗ ██║   ██║   '));
+	console.log(ansi.color.blue(' ██████╗ ██║  ██║██║     ██║██║  ██╗██║   ██║   '));
+	console.log(ansi.color.blue(' ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝   ╚═╝   '));
 
-	terminal('none', `${ansi.bold.blue('Lapikit')} - Component Library for Svelte\n\n`);
+	terminal('none', `${ansi.bold.blue('Lapikit')} - Components Library for Svelte\n\n`);
 
-	console.log(
-		'This installer will guide you through the process of installing Lapikit on your Svelte project.\n'
-	);
-
-	console.log('List actions that will be done:');
-	console.log(
-		ansi.color.green('✓') +
-			' Add lili preprocess (named: lapikitPreprocess) on your svelte.config.js file\n'
-	);
-	console.log(ansi.underline.purple('Setup will take less than 5 seconds\n'));
+	const config = {
+		installEslintConfig: false,
+		addons: []
+	};
 
 	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
 	if (!confirm) {
@@ -33,14 +38,76 @@ async function run() {
 		process.exit(0);
 	}
 
+	config.installEslintConfig = await toggle(rl, 'Install eslint-config-lapikit?');
+	config.pkgManager = await select(rl, 'Select package manager:', PKG_MANAGER);
+	config.addons = await multiselect(rl, 'Select addons to install:', ADDONS);
+
+	console.log('\n');
+	terminal('info', 'Configuration summary:');
+	console.log(`  - Install eslint-config-lapikit: ${config.installEslintConfig ? 'yes' : 'no'}`);
+	console.log(`  - Package manager: ${config.pkgManager}`);
+	console.log(`  - Addons: ${config.addons.length ? config.addons.join(', ') : 'none'}`);
 	console.log('\n');
 
-	try {
-		const svelteConfigFile = await findSvelteConfigFile(process.cwd());
-		await addLiliPreprocess(svelteConfigFile);
-	} catch (error) {
-		terminal('warn', `Warning: Could not update svelte.config file: ${error.message}`);
+	await runSteps(config, process.cwd());
+
+	// TODO: use `config.addons` to launch addons installation processes
+}
+
+function buildSteps(config, projectPath) {
+	const steps = [
+		{
+			label: 'Add lapikitPreprocess to your project',
+			run: async () => {
+				const target = await resolveSveltePreprocessTarget(projectPath);
+				await target.add(target.file);
+			}
+		}
+	];
+
+	if (config.installEslintConfig) {
+		steps.push({
+			label: `Install eslint-config-lapikit (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, 'eslint-config-lapikit', projectPath)
+		});
+		steps.push({
+			label: 'Add eslint-config-lapikit to eslint.config',
+			run: async () => {
+				const eslintConfigFile = await findEslintConfigFile(projectPath);
+				await addLapikitEslintConfig(eslintConfigFile);
+			}
+		});
 	}
+
+	return steps;
+}
+
+async function runSteps(config, projectPath) {
+	const steps = buildSteps(config, projectPath);
+	const results = [];
+
+	for (let i = 0; i < steps.length; i++) {
+		const step = steps[i];
+		terminal('info', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
+
+		try {
+			await step.run();
+			results.push({ label: step.label, ok: true });
+		} catch (error) {
+			terminal('warn', `Warning: ${error.message}`);
+			results.push({ label: step.label, ok: false, error: error.message });
+		}
+	}
+
+	console.log('\n');
+	terminal('info', 'Installation summary:');
+	for (const result of results) {
+		const icon = result.ok ? ansi.color.green('✓') : ansi.color.red('✗');
+		console.log(`  ${icon} ${result.label}`);
+	}
+	console.log('\n');
+
+	return results;
 }
 
 run()
