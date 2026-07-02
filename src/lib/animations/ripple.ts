@@ -1,10 +1,23 @@
-import type { RippleProps } from '../utils/types';
+import type { RippleProps } from '$lib/@types';
 
 const triggerEvents = ['pointerdown', 'touchstart', 'keydown'] as const;
 const cancelEvents = ['mouseleave', 'dragleave', 'touchmove', 'touchcancel', 'pointerup', 'keyup'];
 
+function resolveDuration(options: RippleProps) {
+	return options.duration && options.duration > 0 ? options.duration : undefined;
+}
+
+function getCoords(e: PointerEvent | TouchEvent) {
+	if (window.TouchEvent && e instanceof TouchEvent) {
+		return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+	}
+
+	return { x: (e as PointerEvent).clientX, y: (e as PointerEvent).clientY };
+}
+
 export function ripple(el: HTMLElement, options: RippleProps = {}) {
 	const rippleContainer = document.createElement('div');
+	const activeRipples = new Set<() => void>();
 	addClasses();
 
 	setOptions(options);
@@ -29,33 +42,28 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		}
 	}
 
-	function setOptions(options: RippleProps) {
-		if (options.disabled || isAriaDisabled()) {
+	function setOptions(newOptions: RippleProps) {
+		if (newOptions.disabled || isAriaDisabled()) {
 			rippleContainer.remove();
 		} else {
 			el.appendChild(rippleContainer);
 		}
 
-		if (options.duration && options.duration < 0) {
-			options.duration = undefined;
-		}
-
-		if (options.component) {
+		if (newOptions.component) {
 			rippleContainer.style.setProperty(
 				'--system-ripple-radius',
-				`var(--${options.component}-shape)`
+				`var(--kit-${newOptions.component}-radius)`
 			);
 		}
 
-		if (options.color) {
-			rippleContainer.style.setProperty('--system-ripple-color', options.color);
+		if (newOptions.color) {
+			rippleContainer.style.setProperty('--system-ripple-color', newOptions.color);
 		}
 
-		if (options.duration) {
-			rippleContainer.style.setProperty(
-				'--system-animation-ripple-duration',
-				`${options.duration}ms`
-			);
+		const duration = resolveDuration(newOptions);
+
+		if (duration) {
+			rippleContainer.style.setProperty('--system-animation-ripple-duration', `${duration}ms`);
 		}
 	}
 
@@ -79,15 +87,7 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		addClasses(center);
 
 		const rect = el.getBoundingClientRect();
-
-		const clientX =
-			window.TouchEvent && e instanceof TouchEvent
-				? e.touches[0].clientX
-				: (e as PointerEvent).clientX;
-		const clientY =
-			window.TouchEvent && e instanceof TouchEvent
-				? e.touches[0].clientY
-				: (e as PointerEvent).clientY;
+		const { x: clientX, y: clientY } = getCoords(e);
 
 		const x = clientX - rect.left > el.offsetWidth / 2 ? 0 : el.offsetWidth;
 		const y = clientY - rect.top > el.offsetHeight / 2 ? 0 : el.offsetHeight;
@@ -102,20 +102,32 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 
 		rippleContainer.appendChild(ripple);
 
-		function removeRipple() {
-			if (ripple === null) {
-				return;
+		let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+		function cleanup() {
+			if (timeoutId) {
+				clearTimeout(timeoutId);
 			}
 
-			ripple.style.opacity = '0';
-
-			setTimeout(() => {
-				ripple.remove();
-			}, options.duration || 1000);
-
 			cancelEvents.forEach((event) => el.removeEventListener(event, removeRipple));
+			ripple.remove();
 		}
 
+		function removeRipple() {
+			ripple.style.opacity = '0';
+
+			cancelEvents.forEach((event) => el.removeEventListener(event, removeRipple));
+
+			timeoutId = setTimeout(
+				() => {
+					ripple.remove();
+					activeRipples.delete(cleanup);
+				},
+				resolveDuration(options) || 1000
+			);
+		}
+
+		activeRipples.add(cleanup);
 		cancelEvents.forEach((event) => el.addEventListener(event, removeRipple, { passive: true }));
 	}
 
@@ -128,6 +140,11 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 			triggerEvents.forEach((event) => {
 				el.removeEventListener(event, createRipple);
 			});
+
+			activeRipples.forEach((cleanup) => cleanup());
+			activeRipples.clear();
+
+			rippleContainer.remove();
 		},
 		update(newOptions: RippleProps) {
 			options = newOptions;

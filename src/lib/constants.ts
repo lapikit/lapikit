@@ -29,7 +29,12 @@ export const lapikitComponents: readonly string[] = [
 	'spacer',
 	'separator',
 	'chip',
-	'card'
+	'card',
+	'card-title',
+	'card-content',
+	'card-media',
+	'card-actions',
+	'card-container'
 ] as const;
 
 export const lapikitLabsComponents: readonly string[] = ['sheet'] as const;
