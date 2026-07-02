@@ -156,6 +156,12 @@ async function interactiveList(rl, message, hint, choices, renderLine, onKey) {
 		};
 
 		const onKeypress = (str, key) => {
+			if (key.ctrl && key.name === 'c') {
+				cleanup();
+				process.stdout.write('\n');
+				terminal('warn', 'installation canceled.');
+				process.exit(130);
+			}
 			onKey(key, redrawLine, (value) => {
 				cleanup();
 				console.log('');

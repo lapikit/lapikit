@@ -44,7 +44,7 @@ async function run() {
 	config.pkgManager = await select(rl, 'Select package manager:', PKG_MANAGER);
 	config.addons = await multiselect(rl, 'Select addons to install:', ADDONS);
 
-	await runSteps(config, process.cwd());
+	return await runSteps(config, process.cwd());
 }
 
 function buildSteps(config, projectPath) {
@@ -111,8 +111,9 @@ async function runSteps(config, projectPath) {
 }
 
 run()
-	.then(() => {
-		process.exit(0);
+	.then((results) => {
+		const failed = results?.some((r) => !r.ok);
+		process.exit(failed ? 1 : 0);
 	})
 	.catch((error) => {
 		terminal('error', `Error: ${error}`);

@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawn } from 'node:child_process';
 import { terminal } from './helpers.js';
-
-const execFileAsync = promisify(execFile);
 
 const INSTALL_ARGS = {
 	npm: ['install', '--save-dev'],
@@ -14,10 +11,20 @@ const INSTALL_ARGS = {
 	bun: ['add', '-D']
 };
 
-export async function installDependency(pkgManager, packageName, cwd) {
+export function installDependency(pkgManager, packageName, cwd) {
 	const args = INSTALL_ARGS[pkgManager];
 	if (!args) throw new Error(`Unsupported package manager: ${pkgManager}`);
-	await execFileAsync(pkgManager, [...args, packageName], { cwd, stdio: 'inherit' });
+	return new Promise((resolve, reject) => {
+		const child = spawn(pkgManager, [...args, packageName], {
+			cwd,
+			stdio: 'inherit',
+			shell: process.platform === 'win32'
+		});
+		child.on('error', reject);
+		child.on('close', (code) =>
+			code === 0 ? resolve() : reject(new Error(`${pkgManager} exited with code ${code}`))
+		);
+	});
 }
 
 function findMatchingDelimiter(content, openIndex, openChar, closeChar) {
