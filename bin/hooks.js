@@ -224,13 +224,16 @@ export async function addLapikitEslintConfig(eslintConfigFile) {
 
 	content = insertImportLine(content, lapikitImport);
 
-	if (!content.match(/export\s+default\s*\[/)) {
+	// Matches `export default [...]` as well as wrapped forms like
+	// `export default defineConfig([...])`.
+	const exportArrayPattern = /export\s+default\s*(?:\w+\s*\(\s*)?\[/;
+	if (!exportArrayPattern.test(content)) {
 		throw new Error(
 			`Could not find "export default [...]" in ${eslintConfigFile}. Please add "...lapikitConfig" manually.`
 		);
 	}
 
-	content = content.replace(/export\s+default\s*\[/, (m) => `${m}\n\t...lapikitConfig,`);
+	content = content.replace(exportArrayPattern, (m) => `${m}\n\t...lapikitConfig,`);
 
 	await fs.writeFile(eslintConfigFile, content);
 	terminal('success', `eslint-config-lapikit added to ${eslintConfigFile}`);
