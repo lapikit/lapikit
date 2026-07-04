@@ -30,13 +30,30 @@ export function installDependency(pkgManager, packageName, cwd) {
 function findMatchingDelimiter(content, openIndex, openChar, closeChar) {
 	let depth = 0;
 	for (let i = openIndex; i < content.length; i++) {
-		if (content[i] === openChar) depth++;
-		else if (content[i] === closeChar) {
+		const ch = content[i];
+		if (ch === '"' || ch === "'" || ch === '`') {
+			i = skipString(content, i);
+			continue;
+		}
+		if (ch === openChar) depth++;
+		else if (ch === closeChar) {
 			depth--;
 			if (depth === 0) return i;
 		}
 	}
 	return -1;
+}
+
+function skipString(source, start) {
+	const quote = source[start];
+	for (let i = start + 1; i < source.length; i++) {
+		if (source[i] === '\\') {
+			i++;
+			continue;
+		}
+		if (source[i] === quote) return i;
+	}
+	return source.length - 1;
 }
 
 function insertImportLine(content, importLine) {
@@ -55,10 +72,6 @@ function buildPreprocessCall(pluginKeys = []) {
 	return `lapikitPreprocess({ plugins: [${plugins}] })`;
 }
 
-// `lapikitPreprocess` is already imported and called in `content` — merge
-// `pluginKeys` into the existing call instead of skipping the update, so
-// re-running the installer after selecting a new addon actually adds it.
-// Returns the updated content, or null if there is nothing to change.
 function mergeExistingPreprocessCall(content, pluginKeys) {
 	if (!pluginKeys.length) return null;
 
@@ -66,8 +79,9 @@ function mergeExistingPreprocessCall(content, pluginKeys) {
 	if (!callMatch) return null;
 
 	const [fullMatch, optionsSource] = callMatch;
-	const existingKeys = optionsSource
-		? [...optionsSource.matchAll(/'([^']+)'|"([^"]+)"/g)].map((m) => m[1] ?? m[2])
+	const pluginsMatch = optionsSource?.match(/plugins\s*:\s*\[([^\]]*)\]/);
+	const existingKeys = pluginsMatch
+		? [...pluginsMatch[1].matchAll(/'([^']+)'|"([^"]+)"/g)].map((m) => m[1] ?? m[2])
 		: [];
 
 	const merged = [...new Set([...existingKeys, ...pluginKeys])];
@@ -79,18 +93,34 @@ function mergeExistingPreprocessCall(content, pluginKeys) {
 	);
 }
 
-// `objectSource` is a `{ ... }` slice (e.g. the svelte.config default export,
-// or the options object passed to the sveltekit() vite plugin).
+function findValueEnd(source, start) {
+	let depth = 0;
+	for (let i = start; i < source.length; i++) {
+		const ch = source[i];
+		if (ch === '"' || ch === "'" || ch === '`') {
+			i = skipString(source, i);
+			continue;
+		}
+		if (ch === '(' || ch === '[' || ch === '{') depth++;
+		else if (ch === ')' || ch === ']' || ch === '}') {
+			if (depth === 0) return i;
+			depth--;
+		} else if (ch === ',' && depth === 0) return i;
+	}
+	return source.length;
+}
+
 function injectPreprocessEntry(objectSource, pluginKeys = []) {
 	const call = buildPreprocessCall(pluginKeys);
-	const preprocessMatch = objectSource.match(/preprocess\s*:\s*(\[|[^,\n\]{}]+)/);
 
-	if (!preprocessMatch) {
+	const keyMatch = objectSource.match(/preprocess\s*:\s*/);
+	if (!keyMatch) {
 		return objectSource.replace('{', `{\n\t\t\tpreprocess: [${call}],`);
 	}
+	const valueStart = keyMatch.index + keyMatch[0].length;
 
-	if (preprocessMatch[1] === '[') {
-		const openBracketIndex = preprocessMatch.index + preprocessMatch[0].length - 1;
+	if (objectSource[valueStart] === '[') {
+		const openBracketIndex = valueStart;
 		const closeBracketIndex = findMatchingDelimiter(objectSource, openBracketIndex, '[', ']');
 		const inner = objectSource.slice(openBracketIndex + 1, closeBracketIndex);
 		const trimmed = inner.trim();
@@ -110,18 +140,14 @@ function injectPreprocessEntry(objectSource, pluginKeys = []) {
 			const sep = trimmed.endsWith(',') ? ' ' : ', ';
 			newInner = `${trimmed}${sep}${call}`;
 		}
-
 		return (
 			objectSource.slice(0, openBracketIndex + 1) + newInner + objectSource.slice(closeBracketIndex)
 		);
 	}
 
-	const val = preprocessMatch[1].trim();
-	return (
-		objectSource.slice(0, preprocessMatch.index) +
-		`preprocess: [${val}, ${call}]` +
-		objectSource.slice(preprocessMatch.index + preprocessMatch[0].length)
-	);
+	const valueEnd = findValueEnd(objectSource, valueStart);
+	const expr = objectSource.slice(valueStart, valueEnd).trim();
+	return objectSource.slice(0, valueStart) + `[${expr}, ${call}]` + objectSource.slice(valueEnd);
 }
 
 export async function findSvelteConfigFile(projectPath) {

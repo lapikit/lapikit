@@ -16,6 +16,79 @@ const PKG_MANAGER = [
 	{ title: 'bun', value: 'bun' }
 ];
 
+function buildSteps(config, projectPath) {
+	const pluginKeys = config.addons
+		.map((value) => ADDONS.find((addon) => addon.value === value)?.key)
+		.filter(Boolean);
+
+	const steps = [];
+
+	steps.push({
+		id: 'preprocess',
+		label: 'Add lapikitPreprocess to your project',
+		run: async () => {
+			const target = await resolveSveltePreprocessTarget(projectPath);
+			await target.add(target.file, pluginKeys);
+		}
+	});
+
+	for (const addonValue of config.addons) {
+		steps.push({
+			id: `addon:${addonValue}`,
+			label: `Install ${addonValue} (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, addonValue, projectPath)
+		});
+	}
+
+	if (config.installEslintConfig) {
+		steps.push({
+			id: 'eslint-install',
+			label: `Install eslint-config-lapikit (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, 'eslint-config-lapikit', projectPath)
+		});
+		steps.push({
+			id: 'eslint-config',
+			needs: 'eslint-install',
+			label: 'Add eslint-config-lapikit to eslint.config',
+			run: async () => {
+				const eslintConfigFile = await findEslintConfigFile(projectPath);
+				await addLapikitEslintConfig(eslintConfigFile);
+			}
+		});
+	}
+
+	return steps;
+}
+
+async function runSteps(config, projectPath) {
+	const steps = buildSteps(config, projectPath);
+	const results = [];
+	const failed = new Set();
+
+	for (let i = 0; i < steps.length; i++) {
+		const step = steps[i];
+		const tag = ansi.bold.blue(`[${i + 1}/${steps.length}]`);
+
+		if (step.needs && failed.has(step.needs)) {
+			results.push({ label: step.label, ok: false, skipped: true });
+			terminal('warn', `${tag} ${step.label} - skipped (prerequisite failed)`);
+			continue;
+		}
+
+		try {
+			await step.run();
+			results.push({ label: step.label, ok: true });
+			terminal('success', `${tag} ${step.label}`);
+		} catch (error) {
+			if (step.id) failed.add(step.id);
+			results.push({ label: step.label, ok: false, error: error.message });
+			terminal('error', `${tag} ${step.label} - ${error.message}`);
+		}
+	}
+
+	return results;
+}
+
 async function run() {
 	const rl = createRL();
 	const config = {
@@ -44,78 +117,16 @@ async function run() {
 	config.pkgManager = await select(rl, 'Select package manager:', PKG_MANAGER);
 	config.addons = await multiselect(rl, 'Select addons to install:', ADDONS);
 
-	return await runSteps(config, process.cwd());
-}
-
-function buildSteps(config, projectPath) {
-	const pluginKeys = config.addons
-		.map((value) => ADDONS.find((addon) => addon.value === value)?.key)
-		.filter(Boolean);
-
-	const steps = [];
-
-	steps.push({
-		label: 'Add lapikitPreprocess to your project',
-		run: async () => {
-			const target = await resolveSveltePreprocessTarget(projectPath);
-			await target.add(target.file, pluginKeys);
-		}
-	});
-
-	for (const addonValue of config.addons) {
-		steps.push({
-			label: `Install ${addonValue} (${config.pkgManager})`,
-			run: () => installDependency(config.pkgManager, addonValue, projectPath)
-		});
-	}
-
-	if (config.installEslintConfig) {
-		steps.push({
-			label: `Install eslint-config-lapikit (${config.pkgManager})`,
-			run: () => installDependency(config.pkgManager, 'eslint-config-lapikit', projectPath)
-		});
-		steps.push({
-			label: 'Add eslint-config-lapikit to eslint.config',
-			run: async () => {
-				const eslintConfigFile = await findEslintConfigFile(projectPath);
-				await addLapikitEslintConfig(eslintConfigFile);
-			}
-		});
-	}
-
-	return steps;
-}
-
-async function runSteps(config, projectPath) {
-	const steps = buildSteps(config, projectPath);
-	const results = [];
-
-	for (let i = 0; i < steps.length; i++) {
-		const step = steps[i];
-		// terminal('info', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
-		try {
-			await step.run();
-			results.push({ label: step.label, ok: true });
-			terminal('success', `${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label}`);
-		} catch (error) {
-			// terminal('warn', `Warning: ${error.message}`);
-			results.push({ label: step.label, ok: false, error: error.message });
-			terminal(
-				'error',
-				`${ansi.bold.blue(`[${i + 1}/${steps.length}]`)} ${step.label} - ${error.message}`
-			);
-		}
-	}
-
+	const results = await runSteps(config, process.cwd());
+	rl.close();
 	return results;
 }
 
 run()
 	.then((results) => {
-		const failed = results?.some((r) => !r.ok);
-		process.exit(failed ? 1 : 0);
+		process.exitCode = results?.some((r) => !r.ok) ? 1 : 0;
 	})
 	.catch((error) => {
 		terminal('error', `Error: ${error}`);
-		process.exit(1);
+		process.exitCode = 1;
 	});
