@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2]
+
+### Added
+
+- New actions `createGlobalTheme` and `createTheme` on current lapikit core
+- New interface `ThemeAction` for your function to set theme in `createTheme` actions
+
+### Updated
+
+- `useTheme` action is now a function to set theme with **createGlobalTheme** instance, for more flexibility and stability on theme management.
+
 ## [0.6.1] - 2026-07-02
 
 ### Added
