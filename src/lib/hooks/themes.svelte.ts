@@ -47,7 +47,7 @@ function generateGlobalTheme() {
 
 const refGlobalTheme = generateGlobalTheme();
 
-export const setTheme = refGlobalTheme.set;
+export const useTheme = refGlobalTheme.set;
 
 export function createGlobalTheme(params?: ThemeOptions) {
 	refGlobalTheme.init(params);
@@ -136,20 +136,20 @@ const themeRef: string = 'light';
 
 export const theme: Writable<string> = writable(themeRef);
 
-export function useTheme(name: string, key: string = '@lapikit/theme') {
-	theme.update(() => {
-		if (isBrowser) {
-			const html = document.documentElement;
+// export function useTheme(name: string, key: string = '@lapikit/theme') {
+// 	theme.update(() => {
+// 		if (isBrowser) {
+// 			const html = document.documentElement;
 
-			html.classList.forEach((cls) => {
-				if (cls.startsWith('kit-theme--')) {
-					html.classList.remove(cls);
-				}
-			});
+// 			html.classList.forEach((cls) => {
+// 				if (cls.startsWith('kit-theme--')) {
+// 					html.classList.remove(cls);
+// 				}
+// 			});
 
-			html.classList.add(`kit-theme--${name}`);
-			localStorage.setItem(key, name);
-		}
-		return name;
-	});
-}
+// 			html.classList.add(`kit-theme--${name}`);
+// 			localStorage.setItem(key, name);
+// 		}
+// 		return name;
+// 	});
+// }
