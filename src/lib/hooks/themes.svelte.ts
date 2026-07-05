@@ -123,3 +123,33 @@ export function createTheme(): ThemeAction {
 		}
 	};
 }
+
+/** LEGACY CODE
+ * NEED UPDATE documentation with new theme system before removing this legacy code. The new theme system is designed to be more flexible and easier to use, allowing for better integration with Svelte's reactivity and component structure. It also provides a more consistent API for managing themes across different components and contexts.
+ * TODO: Remove this legacy code once the new theme system is fully implemented and tested. This code is kept for backward compatibility with existing components that rely on the old theme system.
+ */
+
+import { writable, type Writable } from 'svelte/store';
+
+// presets
+const themeRef: string = 'light';
+
+export const theme: Writable<string> = writable(themeRef);
+
+export function useTheme(name: string, key: string = '@lapikit/theme') {
+	theme.update(() => {
+		if (isBrowser) {
+			const html = document.documentElement;
+
+			html.classList.forEach((cls) => {
+				if (cls.startsWith('kit-theme--')) {
+					html.classList.remove(cls);
+				}
+			});
+
+			html.classList.add(`kit-theme--${name}`);
+			localStorage.setItem(key, name);
+		}
+		return name;
+	});
+}
