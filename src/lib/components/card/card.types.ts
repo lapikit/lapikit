@@ -1,4 +1,4 @@
-import type { Component, DensityType, RoundedType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
 
 export interface CardProps extends Component {
 	ref?: HTMLElement | null;
@@ -8,6 +8,7 @@ export interface CardProps extends Component {
 	variant?: 'filled' | 'outline' | 'text';
 	density?: DensityType;
 	rounded?: RoundedType;
+	elevation?: ElevationProps;
 	interactive?: boolean;
 	active?: boolean;
 	disabled?: boolean;
