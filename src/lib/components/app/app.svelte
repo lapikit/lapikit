@@ -1,12 +1,117 @@
 <script lang="ts">
-	let { ref = $bindable(), children, ...rest } = $props();
+	import { makeComponentProps } from '$lib/html-mapped';
+	import { useClassName, useStyles } from '$lib/utils';
+	import type { AppProps } from './app.types';
+
+	let {
+		ref = $bindable(),
+		children,
+		class: className = '',
+		style: styleAttr = '',
+		's-class': sClass,
+		's-style': sStyle,
+		...rest
+	}: AppProps = $props();
+
+	let { classProps, styleProps, restProps } = $derived(makeComponentProps(rest));
+
+	let componentClass = $derived(
+		useClassName({
+			baseClass: 'kit-application',
+			className: `${className ?? ''}`.trim(),
+			sClass,
+			classProps
+		})
+	);
+
+	let componentStyle = $derived(
+		useStyles({
+			styleAttr,
+			sStyle,
+			styleProps
+		})
+	);
 </script>
 
-<div id="kit-app" bind:this={ref} {...rest} class={['kit-application', rest.class]}>
+<div id="kit-app" bind:this={ref} class={componentClass} style={componentStyle} {...restProps}>
 	{@render children?.()}
 </div>
 
 <style>
+	.kit-application {
+		--kit-shape-none: 0;
+		--kit-shape-xs: 4px;
+		--kit-shape-sm: 6px;
+		--kit-shape-md: 10px;
+		--kit-shape-lg: 14px;
+		--kit-shape-xl: 18px;
+
+		--kit-space-compact: 6px;
+		--kit-space-default: 10px;
+		--kit-space-comfortable: 14px;
+
+		--kit-shadow-opacity: 30%;
+		--kit-shadow-ambiant-opacity: 15%;
+	}
+
+	.kit-application,
+	:global([data-kit-theme='light']) {
+		color-scheme: light;
+		--kit-color-bg: hsl(0 0% 100%);
+		--kit-color-bg-secondary: hsl(240 15% 96.5%);
+		--kit-color-bg-tertiary: hsl(240 10% 93%);
+		--kit-color-surface: hsl(0 0% 100%);
+		--kit-color-surface-raised: hsl(0 0% 100%);
+
+		--kit-color-label: hsl(222 20% 10%);
+		--kit-color-label-secondary: hsl(220 10% 40%);
+		--kit-color-label-tertiary: hsl(220 8% 58%);
+		--kit-color-label-quaternary: hsl(220 5% 76%);
+
+		--kit-color-fill: hsl(240 4% 91%);
+		--kit-color-fill-secondary: hsl(240 8% 93%);
+		--kit-color-fill-tertiary: hsl(240 11% 95%);
+
+		--kit-color-separator: hsl(220 16% 88%);
+		--kit-color-shadow: hsl(240 3% 11%);
+
+		--kit-color-accent: hsl(220 90% 56%);
+		--kit-color-success: hsl(145 50% 38%);
+		--kit-color-warning: hsl(35 80% 45%);
+		--kit-color-danger: hsl(5 65% 48%);
+		--kit-color-info: hsl(205 60% 42%);
+		--kit-color-focus: hsl(35 90% 56%);
+	}
+
+	:global([data-kit-theme='dark']) {
+		color-scheme: dark;
+
+		--kit-color-bg: hsl(240 3% 11%);
+		--kit-color-bg-secondary: hsl(240 2% 17.5%);
+		--kit-color-bg-tertiary: hsl(240 1.5% 23%);
+		--kit-color-surface: hsl(240 2% 19%);
+		--kit-color-surface-raised: hsl(240 1.5% 25%);
+
+		--kit-color-label: hsl(0 0% 100%);
+		--kit-color-label-secondary: hsl(240 3% 56%);
+		--kit-color-label-tertiary: hsl(240 2.5% 38%);
+		--kit-color-label-quaternary: hsl(240 1.5% 25%);
+
+		--kit-color-fill: hsl(240 2.5% 28%);
+		--kit-color-fill-secondary: hsl(240 2.5% 24%);
+		--kit-color-fill-tertiary: hsl(240 2% 20%);
+
+		--kit-color-separator: hsl(240 2% 26%);
+		--kit-color-shadow: hsl(240 3% 11%);
+
+		--kit-color-accent: hsl(220 85% 65%);
+		--kit-color-success: hsl(145 50% 50%);
+		--kit-color-warning: hsl(35 85% 58%);
+		--kit-color-danger: hsl(5 70% 60%);
+		--kit-color-info: hsl(205 65% 58%);
+		--kit-color-focus: hsl(35 90% 62%);
+	}
+
 	.kit-application {
 		color-scheme: light;
 
@@ -41,123 +146,6 @@
 		--kit-font:
 			ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 			'Segoe UI Symbol', 'Noto Color Emoji';
-
-		/* ─── Color tokens (light mode defaults) ─────────────────────────── */
-
-		/* Backgrounds */
-		--kit-color-bg: hsl(0 0% 100%);
-		--kit-color-bg-secondary: hsl(240 15% 96.5%);
-		--kit-color-bg-tertiary: hsl(240 10% 93%);
-
-		/* Surfaces — elevated layers (cards, sheets, popovers) */
-		--kit-color-surface: hsl(0 0% 100%);
-		--kit-color-surface-raised: hsl(0 0% 100%);
-
-		/* Labels — text hierarchy */
-		--kit-color-label: hsl(222 20% 10%);
-		--kit-color-label-secondary: hsl(220 10% 40%);
-		--kit-color-label-tertiary: hsl(220 8% 58%);
-		--kit-color-label-quaternary: hsl(220 5% 76%);
-
-		/* Fills — control & input backgrounds */
-		--kit-color-fill: hsl(240 4% 91%);
-		--kit-color-fill-secondary: hsl(240 8% 93%);
-		--kit-color-fill-tertiary: hsl(240 11% 95%);
-
-		/* Separator */
-		--kit-color-separator: hsl(220 16% 88%);
-
-		/* Semantic */
-		--kit-color-accent: hsl(220 90% 56%);
-		--kit-color-success: hsl(145 50% 38%);
-		--kit-color-warning: hsl(35 80% 45%);
-		--kit-color-danger: hsl(5 65% 48%);
-		--kit-color-info: hsl(205 60% 42%);
-		--kit-color-focus: hsl(35 90% 56%);
-
-		/* ─── Backward-compat aliases (removed once components are updated) ─ */
-		/* --kit-bg: var(--kit-color-bg);
-		--kit-fg: var(--kit-color-label);
-		--kit-muted: var(--kit-color-label-tertiary);
-		--kit-surface-1: var(--kit-color-surface);
-		--kit-surface-2: var(--kit-color-bg-secondary);
-		--kit-surface-3: var(--kit-color-bg-tertiary);
-		--kit-border: var(--kit-color-separator);
-		--kit-accent: var(--kit-color-accent);
-		--kit-focus: var(--kit-color-focus); */
-	}
-
-	.kit-application {
-		--kit-shape-none: 0;
-		--kit-shape-xs: 4px;
-		--kit-shape-sm: 6px;
-		--kit-shape-md: 10px;
-		--kit-shape-lg: 14px;
-		--kit-shape-xl: 18px;
-
-		--kit-space-compact: 6px;
-		--kit-space-default: 10px;
-		--kit-space-comfortable: 14px;
-	}
-
-	/* Light — explicit override (same values as defaults, forces color-scheme) */
-	.light {
-		color-scheme: light;
-
-		--kit-color-bg: hsl(0 0% 100%);
-		--kit-color-bg-secondary: hsl(240 15% 96.5%);
-		--kit-color-bg-tertiary: hsl(240 10% 93%);
-
-		--kit-color-surface: hsl(0 0% 100%);
-		--kit-color-surface-raised: hsl(0 0% 100%);
-
-		--kit-color-label: hsl(222 20% 10%);
-		--kit-color-label-secondary: hsl(220 10% 40%);
-		--kit-color-label-tertiary: hsl(220 8% 58%);
-		--kit-color-label-quaternary: hsl(220 5% 76%);
-
-		--kit-color-fill: hsl(240 4% 91%);
-		--kit-color-fill-secondary: hsl(240 8% 93%);
-		--kit-color-fill-tertiary: hsl(240 11% 95%);
-
-		--kit-color-separator: hsl(220 16% 88%);
-
-		--kit-color-accent: hsl(220 90% 56%);
-		--kit-color-success: hsl(145 50% 38%);
-		--kit-color-warning: hsl(35 80% 45%);
-		--kit-color-danger: hsl(5 65% 48%);
-		--kit-color-info: hsl(205 60% 42%);
-		--kit-color-focus: hsl(35 90% 56%);
-	}
-
-	/* Dark */
-	.dark {
-		color-scheme: dark;
-
-		--kit-color-bg: hsl(240 3% 11%);
-		--kit-color-bg-secondary: hsl(240 2% 17.5%);
-		--kit-color-bg-tertiary: hsl(240 1.5% 23%);
-
-		--kit-color-surface: hsl(240 2% 19%);
-		--kit-color-surface-raised: hsl(240 1.5% 25%);
-
-		--kit-color-label: hsl(0 0% 100%);
-		--kit-color-label-secondary: hsl(240 3% 56%);
-		--kit-color-label-tertiary: hsl(240 2.5% 38%);
-		--kit-color-label-quaternary: hsl(240 1.5% 25%);
-
-		--kit-color-fill: hsl(240 2.5% 28%);
-		--kit-color-fill-secondary: hsl(240 2.5% 24%);
-		--kit-color-fill-tertiary: hsl(240 2% 20%);
-
-		--kit-color-separator: hsl(240 2% 26%);
-
-		--kit-color-accent: hsl(220 85% 65%);
-		--kit-color-success: hsl(145 50% 50%);
-		--kit-color-warning: hsl(35 85% 58%);
-		--kit-color-danger: hsl(5 70% 60%);
-		--kit-color-info: hsl(205 65% 58%);
-		--kit-color-focus: hsl(35 90% 62%);
 	}
 
 	:global(.outline) {
@@ -201,6 +189,56 @@
 		border-radius: var(--system-ripple-radius);
 	}
 
+	:global([data-elevation='0']),
+	:global([data-elevation-hover='0']:hover),
+	:global([data-elevation-active='0']):active {
+		box-shadow: none;
+	}
+
+	:global([data-elevation='1']),
+	:global([data-elevation-hover='1']:hover),
+	:global([data-elevation-active='1']:active) {
+		box-shadow:
+			0 1px 2px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 3px 8px -2px
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+	}
+
+	:global([data-elevation='2']),
+	:global([data-elevation-hover='2']:hover),
+	:global([data-elevation-active='2']:active) {
+		box-shadow:
+			0 1px 3px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 5px 12px -3px
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+	}
+
+	:global([data-elevation='3']),
+	:global([data-elevation-hover='3']:hover),
+	:global([data-elevation-active='3']:active) {
+		box-shadow:
+			0 2px 4px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 8px 20px -4px
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+	}
+
+	:global([data-elevation='4']),
+	:global([data-elevation-hover='4']):hover,
+	:global([data-elevation-active='4']):active {
+		box-shadow:
+			0 3px 5px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 11px 26px -5px
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+	}
+
+	:global([data-elevation='5']),
+	:global([data-elevation-hover='5']:hover),
+	:global([data-elevation-active='5']:active) {
+		box-shadow:
+			0 4px 6px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 14px 32px -6px
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+	}
 	@keyframes -global-animation-l-ripple {
 		from {
 			scale: 0;

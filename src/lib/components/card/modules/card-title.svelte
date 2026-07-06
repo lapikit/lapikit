@@ -46,6 +46,10 @@
 
 <style>
 	.kit-card-title {
+		display: flex;
+		align-items: center;
+		gap: var(--kit-card-gap);
+
 		font-weight: 600;
 		line-height: 1.3;
 	}

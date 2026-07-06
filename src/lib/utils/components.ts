@@ -1,4 +1,9 @@
-import type { useClassNameProps, useStylesProps } from '$lib/@types';
+import type {
+	ElevationProps,
+	ElevationState,
+	useClassNameProps,
+	useStylesProps
+} from '$lib/@types';
 
 /**
  * useClassName - Utility to compute class names for a component.
@@ -132,4 +137,26 @@ export function useStyles({ styleAttr, sStyle, styleProps }: useStylesProps = {}
 	}
 
 	return styles.filter(Boolean).join('; ');
+}
+
+/**
+ * useElevation - Utility to resolve the `elevation` prop into its base/hover/active states.
+ * @param elevation - Either a single elevation value applied as `base`, or an object with
+ * independent `base`, `hover` and `active` values (each key is optional).
+ * @returns An object with `base`, `hover` and `active` keys, `undefined` when not provided.
+ */
+export function useElevation(elevation?: ElevationProps | null): ElevationState {
+	if (elevation === undefined || elevation === null) {
+		return { base: undefined, hover: undefined, active: undefined };
+	}
+
+	if (typeof elevation === 'string') {
+		return { base: elevation, hover: undefined, active: undefined };
+	}
+
+	return {
+		base: elevation.base,
+		hover: elevation.hover,
+		active: elevation.active
+	};
 }

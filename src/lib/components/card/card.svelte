@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useIsInteractive, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useIsInteractive, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { ripple } from '$lib/animations';
 	import type { CardProps } from './card.types.ts';
@@ -23,6 +23,7 @@
 		noRipple,
 		color,
 		background,
+		elevation,
 		...rest
 	}: CardProps = $props();
 
@@ -35,6 +36,8 @@
 	let resolvedTabIndex = $derived(tag === 'a' && isDisabled ? -1 : undefined);
 
 	let { classProps, styleProps, restProps } = $derived(makeComponentProps(rest));
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -66,6 +69,9 @@
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
+	data-elevation={elevationState.base}
+	data-elevation-hover={elevationState.hover}
+	data-elevation-active={elevationState.active}
 	data-interactive={isInteractive}
 	data-active={active}
 	data-disabled={isDisabled}
@@ -192,7 +198,7 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:hover {
 		translate: 0 -1px;
 		background: var(--kit-card-hover-bg);
-		box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12);
+		/* box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-disabled='false']:hover {
@@ -203,7 +209,7 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:active {
 		translate: 0 0;
 		background: var(--kit-card-active-bg);
-		box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1);
+		/* box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-active='true'][data-disabled='false'],
