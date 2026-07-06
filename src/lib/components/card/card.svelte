@@ -198,7 +198,7 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:hover {
 		translate: 0 -1px;
 		background: var(--kit-card-hover-bg);
-		box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12);
+		/* box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-disabled='false']:hover {
@@ -209,7 +209,7 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:active {
 		translate: 0 0;
 		background: var(--kit-card-active-bg);
-		box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1);
+		/* box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-active='true'][data-disabled='false'],
