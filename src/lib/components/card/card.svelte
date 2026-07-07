@@ -169,15 +169,15 @@
 	 * @link https://lapikit.dev/docs/components/card#variants
 	 */
 	.kit-card[data-variant='filled'] {
-		--kit-card-bg: var(--kit-color-surface);
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-bg: var(--kit-color-surface-1);
+		--kit-card-fg: var(--kit-color-text);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
 	}
 	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-text);
 		--kit-card-bd: var(--kit-card-fg);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
@@ -185,7 +185,7 @@
 	}
 	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-text);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
