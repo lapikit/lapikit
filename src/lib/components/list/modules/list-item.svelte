@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ripple } from '$lib/animations';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useIsInteractive, useStyles } from '$lib/utils';
 	import type { ListItemProps } from '../list.types.ts';
 
 	let {
@@ -17,7 +17,8 @@
 		href = undefined,
 		color = undefined,
 		background = undefined,
-		rounded = 'sm',
+		rounded = undefined,
+		interactive = false,
 		active = false,
 		disabled = false,
 		noRipple = false,
@@ -29,7 +30,8 @@
 	);
 
 	let tag = $derived(href ? 'a' : is === 'div' && restProps.onclick ? 'button' : is);
-	let isInteractive = $derived(tag !== 'div' && tag !== 'li' && !disabled);
+	// let isInteractive = $derived(tag !== 'div' && tag !== 'li' && !disabled);
+	let isInteractive = $derived(useIsInteractive(rest, tag, ['a', 'button'], interactive));
 
 	let componentClass = $derived(
 		useClassName({
@@ -48,15 +50,7 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-list-item-fg:${color}` : '',
-			background ? `--kit-list-item-bg:${background}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
@@ -72,6 +66,11 @@
 	disabled={tag === 'button' ? disabled : undefined}
 	tabindex={href && disabled ? -1 : undefined}
 	role={tag === 'div' ? 'listitem' : undefined}
+	data-append={append && true}
+	data-prepend={prepend && true}
+	data-interactive={isInteractive}
+	style:--kit-list-item-fg={color && `var(--kit-color-${color})`}
+	style:--kit-list-item-bg={background && `var(--kit-color-${background})`}
 	use:ripple={{
 		component: 'list-item',
 		disabled: noRipple || !isInteractive
@@ -97,104 +96,127 @@
 
 <style>
 	.kit-list-item {
-		--kit-list-item-bg: transparent;
-		--kit-list-item-fg: inherit;
-		--kit-list-item-radius: 8px;
-
+		width: 100%;
+		min-height: calc(var(--kit-list-item-h) * var(--kit-list-density-h-scale));
 		position: relative;
 		display: grid;
-		grid-template-columns: auto minmax(0, 1fr) auto;
+		grid-template-columns: 1fr;
 		align-items: center;
-		gap: var(--kit-list-item-gap, 0.625rem);
-		min-height: calc(var(--kit-list-item-h, 2.75rem) + var(--kit-list-density-offset, 0rem));
-		padding-inline: var(--kit-list-item-px, 0.875rem);
-		border: 0;
+		gap: var(--kit-list-item-gap);
 		border-radius: var(--kit-list-item-radius);
+		border: 0;
 		background: var(--kit-list-item-bg);
 		color: var(--kit-list-item-fg);
 		text-decoration: none;
+		font-size: var(--kit-list-item-font);
+	}
+
+	.kit-list-item .kit-list-item__prepend,
+	.kit-list-item:not([data-prepend='true']) .kit-list-item__content {
+		margin-left: calc(var(--kit-list-item-px) * var(--kit-list-density-scale));
+	}
+
+	.kit-list-item .kit-list-item__append,
+	.kit-list-item:not([data-append='true']) .kit-list-item__content {
+		margin-right: calc(var(--kit-list-item-px) * var(--kit-list-density-scale));
+	}
+
+	.kit-list-item:not([data-prepend='true']):not([data-append='true']) .kit-list-item__content {
+		margin-left: calc(var(--kit-list-item-px) * var(--kit-list-density-scale));
+		margin-right: calc(var(--kit-list-item-px) * var(--kit-list-density-scale));
+	}
+
+	.kit-list-item[data-prepend='true']:not([data-append='true']) {
+		grid-template-columns: auto minmax(0, 1fr);
+	}
+	.kit-list-item[data-append='true']:not([data-prepend='true']) {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+	.kit-list-item[data-append='true'][data-prepend='true'] {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+	}
+
+	a.kit-list-item {
+		text-decoration: none;
+	}
+
+	button.kit-list-item {
+		appearance: none;
+		border: 0;
+		background: none;
 		font: inherit;
-		font-size: var(--kit-list-item-font, 0.9375rem);
-		text-align: left;
+		text-align: inherit;
 	}
 
-	:global(.kit-list[data-size='xs']) .kit-list-item {
-		--kit-list-item-h: var(--kit-list-item-h-xs, 2.125rem);
-		--kit-list-item-px: var(--kit-list-item-px-xs, 0.625rem);
-		--kit-list-item-gap: var(--kit-list-item-gap-xs, 0.5rem);
-		--kit-list-item-font: var(--kit-list-item-font-xs, 0.75rem);
+	.kit-list-item[data-interactive='true'][data-disabled='false'] {
+		cursor: pointer;
 	}
 
-	:global(.kit-list[data-size='sm']) .kit-list-item {
-		--kit-list-item-h: var(--kit-list-item-h-sm, 2.375rem);
-		--kit-list-item-px: var(--kit-list-item-px-sm, 0.75rem);
-		--kit-list-item-gap: var(--kit-list-item-gap-sm, 0.5rem);
-		--kit-list-item-font: var(--kit-list-item-font-sm, 0.875rem);
+	.kit-list-item[data-interactive='true'][data-disabled='false']:hover {
+		translate: 0 -1px;
+		background: var(--kit-list-item-hover-bg);
 	}
 
-	:global(.kit-list[data-size='md']) .kit-list-item {
-		--kit-list-item-h: var(--kit-list-item-h-md, 2.75rem);
-		--kit-list-item-px: var(--kit-list-item-px-md, 0.875rem);
-		--kit-list-item-gap: var(--kit-list-item-gap-md, 0.625rem);
-		--kit-list-item-font: var(--kit-list-item-font-md, 0.9375rem);
+	.kit-list-item[data-interactive='true'][data-active='true'][data-disabled='false'],
+	.kit-list-item[data-interactive='true'][data-disabled='false']:active {
+		translate: 0 0;
+		background: var(--kit-list-item-active-bg);
 	}
 
-	:global(.kit-list[data-size='lg']) .kit-list-item {
-		--kit-list-item-h: var(--kit-list-item-h-lg, 3.125rem);
-		--kit-list-item-px: var(--kit-list-item-px-lg, 1rem);
-		--kit-list-item-gap: var(--kit-list-item-gap-lg, 0.75rem);
-		--kit-list-item-font: var(--kit-list-item-font-lg, 1rem);
+	.kit-list-item[data-interactive='true'][data-disabled='false']:focus-visible {
+		outline: 2px solid var(--kit-focus);
+		outline-offset: 2px;
 	}
 
-	:global(.kit-list[data-size='xl']) .kit-list-item {
-		--kit-list-item-h: var(--kit-list-item-h-xl, 3.5rem);
-		--kit-list-item-px: var(--kit-list-item-px-xl, 1.125rem);
-		--kit-list-item-gap: var(--kit-list-item-gap-xl, 0.875rem);
-		--kit-list-item-font: var(--kit-list-item-font-xl, 1.0625rem);
+	.kit-list-item[data-disabled='true'] {
+		opacity: var(--kit-disabled-opacity, 0.55);
+		pointer-events: none;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-list-item[data-rounded='0'] {
-		--kit-list-item-radius: 0;
+		--kit-list-item-radius: var(--kit-shape-none);
 	}
-
 	.kit-list-item[data-rounded='xs'] {
-		--kit-list-item-radius: 2px;
+		--kit-list-item-radius: var(--kit-shape-xs);
 	}
-
 	.kit-list-item[data-rounded='sm'] {
-		--kit-list-item-radius: 8px;
+		--kit-list-item-radius: var(--kit-shape-sm);
 	}
-
 	.kit-list-item[data-rounded='md'] {
-		--kit-list-item-radius: 12px;
+		--kit-list-item-radius: var(--kit-shape-md);
 	}
-
 	.kit-list-item[data-rounded='lg'] {
-		--kit-list-item-radius: 16px;
+		--kit-list-item-radius: var(--kit-shape-lg);
 	}
-
 	.kit-list-item[data-rounded='xl'] {
-		--kit-list-item-radius: 9999px;
+		--kit-list-item-radius: var(--kit-shape-xl);
+	}
+	.kit-list-item[data-rounded='full'] {
+		--kit-list-item-radius: var(--kit-shape-full);
 	}
 
-	:global(.kit-list[data-variant='filled']) .kit-list-item {
+	/* :global(.kit-list[data-variant='filled']) .kit-list-item {
 		background: var(--kit-list-item-bg, transparent);
 	}
 
 	:global(.kit-list[data-variant='filled']) .kit-list-item[data-active='true'] {
 		background: color-mix(in oklab, currentColor 12%, transparent);
-	}
+	} */
 
-	:global(.kit-list[data-variant='outline']) .kit-list-item::before {
+	/* :global(.kit-list[data-variant='outline']) .kit-list-item::before {
 		content: '';
 		position: absolute;
 		inset: 0;
 		border: 1px solid color-mix(in oklab, currentColor 16%, transparent);
 		border-radius: inherit;
 		pointer-events: none;
-	}
+	} */
 
-	.kit-list-item[data-active='true'] {
+	/* .kit-list-item[data-active='true'] {
 		background: color-mix(in oklab, currentColor 12%, transparent);
 	}
 
@@ -230,5 +252,5 @@
 		background: currentColor;
 		opacity: 0.06;
 		pointer-events: none;
-	}
+	}  */
 </style>

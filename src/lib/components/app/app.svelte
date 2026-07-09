@@ -45,6 +45,7 @@
 		--kit-shape-md: 10px;
 		--kit-shape-lg: 14px;
 		--kit-shape-xl: 18px;
+		--kit-shape-full: 9999px;
 
 		--kit-space-compact: 6px;
 		--kit-space-default: 10px;
