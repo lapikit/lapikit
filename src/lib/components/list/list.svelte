@@ -138,7 +138,7 @@
 	 * @link https://lapikit.dev/docs/components/list#variants
 	 */
 	.kit-list[data-variant='filled'] :global(.kit-list-item) {
-		--kit-list-item-bg: var(--kit-surface-3);
+		--kit-list-item-bg: var(--kit-color-surface-2);
 		--kit-list-item-fg: var(--kit-color-text);
 
 		--kit-list-item-hover-bg: color-mix(in oklab, var(---kit-list-item-bg), black 10%);
