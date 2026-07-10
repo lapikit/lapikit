@@ -102,6 +102,7 @@
 		border-radius: var(--kit-card-radius);
 		border: 0;
 		box-sizing: border-box;
+		padding: calc(10px * var(--kit-card-density-scale));
 		transition:
 			background 140ms ease,
 			color 140ms ease,
@@ -149,19 +150,19 @@
 	 * @link https://lapikit.dev/docs/components/card#density 
 	 */
 	.kit-card[data-density='none'] {
-		padding: 0;
+		--kit-card-density-scale: 0;
 	}
 	.kit-card[data-density='compact'] {
 		--kit-card-gap: var(--kit-space-compact);
-		padding: var(--kit-space-compact);
+		--kit-card-density-scale: 0.8;
 	}
 	.kit-card[data-density='default'] {
 		--kit-card-gap: var(--kit-space-default);
-		padding: var(--kit-space-default);
+		--kit-card-density-scale: 1;
 	}
 	.kit-card[data-density='comfortable'] {
 		--kit-card-gap: var(--kit-space-comfortable);
-		padding: var(--kit-space-comfortable);
+		--kit-card-density-scale: 1.15;
 	}
 
 	/** 
@@ -169,15 +170,15 @@
 	 * @link https://lapikit.dev/docs/components/card#variants
 	 */
 	.kit-card[data-variant='filled'] {
-		--kit-card-bg: var(--kit-color-surface);
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-bg: var(--kit-color-surface-1);
+		--kit-card-fg: var(--kit-color-text);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-bg), black 10%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-bg), black 16%);
 	}
 	.kit-card[data-variant='outline'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-text);
 		--kit-card-bd: var(--kit-card-fg);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
@@ -185,7 +186,7 @@
 	}
 	.kit-card[data-variant='text'] {
 		--kit-card-bg: transparent;
-		--kit-card-fg: var(--kit-color-label);
+		--kit-card-fg: var(--kit-color-text);
 
 		--kit-card-hover-bg: color-mix(in oklab, var(--kit-card-fg), transparent 80%);
 		--kit-card-active-bg: color-mix(in oklab, var(--kit-card-fg), transparent 92%);
@@ -198,7 +199,6 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:hover {
 		translate: 0 -1px;
 		background: var(--kit-card-hover-bg);
-		/* box-shadow: 0 10px 28px hsl(220 35% 8% / 0.12); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-disabled='false']:hover {
@@ -209,7 +209,6 @@
 	.kit-card[data-interactive='true'][data-disabled='false']:active {
 		translate: 0 0;
 		background: var(--kit-card-active-bg);
-		/* box-shadow: 0 4px 14px hsl(220 35% 8% / 0.1); */
 	}
 
 	.kit-card[data-variant='text'][data-interactive='true'][data-active='true'][data-disabled='false'],
