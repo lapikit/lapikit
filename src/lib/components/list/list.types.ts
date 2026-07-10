@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { Component, DensityType, RoundedTypeWithFull, SizeType } from '$lib/@types';
+import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
 
 export type ListVariant = 'filled' | 'outline' | 'text';
 export type ListElement = 'div' | 'nav' | 'ul';
@@ -11,7 +11,7 @@ export interface ListProps extends Component {
 	size?: SizeType;
 	variant?: ListVariant;
 	density?: DensityType;
-	rounded?: RoundedTypeWithFull;
+	rounded?: RoundedType | 'full';
 	nav?: boolean;
 	color?: string;
 	background?: string;
@@ -25,7 +25,6 @@ export interface ListItemProps extends Component {
 	prepend?: Snippet;
 	color?: string;
 	background?: string;
-	rounded?: RoundedTypeWithFull;
 	interactive?: boolean;
 	active?: boolean;
 	disabled?: boolean;

@@ -17,7 +17,6 @@
 		href = undefined,
 		color = undefined,
 		background = undefined,
-		rounded = undefined,
 		interactive = false,
 		active = false,
 		disabled = false,
@@ -61,7 +60,6 @@
 	href={href && !disabled ? href : undefined}
 	data-active={active}
 	data-disabled={disabled}
-	data-rounded={rounded}
 	aria-disabled={disabled || undefined}
 	disabled={tag === 'button' ? disabled : undefined}
 	tabindex={href && disabled ? -1 : undefined}
