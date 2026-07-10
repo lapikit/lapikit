@@ -156,8 +156,12 @@
 		--kit-list-item-bg: transparent;
 		--kit-list-item-fg: var(--kit-color-text);
 
-		--kit-list-hover-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 80%);
-		--kit-list-active-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 92%);
+		--kit-list-item-hover-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 80%);
+		--kit-list-item-active-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 92%);
+	}
+	.kit-list[data-variant='text'] :global(.kit-list-item .outline),
+	.kit-list[data-variant='filled'] :global(.kit-list-item .outline) {
+		display: none;
 	}
 
 	/** 
