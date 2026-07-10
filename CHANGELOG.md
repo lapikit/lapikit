@@ -3,6 +3,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-07-10
+
+### Added
+
+- New props for component `kit:list` and `kit-list-item` (**interactive**, **denisty**, **active**)
+
+### Updated
+
+- Refactorisation to `kit:list` and `kit:list-item`, redefine logic and connect with new theme
+- Add scale vaue for calculate padding on component `kit:card`
+
+### Fixed
+
+- `kit:card` scale ratio not working for padding
+- `kit:list` conflict with theme light dand dark
+- `kit:list` with not respect container
+- `kit:list` size are bigger on `md`, you need to use `sm`...
+
 ## [0.6.2] - 2026-07-06
 
 ### Added
