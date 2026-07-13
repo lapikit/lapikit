@@ -1,4 +1,4 @@
-import type { Component, RoundedType, SizeType } from '$lib/@types';
+import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface ButtonProps extends Component {
@@ -7,7 +7,7 @@ export interface ButtonProps extends Component {
 	input?: boolean;
 	href?: string;
 	variant?: 'outline' | 'text' | 'filled' | 'link';
-	density?: 'compact' | 'comfortable' | 'default';
+	density?: DensityType;
 	active?: boolean;
 	loading?: boolean;
 	disabled?: boolean;
