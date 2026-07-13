@@ -1,8 +1,16 @@
-import type { Component, RoundedType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
 
-export type DialogSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type DialogPosition = 'top' | 'center' | 'bottom';
-export type DialogDensity = 'compact' | 'comfortable' | 'default';
+type DialogSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type DialogPosition =
+	| 'top'
+	| 'center'
+	| 'bottom'
+	| 'top-left'
+	| 'top-right'
+	| 'center-left'
+	| 'center-right'
+	| 'bottom-left'
+	| 'bottom-right';
 
 export interface DialogProps extends Component {
 	ref?: HTMLDialogElement | null;
@@ -10,9 +18,11 @@ export interface DialogProps extends Component {
 	persistent?: boolean;
 	size?: DialogSize;
 	position?: DialogPosition;
-	density?: DialogDensity;
+	density?: DensityType;
 	rounded?: RoundedType;
 	classContent?: string | string[] | undefined;
 	color?: string;
 	background?: string;
+	elevation?: ElevationProps;
+	space?: string;
 }

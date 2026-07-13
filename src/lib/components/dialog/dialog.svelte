@@ -1,23 +1,7 @@
 <script lang="ts">
 	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles, disabledScroll } from '$lib/utils';
-	import type { DialogDensity, DialogPosition, DialogProps, DialogSize } from './dialog.types.ts';
-
-	function resolveSize(value: DialogSize | undefined): DialogSize {
-		return value === 'xs' || value === 'sm' || value === 'md' || value === 'lg' || value === 'xl'
-			? value
-			: 'md';
-	}
-
-	function resolvePosition(value: DialogPosition | undefined): DialogPosition {
-		return value === 'top' || value === 'center' || value === 'bottom' ? value : 'center';
-	}
-
-	function resolveDensity(value: DialogDensity | undefined): DialogDensity {
-		return value === 'compact' || value === 'comfortable' || value === 'default'
-			? value
-			: 'default';
-	}
+	import { useClassName, useStyles, disabledScroll, useElevation } from '$lib/utils';
+	import type { DialogProps } from './dialog.types.ts';
 
 	let {
 		ref = $bindable(),
@@ -33,14 +17,18 @@
 		density = 'default',
 		rounded = 'md',
 		classContent = '',
-		color = undefined,
-		background = undefined,
+		color,
+		background,
+		elevation = '2',
+		space,
 		...rest
 	}: DialogProps = $props();
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -65,18 +53,7 @@
 			: `${classContent ?? ''}`.trim()
 	);
 
-	let safeSize = $derived(resolveSize(size));
-	let safePosition = $derived(resolvePosition(position));
-	let safeDensity = $derived(resolveDensity(density));
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-dialog-fg:${color}` : '',
-			background ? `--kit-dialog-bg:${background}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	$effect(() => {
 		if (!ref) return;
@@ -126,8 +103,8 @@
 	bind:this={ref}
 	class={componentClass}
 	style={mergedStyle}
-	data-size={safeSize}
-	data-position={safePosition}
+	data-size={size}
+	data-position={position}
 	data-persistent={persistent}
 	onclose={handleClose}
 	oncancel={handleCancel}
@@ -136,9 +113,15 @@
 	<div
 		{...restProps}
 		class={['kit-dialog__content', contentClass]}
-		data-density={safeDensity}
+		data-density={density}
 		data-rounded={rounded}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		onclick={(event: MouseEvent) => event.stopPropagation()}
+		style:--kit-dialog-fg={color && `var(--kit-color-${color})`}
+		style:--kit-dialog-bg={background && `var(--kit-color-${background})`}
+		style:--kit-dialog-space={space}
 	>
 		{@render children?.()}
 	</div>
@@ -146,14 +129,6 @@
 
 <style>
 	.kit-dialog {
-		--kit-dialog-bg: var(--kit-surface-1);
-		--kit-dialog-fg: var(--kit-fg);
-		--kit-dialog-bd: var(--kit-border);
-		--kit-dialog-radius: 12px;
-		--kit-dialog-px: 1rem;
-		--kit-dialog-py: 1rem;
-		--kit-dialog-max: min(32rem, calc(100vw - 2rem));
-
 		border: 0;
 		padding: 0;
 		margin: auto;
@@ -165,97 +140,125 @@
 	}
 
 	.kit-dialog::backdrop {
-		background: rgb(15 23 42 / 0.42);
+		background: color-mix(in oklab, var(--kit-color-shadow), transparent 70%);
 		backdrop-filter: blur(2px);
 	}
 
-	.kit-dialog[data-position='top'] {
-		margin-top: 1rem;
+	/**
+	* position
+	* @link nothing...
+	*/
+	.kit-dialog[data-position='top'],
+	.kit-dialog[data-position='top-left'],
+	.kit-dialog[data-position='top-right'] {
+		margin-top: var(--kit-dialog-space, 1rem);
 		margin-bottom: auto;
 	}
-
-	.kit-dialog[data-position='center'] {
+	.kit-dialog[data-position='center'],
+	.kit-dialog[data-position='center-left'],
+	.kit-dialog[data-position='center-right'] {
 		margin-top: auto;
 		margin-bottom: auto;
 	}
-
-	.kit-dialog[data-position='bottom'] {
+	.kit-dialog[data-position='bottom'],
+	.kit-dialog[data-position='bottom-left'],
+	.kit-dialog[data-position='bottom-right'] {
 		margin-top: auto;
-		margin-bottom: 1rem;
+		margin-bottom: var(--kit-dialog-space, 1rem);
+	}
+	.kit-dialog[data-position='top-left'] .kit-dialog__content,
+	.kit-dialog[data-position='center-left'] .kit-dialog__content,
+	.kit-dialog[data-position='bottom-left'] .kit-dialog__content {
+		margin-left: var(--kit-dialog-space, 1rem);
+	}
+	.kit-dialog[data-position='top-right'] .kit-dialog__content,
+	.kit-dialog[data-position='center-right'] .kit-dialog__content,
+	.kit-dialog[data-position='bottom-right'] .kit-dialog__content {
+		margin-right: var(--kit-dialog-space, 1rem);
 	}
 
+	/**
+	* size
+	* @link nothing...
+	*/
 	.kit-dialog[data-size='xs'] {
-		--kit-dialog-max: min(20rem, calc(100vw - 2rem));
+		--kit-dialog-max: 20rem;
+		--kit-dialog-px: 10px;
 	}
 
 	.kit-dialog[data-size='sm'] {
-		--kit-dialog-max: min(24rem, calc(100vw - 2rem));
+		--kit-dialog-max: 24rem;
+		--kit-dialog-px: 12px;
 	}
 
 	.kit-dialog[data-size='md'] {
-		--kit-dialog-max: min(32rem, calc(100vw - 2rem));
+		--kit-dialog-max: 32rem;
+		--kit-dialog-px: 16px;
 	}
 
 	.kit-dialog[data-size='lg'] {
-		--kit-dialog-max: min(42rem, calc(100vw - 2rem));
+		--kit-dialog-max: 42rem;
+		--kit-dialog-px: 20px;
 	}
 
 	.kit-dialog[data-size='xl'] {
-		--kit-dialog-max: min(56rem, calc(100vw - 2rem));
+		--kit-dialog-max: 56rem;
+		--kit-dialog-px: 24px;
 	}
 
 	.kit-dialog__content {
+		--kit-dialog-fg: var(--kit-color-text);
+		--kit-dialog-bg: var(--kit-color-surface-1);
+
 		box-sizing: border-box;
-		width: min(100%, var(--kit-dialog-max));
+		width: min(100%, min(var(--kit-dialog-max), calc(100vw - 2rem)));
 		max-height: calc(100dvh - 2rem);
 		overflow: auto;
-		padding: var(--kit-dialog-py) var(--kit-dialog-px);
-		border: 1px solid var(--kit-dialog-bd);
+		padding: calc(var(--kit-dialog-px) * var(--kit-dialog-density-scale));
+		border: 0;
 		border-radius: var(--kit-dialog-radius);
 		background: var(--kit-dialog-bg);
 		color: var(--kit-dialog-fg);
 		margin: 0 auto;
-		box-shadow:
-			0 20px 50px rgb(15 23 42 / 0.18),
-			0 4px 16px rgb(15 23 42 / 0.1);
 	}
 
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-dialog__content[data-density='none'] {
+		--kit-dialog-density-scale: 0;
+	}
 	.kit-dialog__content[data-density='compact'] {
-		--kit-dialog-px: 0.75rem;
-		--kit-dialog-py: 0.75rem;
+		--kit-dialog-density-scale: 0.9;
 	}
-
 	.kit-dialog__content[data-density='default'] {
-		--kit-dialog-px: 1rem;
-		--kit-dialog-py: 1rem;
+		--kit-dialog-density-scale: 1;
 	}
-
 	.kit-dialog__content[data-density='comfortable'] {
-		--kit-dialog-px: 1.25rem;
-		--kit-dialog-py: 1.25rem;
+		--kit-dialog-density-scale: 1.1;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-dialog__content[data-rounded='0'] {
-		--kit-dialog-radius: 0;
+		--kit-dialog-radius: var(--kit-shape-none);
 	}
-
 	.kit-dialog__content[data-rounded='xs'] {
-		--kit-dialog-radius: 2px;
+		--kit-dialog-radius: var(--kit-shape-xs);
 	}
-
 	.kit-dialog__content[data-rounded='sm'] {
-		--kit-dialog-radius: 6px;
+		--kit-dialog-radius: var(--kit-shape-sm);
 	}
-
 	.kit-dialog__content[data-rounded='md'] {
-		--kit-dialog-radius: 12px;
+		--kit-dialog-radius: var(--kit-shape-md);
 	}
-
 	.kit-dialog__content[data-rounded='lg'] {
-		--kit-dialog-radius: 18px;
+		--kit-dialog-radius: var(--kit-shape-lg);
 	}
-
 	.kit-dialog__content[data-rounded='xl'] {
-		--kit-dialog-radius: 9999px;
+		--kit-dialog-radius: var(--kit-shape-xl);
 	}
 </style>
