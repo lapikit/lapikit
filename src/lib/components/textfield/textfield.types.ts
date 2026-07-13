@@ -1,4 +1,4 @@
-import type { Component, RoundedType, SizeType } from '$lib/@types';
+import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes } from 'svelte/elements';
 
@@ -11,14 +11,14 @@ export interface TextfieldProps extends Component {
 	min?: number;
 	max?: number;
 	variant?: 'outline' | 'text' | 'filled';
-	density?: 'compact' | 'comfortable' | 'default';
+	density?: DensityType;
 	error?: boolean;
 	errorMessage?: string;
 	disabled?: boolean;
 	color?: string;
 	background?: string;
 	size?: SizeType;
-	rounded?: RoundedType | string;
+	rounded?: RoundedType;
 	readonly?: boolean;
 	hideSpinButtons?: boolean;
 	persistentMessage?: boolean;
@@ -37,4 +37,5 @@ export interface TextfieldProps extends Component {
 	id?: string;
 	autocomplete?: HTMLInputAttributes['autocomplete'];
 	inputmode?: HTMLInputAttributes['inputmode'];
+	elevation?: ElevationProps;
 }

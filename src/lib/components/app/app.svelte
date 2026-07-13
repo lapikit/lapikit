@@ -114,8 +114,8 @@
 		--kit-color-on-success: hsl(240 3% 11%);
 		--kit-color-warning: hsl(35 85% 58%);
 		--kit-color-on-warning: hsl(240 3% 11%);
-		--kit-color-danger: hsl(5 70% 60%);
-		--kit-color-on-danger: hsl(240 3% 11%);
+		--kit-color-error: hsl(5 70% 60%);
+		--kit-color-on-error: hsl(240 3% 11%);
 		--kit-color-info: hsl(205 65% 58%);
 		--kit-color-on-info: hsl(240 3% 11%);
 		--kit-color-focus: hsl(35 90% 62%);

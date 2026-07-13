@@ -109,8 +109,6 @@
 
 <style>
 	.kit-icon {
-		--kit-icon-current-size: var(--kit-icon-size-md);
-
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
