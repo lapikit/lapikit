@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 
 type AlertVariant = 'filled' | 'outline' | 'text';
 type AlertTone = 'default' | 'info' | 'success' | 'warning' | 'error';
@@ -19,4 +19,5 @@ export interface AlertProps extends Component {
 	prepend?: Snippet;
 	append?: Snippet;
 	close?: Snippet;
+	elevation?: ElevationProps;
 }

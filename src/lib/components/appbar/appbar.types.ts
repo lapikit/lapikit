@@ -1,4 +1,4 @@
-import type { Component, DensityType, RoundedType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
 
 type Variant = 'filled' | 'outline' | 'text';
 
@@ -11,4 +11,5 @@ export interface AppbarProps extends Component {
 	color?: string;
 	background?: string;
 	classContent?: string | string[] | undefined;
+	elevation?: ElevationProps;
 }

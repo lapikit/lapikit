@@ -1,11 +1,10 @@
-import type { Component } from '$lib/@types';
-
-export type AvatarSize = 'default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type AvatarDensity = 'compact' | 'comfortable' | 'default';
+import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 
 export interface AvatarProps extends Component {
 	ref?: HTMLElement | null;
 	label?: string;
-	size?: AvatarSize;
-	density?: AvatarDensity;
+	size?: SizeType;
+	density?: DensityType;
+	rounded?: RoundedType | 'full';
+	elevation?: ElevationProps;
 }
