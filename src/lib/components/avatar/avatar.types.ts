@@ -7,4 +7,6 @@ export interface AvatarProps extends Component {
 	density?: DensityType;
 	rounded?: RoundedType | 'full';
 	elevation?: ElevationProps;
+	color?: string;
+	background?: string;
 }

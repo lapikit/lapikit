@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { ripple } from '$lib/animations';
 	import type { ChipProps } from './chip.types.ts';
@@ -14,9 +14,10 @@
 		's-style': sStyle,
 		variant = 'filled',
 		density = 'default',
+		rounded = 'full',
 		loading,
 		active = false,
-		size = 'default',
+		size = 'md',
 		labelStyle = false,
 		disabled = false,
 		href,
@@ -30,30 +31,17 @@
 		append,
 		prepend,
 		readonly = false,
+		elevation,
+		background,
+		color,
 		...rest
 	}: ChipProps = $props();
-
-	let safeVariant = $derived(
-		variant === 'filled' || variant === 'outline' || variant === 'text' || variant === 'link'
-			? variant
-			: 'filled'
-	);
-	let safeSize = $derived(
-		size === 'default'
-			? 'md'
-			: size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl'
-				? size
-				: 'md'
-	);
-	let safeDensity = $derived(
-		density === 'compact' || density === 'comfortable' || density === 'default'
-			? density
-			: 'default'
-	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -107,23 +95,29 @@
 		bind:this={ref}
 		class={componentClass}
 		style={componentStyle}
-		data-size={safeSize}
-		data-variant={safeVariant}
+		data-size={size}
+		data-variant={variant}
+		data-rounded={rounded}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
 		data-readonly={isReadonly}
-		data-density={safeDensity}
+		data-density={density}
 		data-label-style={labelStyle}
 		data-interactive={isInteractive}
 		aria-busy={loading}
 		aria-disabled={isLocked || undefined}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		use:ripple={{
 			component: 'chip',
 			disabled: noRipple || isLocked
 		}}
+		style:--kit-chip-fg={color && `var(--kit-color-${color})`}
+		style:--kit-chip-bg={background && `var(--kit-color-${background})`}
 	>
-		{#if safeVariant === 'outline'}
+		{#if variant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 		<input
@@ -150,28 +144,34 @@
 		bind:this={ref}
 		class={componentClass}
 		style={componentStyle}
-		{...restProps}
 		type={resolvedType}
 		href={resolvedHref}
-		data-size={safeSize}
-		data-variant={safeVariant}
+		data-size={size}
+		data-variant={variant}
+		data-rounded={rounded}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
 		data-readonly={isReadonly}
-		data-density={safeDensity}
+		data-density={density}
 		data-label-style={labelStyle}
 		data-interactive={isInteractive}
 		disabled={resolvedDisabled}
 		aria-busy={loading}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		aria-disabled={((tag === 'a' || tag === 'div') && isLocked) || undefined}
 		tabindex={tag === 'a' && isLocked ? -1 : undefined}
 		use:ripple={{
 			component: 'chip',
 			disabled: noRipple || !isInteractive
 		}}
+		style:--kit-chip-fg={color && `var(--kit-color-${color})`}
+		style:--kit-chip-bg={background && `var(--kit-color-${background})`}
+		{...restProps}
 	>
-		{#if safeVariant === 'outline'}
+		{#if variant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 
@@ -227,26 +227,6 @@
 	}
 
 	.kit-chip {
-		--kit-chip-bg: var(--kit-surface-2);
-		--kit-chip-fg: var(--kit-fg);
-		--kit-chip-bd: var(--kit-border);
-		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 6%);
-		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-bg), var(--kit-chip-fg) 10%);
-		--kit-chip-h-xs: 24px;
-		--kit-chip-h-sm: 28px;
-		--kit-chip-h-md: 32px;
-		--kit-chip-h-lg: 36px;
-		--kit-chip-h-xl: 40px;
-		--kit-chip-px-xs: 8px;
-		--kit-chip-px-sm: 10px;
-		--kit-chip-px-md: 12px;
-		--kit-chip-px-lg: 14px;
-		--kit-chip-px-xl: 16px;
-		--kit-chip-density-scale: 1;
-		--kit-chip-density-h-scale: 1;
-		--kit-chip-radius: 99999px;
-		--kit-chip-gap: 0.35em;
-
 		position: relative;
 		display: inline-flex;
 		box-sizing: border-box;
@@ -255,7 +235,7 @@
 		font-family: var(--kit-font);
 		background: var(--kit-chip-bg);
 		color: var(--kit-chip-fg);
-		height: max(24px, calc(var(--kit-chip-h) * var(--kit-chip-density-h-scale)));
+		height: calc(var(--kit-chip-h) * var(--kit-chip-density-h-scale));
 		padding-inline: calc(var(--kit-chip-px) * var(--kit-chip-density-scale));
 		border-radius: var(--kit-chip-radius);
 		text-decoration: none;
@@ -313,96 +293,6 @@
 		cursor: pointer;
 	}
 
-	.kit-chip[data-variant='filled'] {
-		--kit-chip-bg: var(--kit-accent);
-		--kit-chip-fg: white;
-		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-bg), black 10%);
-		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-bg), black 16%);
-	}
-
-	.kit-chip[data-variant='outline'] {
-		--outline-color: var(--kit-accent);
-		--kit-chip-bg: transparent;
-		--kit-chip-fg: var(--kit-accent);
-		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
-		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
-	}
-
-	.kit-chip[data-variant='text'] {
-		--kit-chip-bg: transparent;
-		--kit-chip-fg: var(--kit-accent);
-		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
-		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
-	}
-
-	.kit-chip[data-variant='link'] {
-		--kit-chip-bg: transparent;
-		--kit-chip-fg: var(--kit-accent);
-		--kit-chip-decoration: underline;
-		height: inherit;
-		padding: 0;
-	}
-
-	.kit-chip[data-size='xs'] {
-		--kit-chip-h: var(--kit-chip-h-xs);
-		--kit-chip-px: var(--kit-chip-px-xs);
-		font-size: 12px;
-	}
-	.kit-chip[data-size='xs'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-xs);
-	}
-
-	.kit-chip[data-size='sm'] {
-		--kit-chip-h: var(--kit-chip-h-sm);
-		--kit-chip-px: var(--kit-chip-px-sm);
-		font-size: 13px;
-	}
-	.kit-chip[data-size='sm'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-sm);
-	}
-
-	.kit-chip[data-size='md'] {
-		--kit-chip-h: var(--kit-chip-h-md);
-		--kit-chip-px: var(--kit-chip-px-md);
-		font-size: 14px;
-	}
-	.kit-chip[data-size='md'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-md);
-	}
-
-	.kit-chip[data-size='lg'] {
-		--kit-chip-h: var(--kit-chip-h-lg);
-		--kit-chip-px: var(--kit-chip-px-lg);
-		font-size: 15px;
-	}
-	.kit-chip[data-size='lg'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-lg);
-	}
-
-	.kit-chip[data-size='xl'] {
-		--kit-chip-h: var(--kit-chip-h-xl);
-		--kit-chip-px: var(--kit-chip-px-xl);
-		font-size: 16px;
-	}
-	.kit-chip[data-size='xl'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-xl);
-	}
-
-	.kit-chip[data-density='default'] {
-		--kit-chip-density-scale: 1;
-		--kit-chip-density-h-scale: 1;
-	}
-
-	.kit-chip[data-density='compact'] {
-		--kit-chip-density-scale: 0.92;
-		--kit-chip-density-h-scale: 0.9;
-	}
-
-	.kit-chip[data-density='comfortable'] {
-		--kit-chip-density-scale: 1.08;
-		--kit-chip-density-h-scale: 1.08;
-	}
-
 	.kit-chip[data-label-style='true'] {
 		font-weight: 600;
 		letter-spacing: 0.01em;
@@ -424,6 +314,7 @@
 		align-items: center;
 		justify-content: center;
 		line-height: 1;
+		font-weight: normal;
 	}
 
 	.kit-chip__content :global(.kit-icon),
@@ -488,5 +379,136 @@
 	.kit-chip[data-readonly='true'] > input,
 	.kit-chip[data-disabled='true'] > input {
 		cursor: default;
+	}
+
+	/**
+	* size
+	* @link nothing...
+	*/
+	.kit-chip[data-size='xs'] {
+		--kit-chip-h: 24px;
+		--kit-chip-px: 8px;
+		--kit-chip-gap: 4px;
+		--kit-chip-font: 0.75rem;
+	}
+	.kit-chip[data-size='xs'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xs);
+	}
+	.kit-chip[data-size='sm'] {
+		--kit-chip-h: 28px;
+		--kit-chip-px: 10px;
+		--kit-chip-gap: 6px;
+		--kit-chip-font: 0.875rem;
+	}
+	.kit-chip[data-size='sm'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-sm);
+	}
+
+	.kit-chip[data-size='md'] {
+		--kit-chip-h: 32px;
+		--kit-chip-px: 12px;
+		--kit-chip-gap: 8px;
+		--kit-chip-font: 1rem;
+	}
+	.kit-chip[data-size='md'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-md);
+	}
+
+	.kit-chip[data-size='lg'] {
+		--kit-chip-h: 36px;
+		--kit-chip-px: 14px;
+		--kit-chip-gap: 10px;
+		--kit-chip-font: 1.125rem;
+	}
+	.kit-chip[data-size='lg'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-lg);
+	}
+
+	.kit-chip[data-size='xl'] {
+		--kit-chip-h: 40px;
+		--kit-chip-px: 16px;
+		--kit-chip-gap: 12px;
+		--kit-chip-font: 1.25rem;
+	}
+	.kit-chip[data-size='xl'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xl);
+	}
+
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-chip[data-density='none'] {
+		--kit-chip-density-scale: 0;
+		--kit-chip-density-h-scale: 0;
+	}
+	.kit-chip[data-density='compact'] {
+		--kit-chip-density-scale: 0.9;
+		--kit-chip-density-h-scale: 0.92;
+	}
+	.kit-chip[data-density='default'] {
+		--kit-chip-density-scale: 1;
+		--kit-chip-density-h-scale: 1;
+	}
+	.kit-chip[data-density='comfortable'] {
+		--kit-chip-density-scale: 1.1;
+		--kit-chip-density-h-scale: 1.15;
+	}
+
+	/** 
+	 * rounded
+	 * @link ...
+	 */
+	.kit-chip[data-rounded='0'] {
+		--kit-chip-radius: var(--kit-shape-none);
+	}
+	.kit-chip[data-rounded='xs'] {
+		--kit-chip-radius: var(--kit-shape-xs);
+	}
+	.kit-chip[data-rounded='sm'] {
+		--kit-chip-radius: var(--kit-shape-sm);
+	}
+	.kit-chip[data-rounded='md'] {
+		--kit-chip-radius: var(--kit-shape-md);
+	}
+	.kit-chip[data-rounded='lg'] {
+		--kit-chip-radius: var(--kit-shape-lg);
+	}
+	.kit-chip[data-rounded='xl'] {
+		--kit-chip-radius: var(--kit-shape-xl);
+	}
+	.kit-chip[data-rounded='full'] {
+		--kit-chip-radius: var(--kit-shape-full);
+	}
+
+	/** 
+	 * variant
+	 * @link no links...
+	 */
+	.kit-chip[data-variant='filled'] {
+		--kit-chip-bg: var(--kit-color-surface-2);
+		--kit-chip-fg: var(--kit-color-text);
+
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-bg), black 10%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-bg), black 16%);
+	}
+	.kit-chip[data-variant='outline'] {
+		--kit-chip-bg: transparent;
+		--kit-chip-fg: var(--kit-color-text);
+		--kit-chip-bd: var(--kit-chip-fg);
+
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
+	}
+	.kit-chip[data-variant='text'] {
+		--kit-chip-bg: transparent;
+		--kit-chip-fg: var(--kit-color-text);
+
+		--kit-chip-hover-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 80%);
+		--kit-chip-active-bg: color-mix(in oklab, var(--kit-chip-fg), transparent 92%);
+	}
+
+	.kit-chip .outline {
+		--outline-color: var(--kit-chip-bd);
 	}
 </style>

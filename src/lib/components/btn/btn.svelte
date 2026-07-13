@@ -214,7 +214,7 @@
 		font-family: var(--kit-font);
 		background: var(--kit-btn-bg);
 		color: var(--kit-btn-fg);
-		height: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale)));
+		height: calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale));
 		padding-inline: calc(var(--kit-btn-px) * var(--kit-btn-density-scale));
 		border-radius: var(--kit-btn-radius);
 		text-decoration: none;
@@ -482,7 +482,7 @@
 	 * @link no links...
 	 */
 	.kit-btn[data-variant='filled'] {
-		--kit-btn-bg: var(--kit-color-surface-3);
+		--kit-btn-bg: var(--kit-color-surface-2);
 		--kit-btn-fg: var(--kit-color-text);
 
 		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), black 10%);
