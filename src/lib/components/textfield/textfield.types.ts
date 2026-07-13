@@ -1,4 +1,4 @@
-import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes } from 'svelte/elements';
 
