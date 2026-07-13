@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { useClassName, useStyles, clickOutside } from '$lib/utils';
+	import { useClassName, useStyles, clickOutside, useElevation } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { getPositions } from './dropdown.svelte.ts';
 	import type { DropdownProps, ModelDropdownProps } from './dropdown.types.ts';
@@ -20,12 +20,15 @@
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
+		elevation,
 		...rest
 	}: DropdownProps = $props();
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -162,6 +165,9 @@
 			event.stopPropagation();
 			handleContentClick();
 		}}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: handleClose }}
 		style:--kit-dropdown-fg={color && `var(--kit-color-${color})`}
 		style:--kit-dropdown-bg={background && `var(--kit-color-${background})`}
@@ -214,7 +220,7 @@
 
 	/** 
 	 * density
-	 * @link https://lapikit.dev/docs/components/card#density 
+	 * @link no url
 	 */
 	.kit-dropdown-content[data-density='none'] {
 		--kit-dropdown-density-scale: 0;

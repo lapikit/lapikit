@@ -1,4 +1,10 @@
-import type { Component, DensityType, PropValue, RoundedType } from '$lib/@types/index';
+import type {
+	Component,
+	DensityType,
+	ElevationProps,
+	PropValue,
+	RoundedType
+} from '$lib/@types/index';
 import type { Snippet } from 'svelte';
 
 export type PositionElement = {
@@ -34,4 +40,5 @@ export interface DropdownProps extends Component {
 		]
 	>;
 	[key: string]: PropValue | Record<string, PropValue> | unknown;
+	elevation?: ElevationProps;
 }

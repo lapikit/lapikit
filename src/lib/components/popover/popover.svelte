@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles, clickOutside } from '$lib/utils';
+	import { useClassName, useStyles, clickOutside, useElevation } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { getPositions } from './popover.svelte.ts';
 	import type { ModelPopoverProps, PopoverProps } from './popover.types.ts';
@@ -9,7 +9,7 @@
 		open = $bindable(false),
 		children,
 		activator,
-		rounded,
+		rounded = 'md',
 		position = 'bottom',
 		color,
 		background,
@@ -17,18 +17,16 @@
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
+		elevation = '2',
+		density = 'default',
 		...rest
 	}: PopoverProps = $props();
-
-	let safePosition = $derived(
-		position === 'top' || position === 'bottom' || position === 'left' || position === 'right'
-			? position
-			: 'bottom'
-	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -47,16 +45,7 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			background ? `--kit-popover-bg:${background}` : '',
-			color ? `--kit-popover-fg:${color}` : '',
-			typeof rounded === 'string' && rounded.includes('px') ? `--kit-popover-radius:${rounded}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	const positioner = getPositions();
 
@@ -80,7 +69,7 @@
 
 	const updatePosition = () => {
 		if (!contentRef || !activatorRef) return;
-		positioner.update(activatorRef, contentRef, safePosition, false, true);
+		positioner.update(activatorRef, contentRef, position, false, true);
 		axis = positioner.values;
 	};
 
@@ -121,7 +110,13 @@
 		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
 		role="dialog"
 		data-rounded={rounded}
-		data-position={axis.location ?? safePosition}
+		data-position={axis.location ?? position}
+		data-density={density}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
+		style:--kit-modal-fg={color && `var(--kit-color-${color})`}
+		style:--kit-modal-bg={background && `var(--kit-color-${background})`}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: () => (open = false) }}
 		{...restProps}
 	>
@@ -131,43 +126,60 @@
 
 <style>
 	.kit-popover-content {
-		--kit-popover-bg: var(--kit-surface-1);
-		--kit-popover-fg: var(--kit-fg);
-		--kit-popover-radius: 12px;
-		--kit-popover-bd: color-mix(in oklab, var(--kit-fg), transparent 88%);
-		--kit-popover-shadow: 0 18px 40px -18px color-mix(in oklab, black 24%, transparent);
+		--kit-popover-bg: var(--kit-color-surface-3);
+		--kit-popover-fg: var(--kit-color-text);
 
 		position: fixed;
 		z-index: 1900;
 		display: inline-block;
 		width: auto;
 		max-width: min(28rem, calc(100vw - 1rem));
-		padding: 1rem;
-		border: 1px solid var(--kit-popover-bd);
+		padding: calc(1rem * var(--kit-popover-density-scale));
+		border: 0;
 		border-radius: var(--kit-popover-radius);
 		background: var(--kit-popover-bg);
 		color: var(--kit-popover-fg);
-		box-shadow: var(--kit-popover-shadow);
 		opacity: 1;
 		transition: opacity 140ms ease;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-popover-content[data-rounded='0'] {
-		--kit-popover-radius: 0;
+		--kit-popover-radius: var(--kit-shape-none);
 	}
 	.kit-popover-content[data-rounded='xs'] {
-		--kit-popover-radius: 2px;
+		--kit-popover-radius: var(--kit-shape-xs);
 	}
 	.kit-popover-content[data-rounded='sm'] {
-		--kit-popover-radius: 4px;
+		--kit-popover-radius: var(--kit-shape-sm);
 	}
 	.kit-popover-content[data-rounded='md'] {
-		--kit-popover-radius: 8px;
+		--kit-popover-radius: var(--kit-shape-md);
 	}
 	.kit-popover-content[data-rounded='lg'] {
-		--kit-popover-radius: 16px;
+		--kit-popover-radius: var(--kit-shape-lg);
 	}
 	.kit-popover-content[data-rounded='xl'] {
-		--kit-popover-radius: 99999px;
+		--kit-popover-radius: var(--kit-shape-xl);
+	}
+
+	/** 
+	 * density
+	 * @link no url
+	 */
+	.kit-popover-content[data-density='none'] {
+		--kit-popover-density-scale: 0;
+	}
+	.kit-popover-content[data-density='compact'] {
+		--kit-popover-density-scale: 0.8;
+	}
+	.kit-popover-content[data-density='default'] {
+		--kit-popover-density-scale: 1;
+	}
+	.kit-popover-content[data-density='comfortable'] {
+		--kit-popover-density-scale: 1.15;
 	}
 </style>
