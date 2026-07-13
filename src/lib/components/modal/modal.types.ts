@@ -1,8 +1,16 @@
-import type { Component, RoundedType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
 
-export type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
-export type ModalPosition = 'top' | 'center' | 'bottom';
-export type ModalDensity = 'compact' | 'comfortable' | 'default';
+type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+type ModalPosition =
+	| 'top'
+	| 'center'
+	| 'bottom'
+	| 'top-left'
+	| 'top-right'
+	| 'center-left'
+	| 'center-right'
+	| 'bottom-left'
+	| 'bottom-right';
 
 export interface ModalProps extends Component {
 	ref?: HTMLDivElement | null;
@@ -12,9 +20,11 @@ export interface ModalProps extends Component {
 	persistent?: boolean;
 	position?: ModalPosition;
 	rounded?: RoundedType;
-	density?: ModalDensity;
+	density?: DensityType;
 	classContent?: string | string[] | undefined;
 	color?: string;
 	background?: string;
 	closeWithEsc?: boolean;
+	space?: string;
+	elevation?: ElevationProps;
 }
