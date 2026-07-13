@@ -1,41 +1,29 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import type { AlertProps, AlertTone, AlertVariant, AlertDensity } from './alert.types.ts';
-
-	function resolveVariant(value: AlertVariant | undefined): AlertVariant {
-		return value === 'filled' || value === 'outline' || value === 'text' ? value : 'filled';
-	}
-
-	function resolveDensity(value: AlertDensity | undefined): AlertDensity {
-		return value === 'compact' || value === 'comfortable' || value === 'default'
-			? value
-			: 'default';
-	}
-
-	function resolveTone(value: AlertTone | undefined): AlertTone {
-		return value && ['info', 'success', 'warning', 'error'].includes(value) ? value : 'default';
-	}
+	import type { AlertProps } from './alert.types.ts';
 
 	let {
 		ref = $bindable(),
 		is = 'div',
-		children = undefined,
+		children,
 		class: className = '',
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
 		open = $bindable(true),
-		closable = false,
+		closable,
+		size = 'md',
 		variant = 'filled',
 		density = 'default',
 		rounded = 'md',
 		tone = 'default',
-		color = undefined,
-		background = undefined,
-		prepend = undefined,
-		append = undefined,
-		close = undefined,
+		color,
+		background,
+		prepend,
+		append,
+		close,
+		multiline,
 		...rest
 	}: AlertProps = $props();
 
@@ -60,18 +48,7 @@
 		})
 	);
 
-	let safeVariant = $derived(resolveVariant(variant));
-	let safeDensity = $derived(resolveDensity(density));
-	let safeTone = $derived(resolveTone(tone));
-	let mergedStyle = $derived(
-		[
-			baseStyle,
-			color ? `--kit-alert-fg:${color}` : '',
-			background ? `--kit-alert-bg:${background}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([baseStyle].filter(Boolean).join('; '));
 </script>
 
 {#if !closable || (closable && open)}
@@ -81,13 +58,20 @@
 		class={componentClass}
 		style={mergedStyle}
 		role="alert"
-		data-variant={safeVariant}
-		data-density={safeDensity}
+		data-size={size}
+		data-variant={variant}
+		data-density={density}
 		data-rounded={rounded}
-		data-tone={safeTone}
+		data-tone={tone}
+		data-mutline={multiline}
+		data-append={append && true}
+		data-prepend={prepend && true}
+		data-closable={closable && true}
+		style:--kit-alert-fg={color && `var(--kit-color-${color})`}
+		style:--kit-alert-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
-		{#if safeVariant === 'outline'}
+		{#if variant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 
@@ -117,7 +101,12 @@
 				{#if close}
 					{@render close?.()}
 				{:else}
-					<span aria-hidden="true">×</span>
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<path
+							d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+							fill="currentColor"
+						></path>
+					</svg>
 				{/if}
 			</button>
 		{/if}
@@ -126,121 +115,204 @@
 
 <style>
 	.kit-alert {
-		--kit-alert-bg: var(--kit-surface-2);
-		--kit-alert-fg: var(--kit-fg);
-		--kit-alert-bd: var(--kit-border);
-		--kit-alert-radius: 8px;
-		--kit-alert-py: 0.75rem;
-		--kit-alert-px: 0.875rem;
-		--kit-alert-gap: 0.625rem;
-		--outline-color: var(--kit-alert-bd);
-
 		position: relative;
 		display: grid;
-		grid-template-columns: auto minmax(0, 1fr) auto auto;
+		grid-template-columns: minmax(0, 1fr);
 		gap: var(--kit-alert-gap);
-		align-items: start;
-		padding: var(--kit-alert-py) var(--kit-alert-px);
+		padding: calc(var(--kit-alert-px) * var(--kit-alert-density-scale));
 		border-radius: var(--kit-alert-radius);
 		color: var(--kit-alert-fg);
 		background: var(--kit-alert-bg);
-		border: 1px solid var(--kit-alert-bd);
+		font-size: var(--kit-alert-font);
+		border: 0;
 	}
 
-	.kit-alert[data-variant='outline'] {
-		background: transparent;
-		color: var(--kit-alert-fg);
-		border-color: var(--kit-alert-bd);
+	.kit-alert[data-mutline='true'] .kit-alert__prepend,
+	.kit-alert[data-mutline='true'] .kit-alert__content,
+	.kit-alert[data-mutline='true'] .kit-alert__append,
+	.kit-alert[data-mutline='true'] .kit-alert__close {
+		display: flex;
+		align-items: start;
 	}
 
-	.kit-alert[data-variant='text'] {
-		background: transparent;
-		color: var(--kit-alert-fg);
-		border-color: transparent;
+	.kit-alert:not([data-mutline='true']) .kit-alert__prepend,
+	.kit-alert:not([data-mutline='true']) .kit-alert__content,
+	.kit-alert:not([data-mutline='true']) .kit-alert__append,
+	.kit-alert:not([data-mutline='true']) .kit-alert__close {
+		display: flex;
+		align-items: center;
 	}
 
-	.kit-alert .outline {
-		pointer-events: none;
+	.kit-alert__close svg {
+		width: 1.125rem;
+		height: 1.125rem;
+		display: block;
 	}
 
-	.kit-alert[data-tone='info'] {
-		--kit-alert-tone-accent: hsl(var(--kit-h-info, 205) 60% 42%);
-		--kit-alert-bg: hsl(var(--kit-h-info, 205) 90% 95%);
-		--kit-alert-fg: hsl(var(--kit-h-info, 205) 36% 24%);
-		--kit-alert-bd: hsl(var(--kit-h-info, 205) 45% 78%);
+	.kit-alert[data-prepend='true']:not([data-append='true']):not([data-closable='true']) {
+		grid-template-columns: auto minmax(0, 1fr);
+	}
+	.kit-alert[data-append='true']:not([data-prepend='true']):not([data-closable='true']),
+	.kit-alert[data-closable='true']:not([data-prepend='true']):not([data-append='true']) {
+		grid-template-columns: minmax(0, 1fr) auto;
 	}
 
-	.kit-alert[data-tone='success'] {
-		--kit-alert-tone-accent: hsl(var(--kit-h-success, 145) 50% 38%);
-		--kit-alert-bg: hsl(var(--kit-h-success, 145) 58% 93%);
-		--kit-alert-fg: hsl(var(--kit-h-success, 145) 38% 23%);
-		--kit-alert-bd: hsl(var(--kit-h-success, 145) 30% 75%);
+	.kit-alert[data-append='true']:not([data-prepend='true']):not([data-closable='true']) {
+		grid-template-columns: minmax(0, 1fr) auto;
+	}
+	.kit-alert[data-prepend='true'][data-closable='true']:not([data-append='true']),
+	.kit-alert[data-prepend='true'][data-append='true']:not([data-closable='true']) {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+	}
+	.kit-alert[data-append='true'][data-closable='true']:not([data-prepend='true']) {
+		grid-template-columns: minmax(0, 1fr) auto auto;
+	}
+	.kit-alert[data-prepend='true'][data-append='true'][data-closable='true'] {
+		grid-template-columns: auto minmax(0, 1fr) auto auto;
 	}
 
-	.kit-alert[data-tone='warning'] {
-		--kit-alert-tone-accent: hsl(var(--kit-h-warning, 35) 80% 38%);
-		--kit-alert-bg: hsl(var(--kit-h-warning, 35) 95% 92%);
-		--kit-alert-fg: hsl(var(--kit-h-warning, 35) 55% 24%);
-		--kit-alert-bd: hsl(var(--kit-h-warning, 35) 55% 72%);
-	}
-
-	.kit-alert[data-tone='error'] {
-		--kit-alert-tone-accent: hsl(var(--kit-h-danger, 5) 65% 45%);
-		--kit-alert-bg: hsl(var(--kit-h-danger, 5) 90% 94%);
-		--kit-alert-fg: hsl(var(--kit-h-danger, 5) 48% 28%);
-		--kit-alert-bd: hsl(var(--kit-h-danger, 5) 55% 78%);
-	}
-
-	.kit-alert[data-variant='outline'][data-tone='info'],
-	.kit-alert[data-variant='outline'][data-tone='success'],
-	.kit-alert[data-variant='outline'][data-tone='warning'],
-	.kit-alert[data-variant='outline'][data-tone='error'] {
-		--kit-alert-fg: var(--kit-alert-tone-accent);
-		--kit-alert-bd: var(--kit-alert-tone-accent);
-	}
-
-	.kit-alert[data-variant='text'][data-tone='info'],
-	.kit-alert[data-variant='text'][data-tone='success'],
-	.kit-alert[data-variant='text'][data-tone='warning'],
-	.kit-alert[data-variant='text'][data-tone='error'] {
-		--kit-alert-fg: var(--kit-alert-tone-accent);
-	}
-
-	.kit-alert[data-density='compact'] {
-		--kit-alert-py: 0.5rem;
-		--kit-alert-px: 0.75rem;
-		--kit-alert-gap: 0.5rem;
-	}
-
-	.kit-alert[data-density='default'] {
-		--kit-alert-py: 0.75rem;
-		--kit-alert-px: 0.875rem;
-		--kit-alert-gap: 0.625rem;
-	}
-
-	.kit-alert[data-density='comfortable'] {
-		--kit-alert-py: 0.95rem;
-		--kit-alert-px: 1rem;
-		--kit-alert-gap: 0.75rem;
-	}
-
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-alert[data-rounded='0'] {
-		--kit-alert-radius: 0;
+		--kit-alert-radius: var(--kit-shape-none);
 	}
 	.kit-alert[data-rounded='xs'] {
-		--kit-alert-radius: 2px;
+		--kit-alert-radius: var(--kit-shape-xs);
 	}
 	.kit-alert[data-rounded='sm'] {
-		--kit-alert-radius: 4px;
+		--kit-alert-radius: var(--kit-shape-sm);
 	}
 	.kit-alert[data-rounded='md'] {
-		--kit-alert-radius: 8px;
+		--kit-alert-radius: var(--kit-shape-md);
 	}
 	.kit-alert[data-rounded='lg'] {
-		--kit-alert-radius: 16px;
+		--kit-alert-radius: var(--kit-shape-lg);
 	}
 	.kit-alert[data-rounded='xl'] {
-		--kit-alert-radius: 99999px;
+		--kit-alert-radius: var(--kit-shape-xl);
+	}
+	.kit-alert[data-rounded='full'] {
+		--kit-alert-radius: var(--kit-shape-full);
+	}
+
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-alert[data-density='none'] {
+		--kit-alert-density-scale: 0;
+		--kit-alert-density-h-scale: 0;
+	}
+	.kit-alert[data-density='compact'] {
+		--kit-alert-density-scale: 0.9;
+		--kit-alert-density-h-scale: 0.92;
+	}
+	.kit-alert[data-density='default'] {
+		--kit-alert-density-scale: 1;
+		--kit-alert-density-h-scale: 1;
+	}
+	.kit-alert[data-density='comfortable'] {
+		--kit-alert-density-scale: 1.1;
+		--kit-alert-density-h-scale: 1.15;
+	}
+
+	/** 
+	 * variant
+	 * @link no links...
+	 */
+	.kit-alert[data-variant='filled'] {
+		--kit-alert-bg: var(--kit-color-surface-2);
+		--kit-alert-fg: var(--kit-color-text);
+
+		--kit-alert-hover-bg: color-mix(in oklab, var(--kit-alert-bg), black 10%);
+		--kit-alert-active-bg: color-mix(in oklab, var(--kit-alert-bg), black 16%);
+	}
+	.kit-alert[data-variant='outline'] {
+		--kit-alert-bg: transparent;
+		--kit-alert-fg: var(--kit-color-text);
+		--kit-alert-bd: var(--kit-alert-fg);
+
+		--kit-alert-hover-bg: color-mix(in oklab, var(--kit-alert-fg), transparent 80%);
+		--kit-alert-active-bg: color-mix(in oklab, var(--kit-alert-fg), transparent 92%);
+	}
+	.kit-alert[data-variant='text'] {
+		--kit-alert-bg: transparent;
+		--kit-alert-fg: var(--kit-color-text);
+
+		--kit-alert-hover-bg: color-mix(in oklab, var(--kit-alert-fg), transparent 80%);
+		--kit-alert-active-bg: color-mix(in oklab, var(--kit-alert-fg), transparent 92%);
+	}
+
+	/**
+	* size
+	* @link nothing...
+	*/
+	.kit-alert[data-size='xs'] {
+		--kit-alert-px: 10px;
+		--kit-alert-gap: 4px;
+		--kit-alert-font: 0.75rem;
+	}
+	.kit-alert[data-size='sm'] {
+		--kit-alert-px: 12px;
+		--kit-alert-gap: 6px;
+		--kit-alert-font: 0.875rem;
+	}
+	.kit-alert[data-size='md'] {
+		--kit-alert-px: 16px;
+		--kit-alert-gap: 8px;
+		--kit-alert-font: 1rem;
+	}
+	.kit-alert[data-size='lg'] {
+		--kit-alert-px: 20px;
+		--kit-alert-gap: 10px;
+		--kit-alert-font: 1.125rem;
+	}
+	.kit-alert[data-size='xl'] {
+		--kit-alert-px: 24px;
+		--kit-alert-gap: 12px;
+		--kit-alert-font: 1.25rem;
+	}
+
+	/**
+	* tone
+	* @link nothing...
+	*/
+	.kit-alert[data-tone='info'][data-variant='filled'] {
+		--kit-alert-bg: var(--kit-color-info);
+		--kit-alert-fg: var(--kit-color-on-info);
+	}
+	.kit-alert[data-tone='info'][data-variant='outline'],
+	.kit-alert[data-tone='info'][data-variant='text'] {
+		--kit-alert-fg: var(--kit-color-info);
+	}
+
+	.kit-alert[data-tone='success'][data-variant='filled'] {
+		--kit-alert-bg: var(--kit-color-success);
+		--kit-alert-fg: var(--kit-color-on-success);
+	}
+	.kit-alert[data-tone='success'][data-variant='outline'],
+	.kit-alert[data-tone='success'][data-variant='text'] {
+		--kit-alert-fg: var(--kit-color-success);
+	}
+
+	.kit-alert[data-tone='warning'][data-variant='filled'] {
+		--kit-alert-bg: var(--kit-color-warning);
+		--kit-alert-fg: var(--kit-color-on-warning);
+	}
+	.kit-alert[data-tone='warning'][data-variant='outline'],
+	.kit-alert[data-tone='warning'][data-variant='text'] {
+		--kit-alert-fg: var(--kit-color-warning);
+	}
+
+	.kit-alert[data-tone='error'][data-variant='filled'] {
+		--kit-alert-bg: var(--kit-color-error);
+		--kit-alert-fg: var(--kit-color-on-error);
+	}
+	.kit-alert[data-tone='error'][data-variant='outline'],
+	.kit-alert[data-tone='error'][data-variant='text'] {
+		--kit-alert-fg: var(--kit-color-error);
 	}
 
 	.kit-alert__prepend,
@@ -271,7 +343,12 @@
 		border-radius: 6px;
 	}
 
+	.kit-alert .outline {
+		--outline-color: var(--kit-alert-bd);
+	}
+
 	.kit-alert__close:hover {
 		background: color-mix(in oklab, currentColor 10%, transparent);
+		border-radius: 9999px;
 	}
 </style>

@@ -1,8 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { Component, RoundedType } from '$lib/@types';
+import type { Component, DensityType, RoundedType } from '$lib/@types';
 
 export type AlertVariant = 'filled' | 'outline' | 'text';
-export type AlertDensity = 'compact' | 'comfortable' | 'default';
 export type AlertTone = 'default' | 'info' | 'success' | 'warning' | 'error';
 
 export interface AlertProps extends Component {
@@ -11,7 +10,7 @@ export interface AlertProps extends Component {
 	open?: boolean;
 	closable?: boolean;
 	variant?: AlertVariant;
-	density?: AlertDensity;
+	density?: DensityType;
 	rounded?: RoundedType;
 	tone?: AlertTone;
 	color?: string;

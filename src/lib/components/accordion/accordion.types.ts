@@ -1,5 +1,7 @@
-import type { RoundedType, Component } from '$lib/@types';
+import type { RoundedType, Component, SizeType, DensityType, ElevationProps } from '$lib/@types';
 import type { Snippet } from 'svelte';
+
+export type AccordionVariant = 'filled' | 'outline' | 'text';
 
 export type ModelAccordionItemProps = {
 	open: boolean;
@@ -11,7 +13,10 @@ export interface AccordionProps extends Component {
 	text?: string;
 	color?: string;
 	background?: string;
-	rounded?: RoundedType;
+	rounded?: RoundedType | 'full';
+	size?: SizeType;
+	variant?: AccordionVariant;
+	density?: DensityType;
 	spacer?: boolean;
 	hideIcon?: boolean;
 }
@@ -25,7 +30,6 @@ export interface AccordionItemProps extends Component {
 	is?: 'div';
 	index: number | string;
 	text?: string;
-	rounded?: RoundedType;
 	color?: string;
 	background?: string;
 	readOnly?: boolean;
@@ -34,4 +38,5 @@ export interface AccordionItemProps extends Component {
 	toggle?: (index: number | string) => void;
 	indicator?: Snippet<[AccordionItemModelProps]>;
 	activator?: Snippet;
+	elevation?: ElevationProps;
 }
