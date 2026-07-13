@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import type { AlertProps } from './alert.types.ts';
 
@@ -24,12 +24,15 @@
 		append,
 		close,
 		multiline,
+		elevation,
 		...rest
 	}: AlertProps = $props();
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -67,6 +70,9 @@
 		data-append={append && true}
 		data-prepend={prepend && true}
 		data-closable={closable && true}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		style:--kit-alert-fg={color && `var(--kit-color-${color})`}
 		style:--kit-alert-bg={background && `var(--kit-color-${background})`}
 		{...restProps}

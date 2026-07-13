@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { useClassName, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import type { AspectRatioFit, AspectRatioProps, AspectRatioValue } from './aspect-ratio.types.ts';
+	import type { AspectRatioProps, AspectRatioValue } from './aspect-ratio.types.ts';
 
 	const FALLBACK_RATIO = 16 / 9;
-	const FALLBACK_FIT: AspectRatioFit = 'cover';
 
 	function resolveRatio(value: AspectRatioValue | undefined): number {
 		if (typeof value === 'number') {
@@ -31,10 +30,6 @@
 
 		const asNumber = Number(normalized);
 		return Number.isFinite(asNumber) && asNumber > 0 ? asNumber : FALLBACK_RATIO;
-	}
-
-	function resolveFit(value: AspectRatioFit | undefined): AspectRatioFit {
-		return value === 'cover' || value === 'contain' || value === 'fill' ? value : FALLBACK_FIT;
 	}
 
 	let {
@@ -74,12 +69,7 @@
 	);
 
 	let resolvedRatio = $derived(resolveRatio(ratio ?? aspectRatio));
-	let resolvedFit = $derived(resolveFit(fit));
-	let mergedStyle = $derived(
-		[componentStyle, `--kit-aspect-ratio: ${resolvedRatio}`, `--kit-aspect-fit: ${resolvedFit}`]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
@@ -88,6 +78,8 @@
 	class={componentClass}
 	style={mergedStyle}
 	data-inline={inline}
+	style:--kit-aspect-ratio={resolvedRatio}
+	style:--kit-aspect-fit={fit}
 	{...restProps}
 >
 	<div class="kit-aspect-ratio__inner">

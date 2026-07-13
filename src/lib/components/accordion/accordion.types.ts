@@ -1,7 +1,7 @@
 import type { RoundedType, Component, SizeType, DensityType, ElevationProps } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
-export type AccordionVariant = 'filled' | 'outline' | 'text';
+type AccordionVariant = 'filled' | 'outline' | 'text';
 
 export type ModelAccordionItemProps = {
 	open: boolean;
