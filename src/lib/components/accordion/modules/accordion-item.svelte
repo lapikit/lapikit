@@ -46,8 +46,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	let safeOpen = $derived(!!open);
 	let model: AccordionItemModelProps = {
 		get open() {
@@ -67,7 +65,7 @@
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	data-disabled={disabled}
 	data-read-only={readOnly}
 	data-active={safeOpen}

@@ -56,8 +56,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	const positioner = getPositionsTooltip();
 
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -179,7 +177,7 @@
 	>
 		<div
 			class={componentClass}
-			style={mergedStyle}
+			style={componentStyle}
 			data-density={density}
 			data-location={axis.location ?? location}
 			data-variant={variant}

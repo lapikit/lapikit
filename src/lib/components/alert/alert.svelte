@@ -43,15 +43,13 @@
 		})
 	);
 
-	let baseStyle = $derived(
+	let componentStyle = $derived(
 		useStyles({
 			styleAttr,
 			sStyle,
 			styleProps
 		})
 	);
-
-	let mergedStyle = $derived([baseStyle].filter(Boolean).join('; '));
 </script>
 
 {#if !closable || (closable && open)}
@@ -59,7 +57,7 @@
 		this={is}
 		bind:this={ref}
 		class={componentClass}
-		style={mergedStyle}
+		style={componentStyle}
 		role="alert"
 		data-size={size}
 		data-variant={variant}

@@ -68,7 +68,6 @@
 	let useFilterMode = $derived(
 		!!resolvedSrc && !!imgFilter && (colorMode === 'filter' || colorMode === 'auto')
 	);
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 {#if hasContent}
@@ -76,7 +75,7 @@
 		this={is}
 		bind:this={ref}
 		class={classWithIconName}
-		style={mergedStyle}
+		style={componentStyle}
 		data-size={size}
 		role={iconRole}
 		aria-label={iconAriaLabel}

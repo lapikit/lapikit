@@ -53,8 +53,6 @@
 			: `${classContent ?? ''}`.trim()
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	$effect(() => {
 		if (!ref) return;
 
@@ -102,7 +100,7 @@
 <dialog
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	data-size={size}
 	data-position={position}
 	data-persistent={persistent}

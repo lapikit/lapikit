@@ -48,15 +48,13 @@
 			styleProps
 		})
 	);
-
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
 	this={tag}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	href={href && !disabled ? href : undefined}
 	data-active={active}
 	data-disabled={disabled}

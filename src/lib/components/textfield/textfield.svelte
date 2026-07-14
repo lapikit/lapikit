@@ -70,8 +70,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	let counterValue = $state(0);
 	let displayMessage = $state(false);
 	let displayClear = $state(false);
@@ -122,7 +120,7 @@
 <div
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	{...restProps}
 	data-size={size}
 	data-variant={variant}

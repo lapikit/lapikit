@@ -61,8 +61,6 @@
 			: `${classContent ?? ''}`.trim()
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	$effect(() => {
 		if (open && !wasPushed) {
 			pushModal(modalId);
@@ -117,7 +115,7 @@
 	<div
 		bind:this={ref}
 		class={componentClass}
-		style={mergedStyle}
+		style={componentStyle}
 		role="dialog"
 		aria-modal={!contain}
 		data-contain={contain}

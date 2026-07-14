@@ -56,15 +56,13 @@
 			styleProps
 		})
 	);
-
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	{...restProps}
 	role="toolbar"
 	data-variant={variant}

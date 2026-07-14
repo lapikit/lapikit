@@ -40,8 +40,6 @@
 
 	const formatThickness = (value?: number | string) =>
 		typeof thickness === 'number' ? `${value}px` : value;
-
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
@@ -49,7 +47,7 @@
 	bind:this={ref}
 	{...restProps}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	role="separator"
 	aria-orientation={orientation || 'horizontal'}
 	data-inset={inset || undefined}

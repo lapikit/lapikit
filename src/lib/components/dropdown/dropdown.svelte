@@ -47,8 +47,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	const positioner = getPositions();
 
 	let contentRef = $state<HTMLElement | null>(null);
@@ -154,7 +152,7 @@
 	<div
 		bind:this={contentRef}
 		class={componentClass}
-		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
+		style={`left:${axis.x}px; top:${axis.y}px; ${componentStyle}`}
 		role="menu"
 		data-rounded={rounded}
 		data-position={axis.location ?? position}
