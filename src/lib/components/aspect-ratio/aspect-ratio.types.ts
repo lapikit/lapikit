@@ -1,7 +1,7 @@
 import type { Component } from '$lib/@types';
 
 export type AspectRatioValue = string | number;
-export type AspectRatioFit = 'cover' | 'contain' | 'fill';
+type AspectRatioFit = 'cover' | 'contain' | 'fill';
 
 export interface AspectRatioProps extends Component {
 	ref?: HTMLElement | null;

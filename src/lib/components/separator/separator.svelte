@@ -7,9 +7,8 @@
 		ref = $bindable(),
 		is = 'hr',
 		inset = false,
-		thickness,
+		thickness = 'thin',
 		orientation = 'horizontal',
-		opacity,
 		color,
 		class: className = '',
 		style: styleAttr = '',
@@ -17,12 +16,6 @@
 		's-style': sStyle,
 		...rest
 	}: SeparatorProps = $props();
-
-	let safeOrientation = $derived(
-		typeof orientation === 'string' && (orientation === 'horizontal' || orientation === 'vertical')
-			? orientation
-			: 'horizontal'
-	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
@@ -45,21 +38,10 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-separator-color:${color}` : '',
-			opacity !== undefined ? `--kit-separator-opacity:${opacity}` : '',
-			thickness !== undefined && safeOrientation === 'horizontal'
-				? `--kit-separator-top-width:${typeof thickness === 'number' ? `${thickness}px` : thickness}`
-				: '',
-			thickness !== undefined && safeOrientation === 'vertical'
-				? `--kit-separator-right-width:${typeof thickness === 'number' ? `${thickness}px` : thickness}`
-				: ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	const formatThickness = (value?: number | string) =>
+		typeof thickness === 'number' ? `${value}px` : value;
+
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
@@ -69,24 +51,23 @@
 	class={componentClass}
 	style={mergedStyle}
 	role="separator"
-	aria-orientation={safeOrientation}
+	aria-orientation={orientation || 'horizontal'}
 	data-inset={inset || undefined}
-	data-orientation={safeOrientation}
+	data-orientation={orientation}
+	style:--kit-separator-color={color && `var(--kit-color-${color})`}
+	style:--kit-separator-top-width={orientation === 'horizontal' ? formatThickness(thickness) : ''}
+	style:--kit-separator-right-width={orientation === 'vertical' ? formatThickness(thickness) : ''}
 />
 
 <style>
 	.kit-separator {
-		--kit-separator-color: var(--kit-fg);
-		--kit-separator-opacity: 0.12;
-		--kit-separator-top-width: thin;
-		--kit-separator-right-width: thin;
+		--kit-separator-color: var(--kit-color-border);
 		--kit-separator-vertical-min-size: 1.5rem;
 
 		display: block;
 		flex: 1 1 100%;
 		height: 0;
 		max-height: 0;
-		opacity: var(--kit-separator-opacity);
 		border-color: var(--kit-separator-color);
 		border-style: solid;
 		transition: inherit;

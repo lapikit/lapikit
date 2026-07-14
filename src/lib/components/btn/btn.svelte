@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { ripple } from '$lib/animations';
 	import type { ButtonProps } from './btn.types.ts';
@@ -16,8 +16,8 @@
 		density = 'default',
 		loading,
 		active = false,
-		size = 'default',
-		rounded,
+		size = 'md',
+		rounded = 'sm',
 		disabled = false,
 		block,
 		href,
@@ -32,30 +32,17 @@
 		append,
 		prepend,
 		icon,
+		elevation,
+		color,
+		background,
 		...rest
 	}: ButtonProps = $props();
-
-	let safeVariant = $derived(
-		variant === 'filled' || variant === 'outline' || variant === 'text' || variant === 'link'
-			? variant
-			: 'filled'
-	);
-	let safeSize = $derived(
-		size === 'default'
-			? 'md'
-			: size === 'xs' || size === 'sm' || size === 'md' || size === 'lg' || size === 'xl'
-				? size
-				: 'md'
-	);
-	let safeDensity = $derived(
-		density === 'compact' || density === 'comfortable' || density === 'default'
-			? density
-			: 'default'
-	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -93,24 +80,29 @@
 		bind:this={ref}
 		class={componentClass}
 		style={componentStyle}
-		data-size={safeSize}
-		data-variant={safeVariant}
+		data-size={size}
+		data-variant={variant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
-		data-density={safeDensity}
+		data-density={density}
 		data-rounded={rounded}
 		aria-busy={disabled}
 		aria-disabled={isDisabled || undefined}
 		data-block={block}
 		data-wide={wide}
 		data-icon={icon}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		use:ripple={{
 			component: 'btn',
 			disabled: noRipple || disabled
 		}}
+		style:--kit-btn-fg={color && `var(--kit-color-${color})`}
+		style:--kit-btn-bg={background && `var(--kit-color-${background})`}
 	>
-		{#if safeVariant === 'outline'}
+		{#if variant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 		<input
@@ -131,15 +123,14 @@
 		bind:this={ref}
 		class={componentClass}
 		style={componentStyle}
-		{...restProps}
 		type={resolvedType()}
 		href={resolvedHref}
-		data-size={safeSize}
-		data-variant={safeVariant}
+		data-size={size}
+		data-variant={variant}
 		data-loading={loading}
 		data-active={active}
 		data-disabled={isDisabled}
-		data-density={safeDensity}
+		data-density={density}
 		data-rounded={rounded}
 		disabled={resolvedDisabled}
 		aria-busy={disabled}
@@ -147,12 +138,18 @@
 		data-block={block}
 		data-wide={wide}
 		data-icon={icon}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		use:ripple={{
 			component: 'btn',
 			disabled: noRipple || disabled
 		}}
+		style:--kit-btn-fg={color && `var(--kit-color-${color})`}
+		style:--kit-btn-bg={background && `var(--kit-color-${background})`}
+		{...restProps}
 	>
-		{#if safeVariant === 'outline'}
+		{#if variant === 'outline'}
 			<span class="outline"></span>
 		{/if}
 
@@ -209,26 +206,6 @@
 	}
 
 	.kit-btn {
-		--kit-btn-bg: var(--kit-surface-2);
-		--kit-btn-fg: var(--kit-fg);
-		--kit-btn-bd: var(--kit-border);
-		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), var(--kit-btn-fg) 6%);
-		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-bg), var(--kit-btn-fg) 10%);
-		--kit-btn-h-xs: 28px;
-		--kit-btn-h-sm: 32px;
-		--kit-btn-h-md: 40px;
-		--kit-btn-h-lg: 48px;
-		--kit-btn-h-xl: 56px;
-		--kit-btn-px-xs: 10px;
-		--kit-btn-px-sm: 12px;
-		--kit-btn-px-md: 16px;
-		--kit-btn-px-lg: 20px;
-		--kit-btn-px-xl: 24px;
-		--kit-btn-density-scale: 1;
-		--kit-btn-density-h-scale: 1;
-		--kit-btn-radius: 8px;
-		--kit-btn-gap: 0.45em;
-
 		position: relative;
 		display: inline-flex;
 		box-sizing: border-box;
@@ -237,7 +214,7 @@
 		font-family: var(--kit-font);
 		background: var(--kit-btn-bg);
 		color: var(--kit-btn-fg);
-		height: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale)));
+		height: calc(var(--kit-btn-h) * var(--kit-btn-density-h-scale));
 		padding-inline: calc(var(--kit-btn-px) * var(--kit-btn-density-scale));
 		border-radius: var(--kit-btn-radius);
 		text-decoration: none;
@@ -301,124 +278,6 @@
 	.kit-btn > :is(input[type='checkbox'], input[type='radio']):after {
 		content: attr(aria-label);
 		cursor: pointer;
-	}
-
-	/* variant */
-	.kit-btn[data-variant='filled'] {
-		--kit-btn-bg: var(--kit-accent);
-		--kit-btn-fg: white;
-		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), black 10%);
-		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-bg), black 16%);
-	}
-
-	.kit-btn[data-variant='outline'] {
-		--outline-color: var(--kit-accent);
-		--kit-btn-bg: transparent;
-		--kit-btn-fg: var(--kit-accent);
-		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
-		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
-	}
-
-	.kit-btn[data-variant='text'] {
-		--kit-btn-bg: transparent;
-		--kit-btn-fg: var(--kit-accent);
-		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
-		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
-	}
-
-	.kit-btn[data-variant='link'] {
-		--kit-btn-bg: transparent;
-		--kit-btn-fg: var(--kit-accent);
-		--kit-btn-decoration: underline;
-		height: inherit;
-		padding: 0;
-	}
-
-	/* size */
-	.kit-btn[data-size='xs'] {
-		--kit-btn-h: var(--kit-btn-h-xs);
-		--kit-btn-px: var(--kit-btn-px-xs);
-		font-size: 12px;
-	}
-	.kit-btn[data-size='xs'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-xs);
-	}
-
-	.kit-btn[data-size='sm'] {
-		--kit-btn-h: var(--kit-btn-h-sm);
-		--kit-btn-px: var(--kit-btn-px-sm);
-		font-size: 13px;
-	}
-	.kit-btn[data-size='sm'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-sm);
-	}
-
-	.kit-btn[data-size='md'] {
-		--kit-btn-h: var(--kit-btn-h-md);
-		--kit-btn-px: var(--kit-btn-px-md);
-		font-size: 14px;
-	}
-	.kit-btn[data-size='md'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-md);
-	}
-
-	.kit-btn[data-size='lg'] {
-		--kit-btn-h: var(--kit-btn-h-lg);
-		--kit-btn-px: var(--kit-btn-px-lg);
-		font-size: 15px;
-	}
-	.kit-btn[data-size='lg'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-lg);
-	}
-
-	.kit-btn[data-size='xl'] {
-		--kit-btn-h: var(--kit-btn-h-xl);
-		--kit-btn-px: var(--kit-btn-px-xl);
-		font-size: 16px;
-	}
-	.kit-btn[data-size='xl'] :global(.kit-icon:not([data-size])) {
-		--kit-icon-current-size: var(--kit-icon-size-xl);
-	}
-
-	/* density */
-	.kit-btn[data-density='default'] {
-		--kit-btn-density-scale: 1;
-		--kit-btn-density-h-scale: 1;
-	}
-
-	.kit-btn[data-density='compact'] {
-		--kit-btn-density-scale: 0.9;
-		--kit-btn-density-h-scale: 0.92;
-	}
-
-	.kit-btn[data-density='comfortable'] {
-		--kit-btn-density-scale: 1.1;
-		--kit-btn-density-h-scale: 1.08;
-	}
-
-	/* rounded */
-	.kit-btn[data-rounded='0'] {
-		--kit-btn-radius: 0;
-	}
-
-	.kit-btn[data-rounded='xs'] {
-		--kit-btn-radius: 2px;
-	}
-
-	.kit-btn[data-rounded='sm'] {
-		--kit-btn-radius: 4px;
-	}
-
-	.kit-btn[data-rounded='md'] {
-		--kit-btn-radius: 8px;
-	}
-
-	.kit-btn[data-rounded='lg'] {
-		--kit-btn-radius: 16px;
-	}
-
-	.kit-btn[data-rounded='xl'] {
-		--kit-btn-radius: 99999px;
 	}
 
 	.kit-btn[data-wide='true'] {
@@ -516,5 +375,144 @@
 
 	.kit-btn[data-disabled='true'] > input {
 		cursor: not-allowed;
+	}
+
+	/**
+	* size
+	* @link nothing...
+	*/
+	.kit-btn[data-size='xs'] {
+		--kit-btn-h: 28px;
+		--kit-btn-px: 10px;
+		--kit-btn-gap: 4px;
+		--kit-btn-font: 0.75rem;
+	}
+	.kit-btn[data-size='xs'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xs);
+	}
+	.kit-btn[data-size='sm'] {
+		--kit-btn-h: 32px;
+		--kit-btn-px: 12px;
+		--kit-btn-gap: 6px;
+		--kit-btn-font: 0.875rem;
+	}
+	.kit-btn[data-size='sm'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-sm);
+	}
+
+	.kit-btn[data-size='md'] {
+		--kit-btn-h: 40px;
+		--kit-btn-px: 16px;
+		--kit-btn-gap: 8px;
+		--kit-btn-font: 1rem;
+	}
+	.kit-btn[data-size='md'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-md);
+	}
+
+	.kit-btn[data-size='lg'] {
+		--kit-btn-h: 48px;
+		--kit-btn-px: 20px;
+		--kit-btn-gap: 10px;
+		--kit-btn-font: 1.125rem;
+	}
+	.kit-btn[data-size='lg'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-lg);
+	}
+
+	.kit-btn[data-size='xl'] {
+		--kit-btn-h: 56px;
+		--kit-btn-px: 24px;
+		--kit-btn-gap: 12px;
+		--kit-btn-font: 1.25rem;
+	}
+	.kit-btn[data-size='xl'] :global(.kit-icon:not([data-size])) {
+		--kit-icon-current-size: var(--kit-icon-size-xl);
+	}
+
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-btn[data-density='none'] {
+		--kit-btn-density-scale: 0;
+		--kit-btn-density-h-scale: 0;
+	}
+	.kit-btn[data-density='compact'] {
+		--kit-btn-density-scale: 0.9;
+		--kit-btn-density-h-scale: 0.92;
+	}
+	.kit-btn[data-density='default'] {
+		--kit-btn-density-scale: 1;
+		--kit-btn-density-h-scale: 1;
+	}
+	.kit-btn[data-density='comfortable'] {
+		--kit-btn-density-scale: 1.1;
+		--kit-btn-density-h-scale: 1.15;
+	}
+
+	/** 
+	 * rounded
+	 * @link ...
+	 */
+	.kit-btn[data-rounded='0'] {
+		--kit-btn-radius: var(--kit-shape-none);
+	}
+	.kit-btn[data-rounded='xs'] {
+		--kit-btn-radius: var(--kit-shape-xs);
+	}
+	.kit-btn[data-rounded='sm'] {
+		--kit-btn-radius: var(--kit-shape-sm);
+	}
+	.kit-btn[data-rounded='md'] {
+		--kit-btn-radius: var(--kit-shape-md);
+	}
+	.kit-btn[data-rounded='lg'] {
+		--kit-btn-radius: var(--kit-shape-lg);
+	}
+	.kit-btn[data-rounded='xl'] {
+		--kit-btn-radius: var(--kit-shape-xl);
+	}
+	.kit-btn[data-rounded='full'] {
+		--kit-btn-radius: var(--kit-shape-full);
+	}
+
+	/** 
+	 * variant
+	 * @link no links...
+	 */
+	.kit-btn[data-variant='filled'] {
+		--kit-btn-bg: var(--kit-color-surface-2);
+		--kit-btn-fg: var(--kit-color-text);
+
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-bg), black 10%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-bg), black 16%);
+	}
+	.kit-btn[data-variant='outline'] {
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-color-text);
+		--kit-btn-bd: var(--kit-btn-fg);
+
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
+	}
+	.kit-btn[data-variant='text'] {
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-color-text);
+
+		--kit-btn-hover-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 80%);
+		--kit-btn-active-bg: color-mix(in oklab, var(--kit-btn-fg), transparent 92%);
+	}
+	.kit-btn[data-variant='link'] {
+		--kit-btn-bg: transparent;
+		--kit-btn-fg: var(--kit-color-text);
+		--kit-btn-decoration: underline;
+
+		height: inherit;
+		padding: 0;
+	}
+
+	.kit-btn .outline {
+		--outline-color: var(--kit-btn-bd);
 	}
 </style>

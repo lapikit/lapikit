@@ -1,4 +1,10 @@
-import type { Component, PropValue, RoundedType } from '$lib/@types/index';
+import type {
+	Component,
+	DensityType,
+	ElevationProps,
+	PropValue,
+	RoundedType
+} from '$lib/@types/index';
 import type { Snippet } from 'svelte';
 
 export type PositionElement = {
@@ -20,12 +26,13 @@ export type ModelDropdownHandleProps = (
 
 export interface DropdownProps extends Component {
 	ref?: HTMLElement | null;
-	rounded?: RoundedType | string;
+	rounded?: RoundedType;
 	position?: 'top' | 'bottom' | 'left' | 'right';
 	openOnHover?: boolean;
 	closeOnClick?: boolean;
 	color?: string;
 	background?: string;
+	density?: DensityType;
 	activator?: Snippet<
 		[
 			ModelDropdownProps,
@@ -33,4 +40,5 @@ export interface DropdownProps extends Component {
 		]
 	>;
 	[key: string]: PropValue | Record<string, PropValue> | unknown;
+	elevation?: ElevationProps;
 }

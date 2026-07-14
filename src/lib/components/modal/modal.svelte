@@ -2,30 +2,9 @@
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
 	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useStyles } from '$lib/utils';
 	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from './modal.ts';
-	import type { ModalDensity, ModalPosition, ModalProps, ModalSize } from './modal.types.ts';
-
-	function resolveSize(value: ModalSize | undefined): ModalSize {
-		return value === 'xs' ||
-			value === 'sm' ||
-			value === 'md' ||
-			value === 'lg' ||
-			value === 'xl' ||
-			value === 'full'
-			? value
-			: 'md';
-	}
-
-	function resolvePosition(value: ModalPosition | undefined): ModalPosition {
-		return value === 'top' || value === 'center' || value === 'bottom' ? value : 'center';
-	}
-
-	function resolveDensity(value: ModalDensity | undefined): ModalDensity {
-		return value === 'compact' || value === 'comfortable' || value === 'default'
-			? value
-			: 'default';
-	}
+	import type { ModalProps } from './modal.types.ts';
 
 	const modalId = crypto.randomUUID();
 	let wasPushed = $state(false);
@@ -48,12 +27,16 @@
 		color = undefined,
 		background = undefined,
 		closeWithEsc = true,
+		space,
+		elevation = '2',
 		...rest
 	}: ModalProps = $props();
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -78,18 +61,7 @@
 			: `${classContent ?? ''}`.trim()
 	);
 
-	let safeSize = $derived(resolveSize(size));
-	let safePosition = $derived(resolvePosition(position));
-	let safeDensity = $derived(resolveDensity(density));
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-modal-fg:${color}` : '',
-			background ? `--kit-modal-bg:${background}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	$effect(() => {
 		if (open && !wasPushed) {
@@ -151,18 +123,23 @@
 		data-contain={contain}
 	>
 		{#if contain}
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<div class="kit-modal__overlay" onclick={handleClose}></div>
+			<div class="kit-modal__overlay" role="presentation" onclick={handleClose}></div>
 		{/if}
 
 		<div
 			{...restProps}
 			class={['kit-modal__content', contentClass]}
-			data-size={safeSize}
-			data-position={safePosition}
-			data-density={safeDensity}
+			data-size={size}
+			data-position={position}
+			data-density={density}
 			data-rounded={rounded}
+			data-elevation={elevationState.base}
+			data-elevation-hover={elevationState.hover}
+			data-elevation-active={elevationState.active}
 			onclick={(event: MouseEvent) => event.stopPropagation()}
+			style:--kit-modal-fg={color && `var(--kit-color-${color})`}
+			style:--kit-modal-bg={background && `var(--kit-color-${background})`}
+			style:--kit-modal-space={space}
 		>
 			{@render children?.()}
 		</div>
@@ -171,16 +148,7 @@
 
 <style>
 	.kit-modal {
-		--kit-modal-bg: var(--kit-surface-1);
-		--kit-modal-fg: var(--kit-fg);
-		--kit-modal-bd: var(--kit-border);
-		--kit-modal-radius: 12px;
-		--kit-modal-px: 1rem;
-		--kit-modal-py: 1rem;
 		--kit-modal-max: min(32rem, calc(100vw - 2rem));
-		--kit-modal-top: 50%;
-		--kit-modal-bottom: auto;
-		--kit-modal-translate-y: -50%;
 
 		position: fixed;
 		inset: 0;
@@ -195,29 +163,30 @@
 	.kit-modal__overlay {
 		position: absolute;
 		inset: 0;
-		background: rgb(15 23 42 / 0.42);
+		background: color-mix(in oklab, var(--kit-color-shadow), transparent 70%);
 		backdrop-filter: blur(2px);
 		pointer-events: auto;
 	}
 
 	.kit-modal__content {
+		--kit-modal-bg: var(--kit-color-surface-1);
+		--kit-modal-fg: var(--kit-color-text);
+
 		position: fixed;
-		left: 50%;
+		left: var(--kit-modal-left);
+		right: var(--kit-modal-right);
 		top: var(--kit-modal-top);
 		bottom: var(--kit-modal-bottom);
-		translate: -50% var(--kit-modal-translate-y);
+		translate: var(--kit-modal-translate-x) var(--kit-modal-translate-y);
 		box-sizing: border-box;
 		width: min(calc(100vw - 2rem), var(--kit-modal-max));
 		max-height: calc(100dvh - 2rem);
 		overflow: auto;
-		padding: var(--kit-modal-py) var(--kit-modal-px);
-		border: 1px solid var(--kit-modal-bd);
+		padding: calc(var(--kit-modal-px) * var(--kit-modal-density-scale));
+		border: 0;
 		border-radius: var(--kit-modal-radius);
 		background: var(--kit-modal-bg);
 		color: var(--kit-modal-fg);
-		box-shadow:
-			0 20px 50px rgb(15 23 42 / 0.18),
-			0 4px 16px rgb(15 23 42 / 0.1);
 		pointer-events: auto;
 	}
 
@@ -225,24 +194,33 @@
 		position: absolute;
 	}
 
+	/**
+	* size
+	* @link nothing...
+	*/
 	.kit-modal__content[data-size='xs'] {
-		--kit-modal-max: min(20rem, calc(100vw - 2rem));
+		--kit-modal-max: 20rem;
+		--kit-modal-px: 10px;
 	}
 
 	.kit-modal__content[data-size='sm'] {
-		--kit-modal-max: min(24rem, calc(100vw - 2rem));
+		--kit-modal-max: 24rem;
+		--kit-modal-px: 12px;
 	}
 
 	.kit-modal__content[data-size='md'] {
-		--kit-modal-max: min(32rem, calc(100vw - 2rem));
+		--kit-modal-max: 32rem;
+		--kit-modal-px: 16px;
 	}
 
 	.kit-modal__content[data-size='lg'] {
-		--kit-modal-max: min(42rem, calc(100vw - 2rem));
+		--kit-modal-max: 42rem;
+		--kit-modal-px: 20px;
 	}
 
 	.kit-modal__content[data-size='xl'] {
-		--kit-modal-max: min(56rem, calc(100vw - 2rem));
+		--kit-modal-max: 56rem;
+		--kit-modal-px: 24px;
 	}
 
 	.kit-modal__content[data-size='full'] {
@@ -258,60 +236,88 @@
 		border-bottom-right-radius: 0;
 	}
 
-	.kit-modal__content[data-position='top'] {
-		--kit-modal-top: 1rem;
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-modal__content[data-density='none'] {
+		--kit-modal-density-scale: 0;
+	}
+	.kit-modal__content[data-density='compact'] {
+		--kit-modal-density-scale: 0.9;
+	}
+	.kit-modal__content[data-density='default'] {
+		--kit-modal-density-scale: 1;
+	}
+	.kit-modal__content[data-density='comfortable'] {
+		--kit-modal-density-scale: 1.1;
+	}
+
+	/** 
+	 * rounded
+	 * @link ...
+	 */
+	.kit-modal__content[data-rounded='0'] {
+		--kit-modal-radius: var(--kit-shape-none);
+	}
+	.kit-modal__content[data-rounded='xs'] {
+		--kit-modal-radius: var(--kit-shape-xs);
+	}
+	.kit-modal__content[data-rounded='sm'] {
+		--kit-modal-radius: var(--kit-shape-sm);
+	}
+	.kit-modal__content[data-rounded='md'] {
+		--kit-modal-radius: var(--kit-shape-md);
+	}
+	.kit-modal__content[data-rounded='lg'] {
+		--kit-modal-radius: var(--kit-shape-lg);
+	}
+	.kit-modal__content[data-rounded='xl'] {
+		--kit-modal-radius: var(--kit-shape-xl);
+	}
+
+	/**
+	* position
+	* @link nothing...
+	*/
+
+	.kit-modal__content[data-position='top'],
+	.kit-modal__content[data-position='center'],
+	.kit-modal__content[data-position='bottom'] {
+		--kit-modal-translate-x: -50%;
+		--kit-modal-left: 50%;
+	}
+	.kit-modal__content[data-position='top'],
+	.kit-modal__content[data-position='top-left'],
+	.kit-modal__content[data-position='top-right'] {
+		--kit-modal-top: var(--kit-modal-space, 1rem);
 		--kit-modal-bottom: auto;
 		--kit-modal-translate-y: 0;
 	}
-
-	.kit-modal__content[data-position='center'] {
+	.kit-modal__content[data-position='center'],
+	.kit-modal__content[data-position='center-left'],
+	.kit-modal__content[data-position='center-right'] {
 		--kit-modal-top: 50%;
 		--kit-modal-bottom: auto;
 		--kit-modal-translate-y: -50%;
 	}
 
-	.kit-modal__content[data-position='bottom'] {
+	.kit-modal__content[data-position='bottom'],
+	.kit-modal__content[data-position='bottom-left'],
+	.kit-modal__content[data-position='bottom-right'] {
 		--kit-modal-top: auto;
-		--kit-modal-bottom: 1rem;
+		--kit-modal-bottom: var(--kit-modal-space, 1rem);
 		--kit-modal-translate-y: 0;
 	}
-
-	.kit-modal__content[data-density='compact'] {
-		--kit-modal-px: 0.75rem;
-		--kit-modal-py: 0.75rem;
+	.kit-modal__content[data-position='top-left'],
+	.kit-modal__content[data-position='center-left'],
+	.kit-modal__content[data-position='bottom-left'] {
+		--kit-modal-left: var(--kit-modal-space, 1rem);
+		--kit-modal-translate-x: 0;
 	}
-
-	.kit-modal__content[data-density='default'] {
-		--kit-modal-px: 1rem;
-		--kit-modal-py: 1rem;
-	}
-
-	.kit-modal__content[data-density='comfortable'] {
-		--kit-modal-px: 1.25rem;
-		--kit-modal-py: 1.25rem;
-	}
-
-	.kit-modal__content[data-rounded='0'] {
-		--kit-modal-radius: 0;
-	}
-
-	.kit-modal__content[data-rounded='xs'] {
-		--kit-modal-radius: 2px;
-	}
-
-	.kit-modal__content[data-rounded='sm'] {
-		--kit-modal-radius: 6px;
-	}
-
-	.kit-modal__content[data-rounded='md'] {
-		--kit-modal-radius: 12px;
-	}
-
-	.kit-modal__content[data-rounded='lg'] {
-		--kit-modal-radius: 18px;
-	}
-
-	.kit-modal__content[data-rounded='xl'] {
-		--kit-modal-radius: 9999px;
+	.kit-modal__content[data-position='top-right'],
+	.kit-modal__content[data-position='center-right'],
+	.kit-modal__content[data-position='bottom-right'] {
+		--kit-modal-right: var(--kit-modal-space, 1rem);
 	}
 </style>

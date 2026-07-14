@@ -1,4 +1,4 @@
-import type { Component, PropValue, RoundedType } from '$lib/@types';
+import type { Component, DensityType, ElevationProps, PropValue, RoundedType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export type PositionElement = {
@@ -19,5 +19,7 @@ export interface PopoverProps extends Component {
 	color?: string;
 	background?: string;
 	activator?: Snippet<[ModelPopoverProps]>;
+	elevation?: ElevationProps;
+	density?: DensityType;
 	[key: string]: PropValue | Record<string, PropValue> | unknown;
 }

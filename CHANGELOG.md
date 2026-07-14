@@ -3,6 +3,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.4] - 2026-07-14
+
+### Added
+
+- Add props (**elevation**, **size**) to `kit:accordion`
+- Add props (**elevation**, **size**) to `kit:alert`
+- Add props (**elevation**, **size**) to `kit:appbar`
+- Add props (**elevation**, **rounded**, **color**, **background**) to `kit:avatar`
+- Add props (**elevation**, **color**, **background**) to `kit:btn`
+- Add props (**elevation**, **rounded**, **color**, **background**) to `kit:chip`
+- Add props (**elevation**) to `kit:dialog`
+- Add props (**elevation**) to `kit:dropdown`
+- Add props (**elevation**) to `kit:modal`
+- Add props (**elevation**, **density**) to `kit:popover`
+- Add props (**elevation**) to `kit:texfield`
+- Add props (**elevation**, **size**) to `kit:toolbar`
+
+### Updated
+
+- Update CSS theming to component `kit:accordion`
+- Update CSS theming to component `kit:alert`
+- Update CSS theming to component `kit:appbar`
+- Update CSS theming to component `kit:aspect-ratio`
+- Update CSS theming to component `kit:avatar`
+- Update CSS theming to component `kit:btn`
+- Update CSS theming to component `kit:card`
+- Update CSS theming to component `kit:chip`
+- Update CSS theming to component `kit:dialog`
+- Update CSS theming to component `kit:dropdown`
+- Update CSS theming to component `kit:icon`
+- Update CSS theming to component `kit:modal`
+- Update CSS theming to component `kit:popover`
+- Update CSS theming to component `kit:separator`
+- Update CSS theming to component `kit:textfield`
+- Update CSS theming to component `kit:tooltip`
+- Update props **position** to component `kit:dialog`
+- Update props **position** to component `kit:modal`
+- Remove props **location** to component `kit:toolbar`
+- Update props **variant** to component `kit:toolbar`
+
+### Fixed
+
+- `kit:modal` warning ARIA role
+- Theming variables **error** and **danger** has fixed
+
 ## [0.6.3] - 2026-07-10
 
 ### Added

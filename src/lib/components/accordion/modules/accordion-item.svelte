@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useClassName, useElevation, useStyles } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import type { AccordionItemModelProps, AccordionItemProps } from '../accordion.types.ts';
 
 	let {
 		ref = $bindable(),
 		is = 'div',
-		children = undefined,
+		children,
 		class: className = '',
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
-		activator = undefined,
-		indicator = undefined,
-		text = undefined,
-		rounded = undefined,
-		color = undefined,
-		background = undefined,
+		activator,
+		indicator,
+		text,
+		color,
+		background,
 		index,
-		open = false,
-		toggle = undefined,
+		open,
+		toggle,
 		disabled = false,
 		readOnly = false,
+		elevation,
 		...rest
 	}: AccordionItemProps = $props();
 
@@ -46,15 +46,7 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-accordion-item-fg:${color}` : '',
-			background ? `--kit-accordion-item-bg:${background}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	let safeOpen = $derived(!!open);
 	let model: AccordionItemModelProps = {
@@ -62,6 +54,8 @@
 			return safeOpen;
 		}
 	};
+
+	let elevationState = $derived(useElevation(elevation));
 
 	function handleToggle() {
 		if (readOnly || disabled || !toggle) return;
@@ -74,11 +68,18 @@
 	bind:this={ref}
 	class={componentClass}
 	style={mergedStyle}
-	{...restProps}
-	data-open={safeOpen}
 	data-disabled={disabled}
-	data-rounded={rounded}
+	data-read-only={readOnly}
+	data-active={safeOpen}
+	data-elevation={elevationState.base}
+	data-elevation-hover={elevationState.hover}
+	data-elevation-active={elevationState.active}
+	style:--kit-accordion-item-fg={color && `var(--kit-color-${color})`}
+	style:--kit-accordion-item-bg={background && `var(--kit-color-${background})`}
+	{...restProps}
 >
+	<span class="outline"></span>
+
 	<button
 		class="kit-accordion-item__trigger"
 		type="button"
@@ -110,6 +111,8 @@
 		</span>
 	</button>
 
+	<span class="kit-accordion-item__separator"></span>
+
 	<div class="kit-accordion-item__content" hidden={!safeOpen}>
 		<div class="kit-accordion-item__content-inner">
 			{@render children?.()}
@@ -118,62 +121,25 @@
 </svelte:element>
 
 <style>
-	button {
-		appearance: none;
-		background: none;
-		border: none;
-		font: inherit;
-		color: inherit;
-	}
-
 	.kit-accordion-item {
-		--kit-accordion-item-radius: var(--kit-accordion-radius, 8px);
-		--kit-accordion-item-fg: var(--kit-accordion-fg, var(--kit-fg));
-		--kit-accordion-item-bg: var(--kit-surface-2);
-		--kit-accordion-item-bd: color-mix(in oklab, var(--kit-accordion-item-bg), var(--kit-fg) 12%);
-		--kit-accordion-item-trigger-y: 1rem;
-		--kit-accordion-item-trigger-x: 1.25rem;
-
 		flex: 1 0 100%;
 		max-width: 100%;
 		position: relative;
-		border-radius: var(--kit-accordion-item-radius);
+		border: 0;
+		box-sizing: border-box;
 		background: var(--kit-accordion-item-bg);
 		color: var(--kit-accordion-item-fg);
-		border: 1px solid var(--kit-accordion-item-bd);
-		transition:
-			border-color 150ms ease,
-			background 150ms ease,
-			box-shadow 150ms ease;
+		gap: var(--kit-accordion-item-gap);
+		text-decoration: none;
+		font-size: var(--kit-accordion-item-font);
 		overflow: clip;
 	}
 
-	.kit-accordion-item[data-rounded='0'] {
-		--kit-accordion-item-radius: 0;
-	}
-
-	.kit-accordion-item[data-rounded='xs'] {
-		--kit-accordion-item-radius: 2px;
-	}
-
-	.kit-accordion-item[data-rounded='sm'] {
-		--kit-accordion-item-radius: 4px;
-	}
-
-	.kit-accordion-item[data-rounded='md'] {
-		--kit-accordion-item-radius: 8px;
-	}
-
-	.kit-accordion-item[data-rounded='lg'] {
-		--kit-accordion-item-radius: 16px;
-	}
-
-	.kit-accordion-item[data-rounded='xl'] {
-		--kit-accordion-item-radius: 99999px;
-	}
-
-	.kit-accordion-item[data-open='true'] {
-		box-shadow: 0 10px 28px color-mix(in oklab, var(--kit-fg), transparent 90%);
+	.kit-accordion-item > button {
+		appearance: none;
+		border: 0;
+		font: inherit;
+		text-align: inherit;
 	}
 
 	.kit-accordion-item__trigger {
@@ -181,10 +147,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		gap: 1rem;
-		padding: var(--kit-accordion-item-trigger-y) var(--kit-accordion-item-trigger-x);
+		gap: var(--kit-accordion-item-gap);
+		min-height: calc(var(--kit-accordion-item-h) * var(--kit-accordion-density-h-scale));
+		padding: calc(var(--kit-accordion-item-px) * var(--kit-accordion-density-scale));
 		cursor: pointer;
 		text-align: left;
+		background: var(--kit-accordion-item-bg);
+		color: var(--kit-accordion-item-fg);
 	}
 
 	.kit-accordion-item__trigger:disabled,
@@ -220,6 +189,36 @@
 	}
 
 	.kit-accordion-item__content-inner {
-		padding: 0 1.25rem 1rem;
+		padding: calc(var(--kit-accordion-item-px) * var(--kit-accordion-density-scale));
+	}
+
+	.kit-accordion-item__separator {
+		width: 96%;
+		height: 1px;
+		display: block;
+		position: relative;
+		background: var(--kit-accordion-item-fg);
+		margin: 0 auto;
+	}
+
+	.kit-accordion-item[data-read-only='false'][data-disabled='false'] > button:hover {
+		background: var(--kit-accordion-item-hover-bg);
+	}
+
+	/**I think is a good idea for not use this*/
+	/* .kit-accordion-item[data-active='true'][data-disabled='false'][data-read-only='false'] > button {
+		background: var(--kit-accordion-item-active-bg);
+	}
+	.kit-accordion-item[data-disabled='false'][data-read-only='false'] > button:active {
+		background: var(--kit-accordion-item-active-bg);
+	} */
+
+	.kit-accordion-item[data-disabled='false'][data-read-only='false'] > button:focus-visible {
+		outline: 2px solid var(--kit-focus);
+		outline-offset: 2px;
+	}
+
+	.kit-accordion-item .outline {
+		--outline-color: var(--kit-accordion-item-bd);
 	}
 </style>

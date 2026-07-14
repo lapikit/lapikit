@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { useClassName, useStyles, clickOutside } from '$lib/utils';
+	import { useClassName, useStyles, clickOutside, useElevation } from '$lib/utils';
 	import { makeComponentProps } from '$lib/html-mapped';
 	import { getPositions } from './dropdown.svelte.ts';
 	import type { DropdownProps, ModelDropdownProps } from './dropdown.types.ts';
@@ -9,28 +9,26 @@
 		ref = $bindable(),
 		children,
 		activator,
-		rounded,
+		rounded = 'md',
 		position = 'bottom',
 		closeOnClick = false,
 		openOnHover = false,
 		color,
 		background,
+		density = 'default',
 		class: className = '',
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
+		elevation,
 		...rest
 	}: DropdownProps = $props();
-
-	let safePosition = $derived(
-		position === 'top' || position === 'bottom' || position === 'left' || position === 'right'
-			? position
-			: 'bottom'
-	);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
 	);
+
+	let elevationState = $derived(useElevation(elevation));
 
 	let componentClass = $derived(
 		useClassName({
@@ -49,18 +47,7 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			background ? `--kit-dropdown-bg:${background}` : '',
-			color ? `--kit-dropdown-fg:${color}` : '',
-			typeof rounded === 'string' && rounded.includes('px')
-				? `--kit-dropdown-radius:${rounded}`
-				: ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	const positioner = getPositions();
 
@@ -83,7 +70,7 @@
 
 	const updatePosition = () => {
 		if (!contentRef || !activatorRef) return;
-		positioner.update(activatorRef, contentRef, safePosition, false, true);
+		positioner.update(activatorRef, contentRef, position, false, true);
 		axis = positioner.values;
 	};
 
@@ -170,14 +157,20 @@
 		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
 		role="menu"
 		data-rounded={rounded}
-		data-position={axis.location ?? safePosition}
+		data-position={axis.location ?? position}
+		data-density={density}
 		onmouseover={() => handleMouseEvent('open', activatorRef)}
 		onmouseleave={() => handleMouseEvent('close', activatorRef)}
 		onclick={(event) => {
 			event.stopPropagation();
 			handleContentClick();
 		}}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: handleClose }}
+		style:--kit-dropdown-fg={color && `var(--kit-color-${color})`}
+		style:--kit-dropdown-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
 		{@render children?.()}
@@ -186,43 +179,60 @@
 
 <style>
 	.kit-dropdown-content {
-		--kit-dropdown-bg: var(--kit-surface-1);
-		--kit-dropdown-fg: var(--kit-fg);
-		--kit-dropdown-radius: 12px;
-		--kit-dropdown-bd: color-mix(in oklab, var(--kit-fg), transparent 88%);
-		--kit-dropdown-shadow: 0 18px 40px -18px color-mix(in oklab, black 24%, transparent);
+		--kit-dropdown-bg: var(--kit-color-surface-3);
+		--kit-dropdown-fg: var(--kit-color-text);
 
 		position: fixed;
 		z-index: 1800;
 		min-width: 12rem;
 		max-width: min(22rem, calc(100vw - 1rem));
-		padding: 0.375rem;
-		border: 1px solid var(--kit-dropdown-bd);
+		padding: 0.375rem calc(0.375rem * var(--kit-dropdown-density-scale));
+		border: 0;
 		border-radius: var(--kit-dropdown-radius);
 		background: var(--kit-dropdown-bg);
 		color: var(--kit-dropdown-fg);
-		box-shadow: var(--kit-dropdown-shadow);
 		transform-origin: top left;
 		animation: kit-dropdown-enter 140ms ease;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-dropdown-content[data-rounded='0'] {
-		--kit-dropdown-radius: 0;
+		--kit-dropdown-radius: var(--kit-shape-none);
 	}
 	.kit-dropdown-content[data-rounded='xs'] {
-		--kit-dropdown-radius: 2px;
+		--kit-dropdown-radius: var(--kit-shape-xs);
 	}
 	.kit-dropdown-content[data-rounded='sm'] {
-		--kit-dropdown-radius: 4px;
+		--kit-dropdown-radius: var(--kit-shape-sm);
 	}
 	.kit-dropdown-content[data-rounded='md'] {
-		--kit-dropdown-radius: 8px;
+		--kit-dropdown-radius: var(--kit-shape-md);
 	}
 	.kit-dropdown-content[data-rounded='lg'] {
-		--kit-dropdown-radius: 16px;
+		--kit-dropdown-radius: var(--kit-shape-lg);
 	}
 	.kit-dropdown-content[data-rounded='xl'] {
-		--kit-dropdown-radius: 99999px;
+		--kit-dropdown-radius: var(--kit-shape-xl);
+	}
+
+	/** 
+	 * density
+	 * @link no url
+	 */
+	.kit-dropdown-content[data-density='none'] {
+		--kit-dropdown-density-scale: 0;
+	}
+	.kit-dropdown-content[data-density='compact'] {
+		--kit-dropdown-density-scale: 0.8;
+	}
+	.kit-dropdown-content[data-density='default'] {
+		--kit-dropdown-density-scale: 1;
+	}
+	.kit-dropdown-content[data-density='comfortable'] {
+		--kit-dropdown-density-scale: 1.15;
 	}
 
 	@keyframes kit-dropdown-enter {
