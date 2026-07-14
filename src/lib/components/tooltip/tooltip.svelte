@@ -12,7 +12,7 @@
 		open = $bindable(false),
 		forceMount = false,
 		label,
-		rounded,
+		rounded = 'xs',
 		color,
 		background,
 		location = 'bottom',
@@ -27,18 +27,6 @@
 		's-style': sStyle,
 		...rest
 	}: TooltipProps = $props();
-
-	let safeLocation = $derived(
-		location === 'top' || location === 'bottom' || location === 'left' || location === 'right'
-			? location
-			: 'bottom'
-	);
-	let safeDensity = $derived(
-		density === 'compact' || density === 'comfortable' || density === 'default'
-			? density
-			: 'default'
-	);
-	let safeVariant = $derived(variant === 'arrow' ? 'arrow' : undefined);
 
 	let { classProps, styleProps, restProps } = $derived(
 		makeComponentProps(rest as Record<string, unknown>)
@@ -68,16 +56,7 @@
 		})
 	);
 
-	let mergedStyle = $derived(
-		[
-			componentStyle,
-			background ? `--kit-tooltip-bg:${background}` : '',
-			color ? `--kit-tooltip-fg:${color}` : '',
-			typeof rounded === 'string' && rounded.includes('px') ? `--kit-tooltip-radius:${rounded}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 
 	const positioner = getPositionsTooltip();
 
@@ -100,7 +79,7 @@
 
 	const updatePosition = () => {
 		if (!triggerRef || !tooltipRef) return;
-		positioner.update(triggerRef, tooltipRef, safeLocation, true, avoidCollisions);
+		positioner.update(triggerRef, tooltipRef, location, true, avoidCollisions);
 		axis = positioner.values;
 	};
 
@@ -195,13 +174,15 @@
 		role="tooltip"
 		aria-label={label}
 		style={`transform: translate(${axis.x}px, ${axis.y}px); display:${open ? 'block' : 'none'}`}
+		style:--kit-tooltip-fg={color && `var(--kit-color-${color})`}
+		style:--kit-tooltip-bg={background && `var(--kit-color-${background})`}
 	>
 		<div
 			class={componentClass}
 			style={mergedStyle}
-			data-density={safeDensity}
-			data-location={axis.location ?? safeLocation}
-			data-variant={safeVariant}
+			data-density={density}
+			data-location={axis.location ?? location}
+			data-variant={variant}
 			data-rounded={rounded}
 			{...restProps}
 		>
@@ -224,7 +205,7 @@
 	}
 
 	.kit-tooltip-trigger:focus-visible {
-		outline: 2px solid var(--kit-focus);
+		outline: 2px solid var(--kit-color-focus);
 		outline-offset: 2px;
 	}
 
@@ -237,10 +218,8 @@
 	}
 
 	.kit-tooltip__content {
-		--kit-tooltip-bg: var(--kit-surface-3);
-		--kit-tooltip-fg: var(--kit-fg);
-		--kit-tooltip-radius: 8px;
-		--kit-tooltip-bd: color-mix(in oklab, var(--kit-tooltip-bg), black 8%);
+		--kit-tooltip-bg: var(--kit-color-surface-2);
+		--kit-tooltip-fg: var(--kit-color-text);
 		--kit-tooltip-py: 0.15rem;
 		--kit-tooltip-px: 0.625rem;
 
@@ -248,8 +227,9 @@
 		display: inline-block;
 		width: max-content;
 		max-width: min(20rem, calc(100vw - 1rem));
-		padding: var(--kit-tooltip-py) var(--kit-tooltip-px);
-		border: 1px solid var(--kit-tooltip-bd);
+		padding: calc(var(--kit-tooltip-py) * var(--kit-tooltip-density-scale))
+			calc(var(--kit-tooltip-px) * var(--kit-tooltip-density-scale));
+		border: 0;
 		border-radius: var(--kit-tooltip-radius);
 		background: var(--kit-tooltip-bg);
 		color: var(--kit-tooltip-fg);
@@ -259,33 +239,47 @@
 		animation: kit-tooltip-enter 150ms ease;
 	}
 
+	/** 
+	 * density
+	 * @link no links
+	 */
+	.kit-tooltip__content[data-density='none'] {
+		--kit-tooltip-density-scale: 0;
+	}
 	.kit-tooltip__content[data-density='compact'] {
-		--kit-tooltip-py: 0.125rem;
-		--kit-tooltip-px: 0.5rem;
+		--kit-tooltip-density-scale: 0.9;
 	}
-
+	.kit-tooltip__content[data-density='default'] {
+		--kit-tooltip-density-scale: 1;
+	}
 	.kit-tooltip__content[data-density='comfortable'] {
-		--kit-tooltip-py: 0.35rem;
-		--kit-tooltip-px: 0.75rem;
+		--kit-tooltip-density-scale: 1.1;
 	}
 
+	/** 
+	 * rounded
+	 * @link ...
+	 */
 	.kit-tooltip__content[data-rounded='0'] {
-		--kit-tooltip-radius: 0;
+		--kit-tooltip-radius: var(--kit-shape-none);
 	}
 	.kit-tooltip__content[data-rounded='xs'] {
-		--kit-tooltip-radius: 2px;
+		--kit-tooltip-radius: var(--kit-shape-xs);
 	}
 	.kit-tooltip__content[data-rounded='sm'] {
-		--kit-tooltip-radius: 4px;
+		--kit-tooltip-radius: var(--kit-shape-sm);
 	}
 	.kit-tooltip__content[data-rounded='md'] {
-		--kit-tooltip-radius: 8px;
+		--kit-tooltip-radius: var(--kit-shape-md);
 	}
 	.kit-tooltip__content[data-rounded='lg'] {
-		--kit-tooltip-radius: 16px;
+		--kit-tooltip-radius: var(--kit-shape-lg);
 	}
 	.kit-tooltip__content[data-rounded='xl'] {
-		--kit-tooltip-radius: 99999px;
+		--kit-tooltip-radius: var(--kit-shape-xl);
+	}
+	.kit-tooltip__content[data-rounded='full'] {
+		--kit-tooltip-radius: var(--kit-shape-full);
 	}
 
 	.kit-tooltip__content[data-variant='arrow']::after {
