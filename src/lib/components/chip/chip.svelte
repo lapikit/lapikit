@@ -87,6 +87,10 @@
 	const resolvedDisabled = $derived((tag === 'button' && isLocked) || undefined);
 
 	const resolvedType = $derived(tag !== 'button' ? type : (type ?? 'button'));
+
+	$effect(() => {
+		console.log('lapikit test:', componentStyle, styleAttr, sStyle, styleProps);
+	});
 </script>
 
 {#if isInput}
