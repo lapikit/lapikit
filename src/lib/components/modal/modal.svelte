@@ -109,13 +109,24 @@
 	function handleClose() {
 		if (!persistent) open = false;
 	}
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-modal-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-modal-bg:${background && `var(--kit-color-${background})`}` : '',
+			space ? `--kit-modal-space:${space}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 {#if open}
 	<div
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		role="dialog"
 		aria-modal={!contain}
 		data-contain={contain}
@@ -135,9 +146,6 @@
 			data-elevation-hover={elevationState.hover}
 			data-elevation-active={elevationState.active}
 			onclick={(event: MouseEvent) => event.stopPropagation()}
-			style:--kit-modal-fg={color && `var(--kit-color-${color})`}
-			style:--kit-modal-bg={background && `var(--kit-color-${background})`}
-			style:--kit-modal-space={space}
 		>
 			{@render children?.()}
 		</div>

@@ -56,6 +56,16 @@
 		})
 	);
 
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-tooltip-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-tooltip-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
+
 	const positioner = getPositionsTooltip();
 
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -172,12 +182,10 @@
 		role="tooltip"
 		aria-label={label}
 		style={`transform: translate(${axis.x}px, ${axis.y}px); display:${open ? 'block' : 'none'}`}
-		style:--kit-tooltip-fg={color && `var(--kit-color-${color})`}
-		style:--kit-tooltip-bg={background && `var(--kit-color-${background})`}
 	>
 		<div
 			class={componentClass}
-			style={componentStyle}
+			style={resolvedStyle}
 			data-density={density}
 			data-location={axis.location ?? location}
 			data-variant={variant}

@@ -47,6 +47,16 @@
 		})
 	);
 
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-dropdown-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-dropdown-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
+
 	const positioner = getPositions();
 
 	let contentRef = $state<HTMLElement | null>(null);
@@ -152,7 +162,7 @@
 	<div
 		bind:this={contentRef}
 		class={componentClass}
-		style={`left:${axis.x}px; top:${axis.y}px; ${componentStyle}`}
+		style={`left:${axis.x}px; top:${axis.y}px; ${resolvedStyle}`}
 		role="menu"
 		data-rounded={rounded}
 		data-position={axis.location ?? position}
@@ -167,8 +177,6 @@
 		data-elevation-hover={elevationState.hover}
 		data-elevation-active={elevationState.active}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: handleClose }}
-		style:--kit-dropdown-fg={color && `var(--kit-color-${color})`}
-		style:--kit-dropdown-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
 		{@render children?.()}

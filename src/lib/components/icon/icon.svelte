@@ -47,6 +47,16 @@
 		})
 	);
 
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-icon-color:${color && `var(--kit-color-${color})`}` : '',
+			color ? `color:${color && `var(--kit-color-${color})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
+
 	let resolvedSrc = $derived(src ?? (icon?.includes('/') ? icon : undefined));
 	let resolvedName = $derived(name ?? (!icon?.includes('/') ? icon : undefined));
 	let hasChildren = $derived(!!children);
@@ -75,13 +85,11 @@
 		this={is}
 		bind:this={ref}
 		class={classWithIconName}
-		style={componentStyle}
+		style={resolvedStyle}
 		data-size={size}
 		role={iconRole}
 		aria-label={iconAriaLabel}
 		aria-hidden={iconAriaHidden}
-		style:--kit-icon-color={color && `var(--kit-color-${color})`}
-		style:color={color && `var(--kit-color-${color})`}
 		{...restProps}
 	>
 		{#if hasChildren}

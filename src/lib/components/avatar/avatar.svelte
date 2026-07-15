@@ -44,13 +44,23 @@
 	let elevationState = $derived(useElevation(elevation));
 	let contentType = $derived(label && label.trim().length > 0 ? 'label' : children);
 	let displayLabel = $derived(label?.trim() ?? '');
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-avatar-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-avatar-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={'div'}
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	data-type={contentType}
 	data-size={contentType === 'label' ? size : undefined}
 	data-density={contentType === 'label' ? density : undefined}
@@ -58,8 +68,6 @@
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	style:--kit-avatar-fg={color && `var(--kit-color-${color})`}
-	style:--kit-avatar-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	{#if contentType === 'label'}

@@ -95,12 +95,22 @@
 		if (event.target !== ref || persistent) return;
 		open = false;
 	}
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-dialog-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-dialog-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <dialog
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	data-size={size}
 	data-position={position}
 	data-persistent={persistent}

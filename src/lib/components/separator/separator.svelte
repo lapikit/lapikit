@@ -40,6 +40,21 @@
 
 	const formatThickness = (value?: number | string) =>
 		typeof thickness === 'number' ? `${value}px` : value;
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-separator-fg:${color && `var(--kit-color-${color})`}` : '',
+			thickness && orientation === 'horizontal'
+				? `--kit-separator-top-width:${formatThickness(thickness)}`
+				: '',
+			thickness && orientation === 'vertical'
+				? `--kit-separator-right-width:${formatThickness(thickness)}`
+				: ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
@@ -47,14 +62,12 @@
 	bind:this={ref}
 	{...restProps}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	role="separator"
 	aria-orientation={orientation || 'horizontal'}
 	data-inset={inset || undefined}
 	data-orientation={orientation}
 	style:--kit-separator-color={color && `var(--kit-color-${color})`}
-	style:--kit-separator-top-width={orientation === 'horizontal' ? formatThickness(thickness) : ''}
-	style:--kit-separator-right-width={orientation === 'vertical' ? formatThickness(thickness) : ''}
 />
 
 <style>

@@ -50,6 +50,16 @@
 			styleProps
 		})
 	);
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-alert-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-alert-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 {#if !closable || (closable && open)}
@@ -57,7 +67,7 @@
 		this={is}
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		role="alert"
 		data-size={size}
 		data-variant={variant}
@@ -71,8 +81,6 @@
 		data-elevation={elevationState.base}
 		data-elevation-hover={elevationState.hover}
 		data-elevation-active={elevationState.active}
-		style:--kit-alert-fg={color && `var(--kit-color-${color})`}
-		style:--kit-alert-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
 		{#if variant === 'outline'}

@@ -88,15 +88,11 @@
 
 	const resolvedType = $derived(tag !== 'button' ? type : (type ?? 'button'));
 
-	$effect(() => {
-		console.log('lapikit test:', componentStyle, styleAttr, sStyle, styleProps);
-	});
-
-	let mergedStyle = $derived(
+	let resolvedStyle = $derived(
 		[
 			componentStyle,
-			color ? `--kit-chip-fg:${color}` : '',
-			background ? `--kit-chip-bg:${background}` : ''
+			color ? `--kit-chip-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-chip-bg:${background && `var(--kit-color-${background})`}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
@@ -108,7 +104,7 @@
 		this={inputWrapperTag}
 		bind:this={ref}
 		class={componentClass}
-		style={mergedStyle}
+		style={resolvedStyle}
 		data-size={size}
 		data-variant={variant}
 		data-rounded={rounded}
@@ -128,8 +124,6 @@
 			component: 'chip',
 			disabled: noRipple || isLocked
 		}}
-		// style:--kit-chip-fg={color && `var(--kit-color-${color})`}
-		// style:--kit-chip-bg={background && `var(--kit-color-${background})`}
 	>
 		{#if variant === 'outline'}
 			<span class="outline"></span>
@@ -157,7 +151,7 @@
 		this={tag}
 		bind:this={ref}
 		class={componentClass}
-		style={mergedStyle}
+		style={resolvedStyle}
 		type={resolvedType}
 		href={resolvedHref}
 		data-size={size}

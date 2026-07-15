@@ -55,13 +55,23 @@
 			styleProps
 		})
 	);
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-card-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-card-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={tag}
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	href={resolvedHref}
 	type={resolvedType}
 	disabled={resolvedDisabled}
@@ -80,8 +90,6 @@
 		component: 'card',
 		disabled: noRipple || disabled || !isInteractive
 	}}
-	style:--kit-card-fg={color && `var(--kit-color-${color})`}
-	style:--kit-card-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	{#if variant === 'outline'}

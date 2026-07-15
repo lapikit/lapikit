@@ -43,13 +43,23 @@
 			styleProps
 		})
 	);
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-accordion-item-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-accordion-item-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	data-text={text ? true : undefined}
 	data-spacer={spacer}
 	data-hide-icon={hideIcon}
@@ -57,8 +67,6 @@
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
-	style:--kit-accordion-item-fg={color && `var(--kit-color-${color})`}
-	style:--kit-accordion-item-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	{@render children?.()}

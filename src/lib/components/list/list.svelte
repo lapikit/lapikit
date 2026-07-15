@@ -41,21 +41,29 @@
 			styleProps
 		})
 	);
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-list-item-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-list-item-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	data-size={size}
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
 	data-nav={nav}
 	role={nav ? 'navigation' : is === 'ul' ? undefined : 'list'}
-	style:--kit-list-item-fg={color && `var(--kit-color-${color})`}
-	style:--kit-list-item-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	{@render children?.()}

@@ -72,6 +72,16 @@
 		if (tag !== 'button') return type;
 		return type ?? 'button';
 	});
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-btn-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-btn-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 {#if isInput}
@@ -79,7 +89,7 @@
 		this={inputWrapperTag}
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		data-size={size}
 		data-variant={variant}
 		data-loading={loading}
@@ -99,8 +109,6 @@
 			component: 'btn',
 			disabled: noRipple || disabled
 		}}
-		style:--kit-btn-fg={color && `var(--kit-color-${color})`}
-		style:--kit-btn-bg={background && `var(--kit-color-${background})`}
 	>
 		{#if variant === 'outline'}
 			<span class="outline"></span>
@@ -122,7 +130,7 @@
 		this={tag}
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		type={resolvedType()}
 		href={resolvedHref}
 		data-size={size}
@@ -145,8 +153,6 @@
 			component: 'btn',
 			disabled: noRipple || disabled
 		}}
-		style:--kit-btn-fg={color && `var(--kit-color-${color})`}
-		style:--kit-btn-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
 		{#if variant === 'outline'}
