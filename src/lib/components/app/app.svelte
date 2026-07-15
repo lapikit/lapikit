@@ -38,7 +38,7 @@
 </div>
 
 <style>
-	.kit-application {
+	:global(html) {
 		--kit-shape-none: 0;
 		--kit-shape-xs: 4px;
 		--kit-shape-sm: 6px;
@@ -60,7 +60,7 @@
 			'Segoe UI Symbol', 'Noto Color Emoji';
 	}
 
-	.kit-application,
+	:global(html:not([data-kit-theme])),
 	:global([data-kit-theme='light']) {
 		color-scheme: light;
 		--kit-color-surface: hsl(0 0% 100%);
