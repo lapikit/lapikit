@@ -69,14 +69,13 @@
 	);
 
 	let resolvedRatio = $derived(resolveRatio(ratio ?? aspectRatio));
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={componentStyle}
 	data-inline={inline}
 	style:--kit-aspect-ratio={resolvedRatio}
 	style:--kit-aspect-fit={fit}

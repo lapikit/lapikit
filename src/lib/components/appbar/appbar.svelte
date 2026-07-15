@@ -56,14 +56,22 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-appbar-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-appbar-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={resolvedStyle}
 	data-size={size}
 	data-variant={variant}
 	data-density={density}
@@ -71,8 +79,6 @@
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	style:--kit-appbar-fg={color && `var(--kit-color-${color})`}
-	style:--kit-appbar-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	{#if variant === 'outline'}

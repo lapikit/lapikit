@@ -57,14 +57,22 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-toolbar-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-toolbar-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={resolvedStyle}
 	{...restProps}
 	role="toolbar"
 	data-variant={variant}
@@ -75,8 +83,6 @@
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	style:--kit-toolbar-fg={color && `var(--kit-color-${color})`}
-	style:--kit-toolbar-bg={background && `var(--kit-color-${background})`}
 >
 	{#if variant === 'outline'}
 		<span class="outline"></span>

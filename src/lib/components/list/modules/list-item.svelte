@@ -49,14 +49,22 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-list-item-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-list-item-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={tag}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={resolvedStyle}
 	href={href && !disabled ? href : undefined}
 	data-active={active}
 	data-disabled={disabled}
@@ -67,8 +75,6 @@
 	data-append={append && true}
 	data-prepend={prepend && true}
 	data-interactive={isInteractive}
-	style:--kit-list-item-fg={color && `var(--kit-color-${color})`}
-	style:--kit-list-item-bg={background && `var(--kit-color-${background})`}
 	use:ripple={{
 		component: 'list-item',
 		disabled: noRipple || !isInteractive

@@ -87,6 +87,16 @@
 	const resolvedDisabled = $derived((tag === 'button' && isLocked) || undefined);
 
 	const resolvedType = $derived(tag !== 'button' ? type : (type ?? 'button'));
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-chip-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-chip-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 {#if isInput}
@@ -94,7 +104,7 @@
 		this={inputWrapperTag}
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		data-size={size}
 		data-variant={variant}
 		data-rounded={rounded}
@@ -114,8 +124,6 @@
 			component: 'chip',
 			disabled: noRipple || isLocked
 		}}
-		style:--kit-chip-fg={color && `var(--kit-color-${color})`}
-		style:--kit-chip-bg={background && `var(--kit-color-${background})`}
 	>
 		{#if variant === 'outline'}
 			<span class="outline"></span>
@@ -143,7 +151,7 @@
 		this={tag}
 		bind:this={ref}
 		class={componentClass}
-		style={componentStyle}
+		style={resolvedStyle}
 		type={resolvedType}
 		href={resolvedHref}
 		data-size={size}
@@ -167,8 +175,8 @@
 			component: 'chip',
 			disabled: noRipple || !isInteractive
 		}}
-		style:--kit-chip-fg={color && `var(--kit-color-${color})`}
-		style:--kit-chip-bg={background && `var(--kit-color-${background})`}
+		// style:--kit-chip-fg={color && `var(--kit-color-${color})`}
+		// style:--kit-chip-bg={background && `var(--kit-color-${background})`}
 		{...restProps}
 	>
 		{#if variant === 'outline'}

@@ -70,7 +70,15 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-textfield-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-textfield-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 
 	let counterValue = $state(0);
 	let displayMessage = $state(false);
@@ -122,7 +130,7 @@
 <div
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={resolvedStyle}
 	{...restProps}
 	data-size={size}
 	data-variant={variant}
@@ -133,8 +141,6 @@
 	data-hide-spin-buttons={type === 'number' && hideSpinButtons}
 	data-rounded={rounded}
 	data-with-message={(messageValue || messagePrefix || messageSuffix || counter) && true}
-	style:--kit-textfield-fg={color && `var(--kit-color-${color})`}
-	style:--kit-textfield-bg={background && `var(--kit-color-${background})`}
 >
 	{#if prepend}
 		<div class="kit-textfield__prepend">

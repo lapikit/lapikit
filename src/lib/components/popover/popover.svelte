@@ -45,8 +45,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	const positioner = getPositions();
 
 	let contentRef = $state<HTMLElement | null>(null);
@@ -97,6 +95,16 @@
 	$effect(() => {
 		ref = contentRef;
 	});
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-popover-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-popover-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:window bind:innerHeight bind:innerWidth bind:scrollX bind:scrollY />
@@ -107,7 +115,7 @@
 	<div
 		bind:this={contentRef}
 		class={componentClass}
-		style={`left:${axis.x}px; top:${axis.y}px; ${mergedStyle}`}
+		style={`left:${axis.x}px; top:${axis.y}px; ${resolvedStyle}`}
 		role="dialog"
 		data-rounded={rounded}
 		data-position={axis.location ?? position}
@@ -115,8 +123,6 @@
 		data-elevation={elevationState.base}
 		data-elevation-hover={elevationState.hover}
 		data-elevation-active={elevationState.active}
-		style:--kit-modal-fg={color && `var(--kit-color-${color})`}
-		style:--kit-modal-bg={background && `var(--kit-color-${background})`}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: () => (open = false) }}
 		{...restProps}
 	>

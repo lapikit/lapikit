@@ -46,8 +46,6 @@
 		})
 	);
 
-	let mergedStyle = $derived([componentStyle].filter(Boolean).join('; '));
-
 	let safeOpen = $derived(!!open);
 	let model: AccordionItemModelProps = {
 		get open() {
@@ -61,21 +59,29 @@
 		if (readOnly || disabled || !toggle) return;
 		toggle(index);
 	}
+
+	let resolvedStyle = $derived(
+		[
+			componentStyle,
+			color ? `--kit-accordion-item-fg:${color && `var(--kit-color-${color})`}` : '',
+			background ? `--kit-accordion-item-bg:${background && `var(--kit-color-${background})`}` : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={mergedStyle}
+	style={resolvedStyle}
 	data-disabled={disabled}
 	data-read-only={readOnly}
 	data-active={safeOpen}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	style:--kit-accordion-item-fg={color && `var(--kit-color-${color})`}
-	style:--kit-accordion-item-bg={background && `var(--kit-color-${background})`}
 	{...restProps}
 >
 	<span class="outline"></span>
