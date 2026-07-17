@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.6]
+
+### Added
+
+- create normalize variable size **font**
+- create normalize variable size **density**
+
+### Updated
+
+- normalize all sizing components
+- update variables **space**
+
+### Fixed
+
+- `kit:dialog` fix override variables colors **bg**, **fg** and **spacer**
+
 ## [0.6.5] - 2026-07-15
 
 ### Fixed
