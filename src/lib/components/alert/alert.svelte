@@ -281,7 +281,7 @@
 	}
 	.kit-alert[data-size='xl'] {
 		--kit-alert-h: 64px;
-		--kit-alert-px: 20px;
+		--kit-alert-p: 20px;
 		--kit-alert-gap: var(--kit-space-comfortable);
 		--kit-alert-font: var(--kit-font-xl);
 	}

@@ -118,15 +118,15 @@
 
 	.kit-list-item .kit-list-item__prepend,
 	.kit-list-item:not([data-prepend='true']) .kit-list-item__content {
-		margin-left: calc(var(--kit-list-item-px) + var(--kit-list-density-offset) / 2);
+		margin-left: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
 	}
 	.kit-list-item .kit-list-item__append,
 	.kit-list-item:not([data-append='true']) .kit-list-item__content {
-		margin-right: calc(var(--kit-list-item-px) + var(--kit-list-density-offset) / 2);
+		margin-right: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
 	}
 	.kit-list-item:not([data-prepend='true']):not([data-append='true']) .kit-list-item__content {
-		margin-left: calc(var(--kit-list-item-px) + var(--kit-list-density-offset) / 2);
-		margin-right: calc(var(--kit-list-item-px) + var(--kit-list-density-offset) / 2);
+		margin-left: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
+		margin-right: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
 	}
 
 	.kit-list-item[data-prepend='true']:not([data-append='true']) {

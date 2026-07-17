@@ -228,7 +228,7 @@
 		align-items: center;
 		justify-content: flex-start;
 		min-height: calc(var(--kit-toolbar-h) + var(--kit-toolbar-density-offset) / 2);
-		padding: calc(var(--kit-toolbar-px) + var(--kit-toolbar-density-offset) / 2);
+		padding: calc(var(--kit-toolbar-p) + var(--kit-toolbar-density-offset) / 2);
 		gap: var(--kit-toolbar-gap);
 		width: 100%;
 		border-radius: inherit;

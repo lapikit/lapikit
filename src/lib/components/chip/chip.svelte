@@ -424,7 +424,7 @@
 
 	.kit-chip[data-size='lg'] {
 		--kit-chip-h: 36px;
-		--kit-chip-px: 14px;
+		--kit-chip-p: 14px;
 		--kit-chip-gap: var(--kit-space-default);
 		--kit-chip-font: 14px;
 	}
@@ -434,7 +434,7 @@
 
 	.kit-chip[data-size='xl'] {
 		--kit-chip-h: 40px;
-		--kit-chip-px: 16px;
+		--kit-chip-p: 16px;
 		--kit-chip-gap: var(--kit-space-comfortable);
 		--kit-chip-font: 15px;
 	}

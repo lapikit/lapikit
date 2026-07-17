@@ -188,31 +188,31 @@
 	*/
 	.kit-list[data-size='xs'] :global(.kit-list-item) {
 		--kit-list-item-h: 28px;
-		--kit-list-item-px: 12px;
+		--kit-list-item-p: 12px;
 		--kit-list-item-gap: var(--kit-space-compact);
 		--kit-list-item-font: var(--kit-font-xs);
 	}
 	.kit-list[data-size='sm'] :global(.kit-list-item) {
 		--kit-list-item-h: 36px;
-		--kit-list-item-px: 14px;
+		--kit-list-item-p: 14px;
 		--kit-list-item-gap: var(--kit-space-default);
 		--kit-list-item-font: var(--kit-font-sm);
 	}
 	.kit-list[data-size='md'] :global(.kit-list-item) {
 		--kit-list-item-h: 44px;
-		--kit-list-item-px: 16px;
+		--kit-list-item-p: 16px;
 		--kit-list-item-gap: var(--kit-space-default);
 		--kit-list-item-font: var(--kit-font-md);
 	}
 	.kit-list[data-size='lg'] :global(.kit-list-item) {
 		--kit-list-item-h: 52px;
-		--kit-list-item-px: 20px;
+		--kit-list-item-p: 20px;
 		--kit-list-item-gap: var(--kit-space-default);
 		--kit-list-item-font: var(--kit-font-lg);
 	}
 	.kit-list[data-size='xl'] :global(.kit-list-item) {
 		--kit-list-item-h: 60px;
-		--kit-list-item-px: 24px;
+		--kit-list-item-p: 24px;
 		--kit-list-item-gap: var(--kit-space-comfortable);
 		--kit-list-item-font: var(--kit-font-xl);
 	}
