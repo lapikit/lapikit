@@ -231,7 +231,7 @@
 		display: inline-block;
 		width: max-content;
 		max-width: min(20rem, calc(100vw - 1rem));
-		padding: calc(var(--kit-space-default) * var(--kit-tooltip-density-offset) / 2);
+		padding: calc(var(--kit-space-default) + var(--kit-tooltip-density-offset) / 2);
 		border: 0;
 		border-radius: var(--kit-tooltip-radius);
 		background: var(--kit-tooltip-bg);

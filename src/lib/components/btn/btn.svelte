@@ -221,7 +221,7 @@
 		background: var(--kit-btn-bg);
 		color: var(--kit-btn-fg);
 		height: calc(var(--kit-btn-h) + var(--kit-btn-density-offset) / 2);
-		padding-inline: calc(var(--kit-btn-p) * var(--kit-btn-density-offset) / 2);
+		padding-inline: calc(var(--kit-btn-p) + var(--kit-btn-density-offset) / 2);
 		border-radius: var(--kit-btn-radius);
 		text-decoration: none;
 		white-space: nowrap;
@@ -351,8 +351,8 @@
 	}
 
 	.kit-btn[data-icon='true'] {
-		width: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-offset) / 2));
-		min-width: max(28px, calc(var(--kit-btn-h) * var(--kit-btn-density-offset) / 2));
+		width: max(28px, calc(var(--kit-btn-h) + var(--kit-btn-density-offset) / 2));
+		min-width: max(28px, calc(var(--kit-btn-h) + var(--kit-btn-density-offset) / 2));
 		padding-inline: 0;
 	}
 
