@@ -95,15 +95,6 @@
 
 <style>
 	.kit-toolbar {
-		/* --kit-toolbar-bg: var(--kit-surface-2);
-		--kit-toolbar-fg: var(--kit-fg);
-		--kit-toolbar-bd: color-mix(in oklab, var(--kit-toolbar-fg), transparent 82%);
-		--kit-toolbar-radius: 1rem;
-		--kit-toolbar-gap: 0.5rem;
-		--kit-toolbar-padding-x: 0.75rem;
-		--kit-toolbar-padding-y: 0.5rem;
-		--kit-toolbar-size: auto; */
-
 		position: relative;
 		display: inline-flex;
 		max-width: 100%;
@@ -150,21 +141,14 @@
 	 * density
 	 * @link no links
 	 */
-	.kit-toolbar[data-density='none'] {
-		--kit-toolbar-density-scale: 0;
-		--kit-toolbar-density-h-scale: 0;
-	}
 	.kit-toolbar[data-density='compact'] {
-		--kit-toolbar-density-scale: 0.9;
-		--kit-toolbar-density-h-scale: 0.92;
+		--kit-toolbar-density-offset: var(--kit-density-compact);
 	}
 	.kit-toolbar[data-density='default'] {
-		--kit-toolbar-density-scale: 1;
-		--kit-toolbar-density-h-scale: 1;
+		--kit-toolbar-density-offset: var(--kit-density-default);
 	}
 	.kit-toolbar[data-density='comfortable'] {
-		--kit-toolbar-density-scale: 1.1;
-		--kit-toolbar-density-h-scale: 1.15;
+		--kit-toolbar-density-offset: var(--kit-density-comfortable);
 	}
 
 	/** 
@@ -199,34 +183,34 @@
 	* @link nothing...
 	*/
 	.kit-toolbar[data-size='xs'] {
-		--kit-toolbar-h: 24px;
-		--kit-toolbar-px: 6px;
-		--kit-toolbar-gap: 4px;
-		--kit-toolbar-font: 0.75rem;
+		--kit-toolbar-h: 32px;
+		--kit-toolbar-p: 8px;
+		--kit-toolbar-gap: var(--kit-space-compact);
+		--kit-toolbar-font: var(--kit-font-xs);
 	}
 	.kit-toolbar[data-size='sm'] {
-		--kit-toolbar-h: 28px;
-		--kit-toolbar-px: 8px;
-		--kit-toolbar-gap: 6px;
-		--kit-toolbar-font: 0.875rem;
+		--kit-toolbar-h: 40px;
+		--kit-toolbar-p: 10px;
+		--kit-toolbar-gap: var(--kit-space-default);
+		--kit-toolbar-font: var(--kit-font-sm);
 	}
 	.kit-toolbar[data-size='md'] {
-		--kit-toolbar-h: 32px;
-		--kit-toolbar-px: 10px;
-		--kit-toolbar-gap: 8px;
-		--kit-toolbar-font: 1rem;
+		--kit-toolbar-h: 48px;
+		--kit-toolbar-p: 12px;
+		--kit-toolbar-gap: var(--kit-space-default);
+		--kit-toolbar-font: var(--kit-font-md);
 	}
 	.kit-toolbar[data-size='lg'] {
-		--kit-toolbar-h: 38px;
-		--kit-toolbar-px: 12px;
-		--kit-toolbar-gap: 10px;
-		--kit-toolbar-font: 1.125rem;
+		--kit-toolbar-h: 56px;
+		--kit-toolbar-p: 16px;
+		--kit-toolbar-gap: var(--kit-space-default);
+		--kit-toolbar-font: var(--kit-font-lg);
 	}
 	.kit-toolbar[data-size='xl'] {
-		--kit-toolbar-h: 42px;
-		--kit-toolbar-px: 14px;
-		--kit-toolbar-gap: 12px;
-		--kit-toolbar-font: 1.25rem;
+		--kit-toolbar-h: 64px;
+		--kit-toolbar-p: 20px;
+		--kit-toolbar-gap: var(--kit-space-comfortable);
+		--kit-toolbar-font: var(--kit-font-xl);
 	}
 
 	.kit-toolbar .outline {
@@ -243,8 +227,8 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: flex-start;
-		min-height: calc(var(--kit-toolbar-h) * var(--kit-toolbar-density-h-scale));
-		padding: calc(var(--kit-toolbar-px) * var(--kit-toolbar-density-scale));
+		min-height: calc(var(--kit-toolbar-h) + var(--kit-toolbar-density-offset) / 2);
+		padding: calc(var(--kit-toolbar-px) + var(--kit-toolbar-density-offset) / 2);
 		gap: var(--kit-toolbar-gap);
 		width: 100%;
 		border-radius: inherit;

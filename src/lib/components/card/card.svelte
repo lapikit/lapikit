@@ -110,7 +110,7 @@
 		border-radius: var(--kit-card-radius);
 		border: 0;
 		box-sizing: border-box;
-		padding: calc(10px * var(--kit-card-density-scale));
+		padding: calc(10px + var(--kit-card-density-offset) / 2);
 		transition:
 			background 140ms ease,
 			color 140ms ease,
@@ -157,20 +157,17 @@
 	 * density
 	 * @link https://lapikit.dev/docs/components/card#density 
 	 */
-	.kit-card[data-density='none'] {
-		--kit-card-density-scale: 0;
-	}
 	.kit-card[data-density='compact'] {
 		--kit-card-gap: var(--kit-space-compact);
-		--kit-card-density-scale: 0.8;
+		--kit-card-density-offset: var(--kit-density-compact);
 	}
 	.kit-card[data-density='default'] {
 		--kit-card-gap: var(--kit-space-default);
-		--kit-card-density-scale: 1;
+		--kit-card-density-offset: var(--kit-density-default);
 	}
 	.kit-card[data-density='comfortable'] {
 		--kit-card-gap: var(--kit-space-comfortable);
-		--kit-card-density-scale: 1.15;
+		--kit-card-density-offset: var(--kit-density-comfortable);
 	}
 
 	/** 
@@ -225,7 +222,7 @@
 	}
 
 	.kit-card[data-interactive='true'][data-disabled='false']:focus-visible {
-		outline: 2px solid var(--kit-focus);
+		outline: 2px solid var(--kit-color-focus);
 		outline-offset: 2px;
 	}
 

@@ -47,9 +47,19 @@
 		--kit-shape-xl: 18px;
 		--kit-shape-full: 9999px;
 
-		--kit-space-compact: 6px;
-		--kit-space-default: 10px;
-		--kit-space-comfortable: 14px;
+		--kit-font-xs: 13px;
+		--kit-font-sm: 14px;
+		--kit-font-md: 15px;
+		--kit-font-lg: 16px;
+		--kit-font-xl: 17px;
+
+		--kit-space-compact: 2px;
+		--kit-space-default: 4px;
+		--kit-space-comfortable: 6px;
+
+		--kit-density-compact: -4px;
+		--kit-density-default: 0px;
+		--kit-density-comfortable: 4px;
 
 		--kit-shadow-opacity: 30%;
 		--kit-shadow-ambiant-opacity: 15%;

@@ -100,7 +100,8 @@
 		[
 			componentStyle,
 			color ? `--kit-dialog-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-dialog-bg:${background && `var(--kit-color-${background})`}` : ''
+			background ? `--kit-dialog-bg:${background && `var(--kit-color-${background})`}` : '',
+			space ? `--kit-dialog-space:${space}` : ''
 		]
 			.filter(Boolean)
 			.join('; ')
@@ -127,9 +128,6 @@
 		data-elevation-hover={elevationState.hover}
 		data-elevation-active={elevationState.active}
 		onclick={(event: MouseEvent) => event.stopPropagation()}
-		style:--kit-dialog-fg={color && `var(--kit-color-${color})`}
-		style:--kit-dialog-bg={background && `var(--kit-color-${background})`}
-		style:--kit-dialog-space={space}
 	>
 		{@render children?.()}
 	</div>
@@ -191,27 +189,27 @@
 	*/
 	.kit-dialog[data-size='xs'] {
 		--kit-dialog-max: 20rem;
-		--kit-dialog-px: 10px;
+		--kit-dialog-p: 12px;
 	}
 
 	.kit-dialog[data-size='sm'] {
 		--kit-dialog-max: 24rem;
-		--kit-dialog-px: 12px;
+		--kit-dialog-p: 14px;
 	}
 
 	.kit-dialog[data-size='md'] {
 		--kit-dialog-max: 32rem;
-		--kit-dialog-px: 16px;
+		--kit-dialog-p: 16px;
 	}
 
 	.kit-dialog[data-size='lg'] {
 		--kit-dialog-max: 42rem;
-		--kit-dialog-px: 20px;
+		--kit-dialog-p: 20px;
 	}
 
 	.kit-dialog[data-size='xl'] {
 		--kit-dialog-max: 56rem;
-		--kit-dialog-px: 24px;
+		--kit-dialog-p: 24px;
 	}
 
 	.kit-dialog__content {
@@ -222,7 +220,7 @@
 		width: min(100%, min(var(--kit-dialog-max), calc(100vw - 2rem)));
 		max-height: calc(100dvh - 2rem);
 		overflow: auto;
-		padding: calc(var(--kit-dialog-px) * var(--kit-dialog-density-scale));
+		padding: calc(var(--kit-dialog-p) + var(--kit-dialog-density-offset) / 2);
 		border: 0;
 		border-radius: var(--kit-dialog-radius);
 		background: var(--kit-dialog-bg);
@@ -234,17 +232,14 @@
 	 * density
 	 * @link no links
 	 */
-	.kit-dialog__content[data-density='none'] {
-		--kit-dialog-density-scale: 0;
-	}
 	.kit-dialog__content[data-density='compact'] {
-		--kit-dialog-density-scale: 0.9;
+		--kit-dialog-density-offset: var(--kit-density-compact);
 	}
 	.kit-dialog__content[data-density='default'] {
-		--kit-dialog-density-scale: 1;
+		--kit-dialog-density-offset: var(--kit-density-default);
 	}
 	.kit-dialog__content[data-density='comfortable'] {
-		--kit-dialog-density-scale: 1.1;
+		--kit-dialog-density-offset: var(--kit-density-comfortable);
 	}
 
 	/** 

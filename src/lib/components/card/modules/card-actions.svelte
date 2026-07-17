@@ -48,6 +48,6 @@
 	.kit-card-actions {
 		display: inline-flex;
 		align-items: center;
-		gap: var(--kit-space-compact);
+		gap: var(--kit-card-gap);
 	}
 </style>

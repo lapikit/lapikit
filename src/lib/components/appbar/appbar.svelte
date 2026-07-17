@@ -98,8 +98,8 @@
 		position: relative;
 		width: 100%;
 		gap: var(--kit-appbar-gap);
-		min-height: calc(var(--kit-appbar-h) * var(--kit-appbar-density-h-scale));
-		padding: calc(var(--kit-appbar-px) * var(--kit-appbar-density-scale));
+		min-height: calc(var(--kit-appbar-h) + var(--kit-appbar-density-offset) / 2);
+		padding: calc(var(--kit-appbar-p) + var(--kit-appbar-density-offset) / 2);
 		border-radius: var(--kit-appbar-radius);
 		color: var(--kit-appbar-fg);
 		background-color: var(--kit-appbar-bg);
@@ -142,21 +142,14 @@
 	 * density
 	 * @link no links
 	 */
-	.kit-appbar[data-density='none'] {
-		--kit-appbar-density-scale: 0;
-		--kit-appbar-density-h-scale: 0;
-	}
 	.kit-appbar[data-density='compact'] {
-		--kit-appbar-density-scale: 0.9;
-		--kit-appbar-density-h-scale: 0.92;
+		--kit-appbar-density-offset: var(--kit-density-compact);
 	}
 	.kit-appbar[data-density='default'] {
-		--kit-appbar-density-scale: 1;
-		--kit-appbar-density-h-scale: 1;
+		--kit-appbar-density-offset: var(--kit-density-compact);
 	}
 	.kit-appbar[data-density='comfortable'] {
-		--kit-appbar-density-scale: 1.1;
-		--kit-appbar-density-h-scale: 1.15;
+		--kit-appbar-density-offset: var(--kit-density-compact);
 	}
 
 	/** 
@@ -191,34 +184,34 @@
 	* @link nothing...
 	*/
 	.kit-appbar[data-size='xs'] {
-		--kit-appbar-h: 28px;
-		--kit-appbar-px: 10px;
-		--kit-appbar-gap: 4px;
-		--kit-appbar-font: 0.75rem;
+		--kit-appbar-h: 32px;
+		--kit-appbar-p: 8px;
+		--kit-appbar-gap: var(--kit-space-compact);
+		--kit-appbar-font: var(--kit-font-xs);
 	}
 	.kit-appbar[data-size='sm'] {
-		--kit-appbar-h: 32px;
-		--kit-appbar-px: 12px;
-		--kit-appbar-gap: 6px;
-		--kit-appbar-font: 0.875rem;
+		--kit-appbar-h: 40px;
+		--kit-appbar-p: 10px;
+		--kit-appbar-gap: var(--kit-space-default);
+		--kit-appbar-font: var(--kit-font-sm);
 	}
 	.kit-appbar[data-size='md'] {
-		--kit-appbar-h: 40px;
-		--kit-appbar-px: 14px;
-		--kit-appbar-gap: 8px;
-		--kit-appbar-font: 1rem;
+		--kit-appbar-h: 48px;
+		--kit-appbar-p: 12px;
+		--kit-appbar-gap: var(--kit-space-default);
+		--kit-appbar-font: var(--kit-font-md);
 	}
 	.kit-appbar[data-size='lg'] {
-		--kit-appbar-h: 48px;
-		--kit-appbar-px: 16px;
-		--kit-appbar-gap: 10px;
-		--kit-appbar-font: 1.125rem;
+		--kit-appbar-h: 56px;
+		--kit-appbar-p: 16px;
+		--kit-appbar-gap: var(--kit-space-default);
+		--kit-appbar-font: var(--kit-font-lg);
 	}
 	.kit-appbar[data-size='xl'] {
-		--kit-appbar-h: 56px;
-		--kit-appbar-px: 18px;
-		--kit-appbar-gap: 12px;
-		--kit-appbar-font: 1.25rem;
+		--kit-appbar-h: 64px;
+		--kit-appbar-p: 20px;
+		--kit-appbar-gap: var(--kit-space-comfortable);
+		--kit-appbar-font: var(--kit-font-xl);
 	}
 
 	.kit-appbar__wrapper {
@@ -227,7 +220,7 @@
 		display: flex;
 		align-items: center;
 		flex-direction: row;
-		gap: 0.75rem;
+		gap: var(--kit-appbar-gap);
 		width: 100%;
 		margin: 0 auto;
 	}

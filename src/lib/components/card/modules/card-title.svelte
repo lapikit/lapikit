@@ -11,6 +11,7 @@
 		style: styleAttr = '',
 		's-class': sClass,
 		's-style': sStyle,
+		color,
 		...rest
 	}: CardTitleProps = $props();
 
@@ -32,13 +33,19 @@
 			styleProps
 		})
 	);
+
+	let resolvedStyle = $derived(
+		[componentStyle, color ? `--kit-card-title-fg:${color && `var(--kit-color-${color})`}` : '']
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
 	class={componentClass}
-	style={componentStyle}
+	style={resolvedStyle}
 	{...restProps}
 >
 	{@render children?.()}
@@ -49,7 +56,7 @@
 		display: flex;
 		align-items: center;
 		gap: var(--kit-card-gap);
-
+		color: var(--kit-card-title-fg, --kit-card-fg);
 		font-weight: 600;
 		line-height: 1.3;
 	}
