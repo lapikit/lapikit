@@ -418,7 +418,7 @@
 
 	.kit-btn[data-size='lg'] {
 		--kit-btn-h: 48px;
-		--kit-btn-px: 20px;
+		--kit-btn-p: 20px;
 		--kit-btn-gap: var(--kit-space-default);
 		--kit-btn-font: 16px;
 	}
@@ -428,7 +428,7 @@
 
 	.kit-btn[data-size='xl'] {
 		--kit-btn-h: 56px;
-		--kit-btn-px: 24px;
+		--kit-btn-p: 24px;
 		--kit-btn-gap: var(--kit-space-comfortable);
 		--kit-btn-font: 17px;
 	}
