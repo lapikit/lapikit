@@ -181,6 +181,10 @@
 		border-bottom-left-radius: var(--kit-list-item-radius);
 		border-bottom-right-radius: var(--kit-list-item-radius);
 	}
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:not(:first-child)),
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:not(:last-child)) {
+		--kit-list-item-radius: 0;
+	}
 
 	/**
 	* size
