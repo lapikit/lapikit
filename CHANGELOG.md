@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - create normalize variable size **font**
 - create normalize variable size **density**
+- add new color variable **--kit-color-transparent** for all components
 
 ### Updated
 
@@ -18,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `kit:dialog` fix override variables colors **bg**, **fg** and **spacer**
+- `kit:accordion` fix error rounded if accordion have only one item
+- `kit:list` fix ripple effect if item has not nav props
+- `kit:avatar` fix **size** and **density** not working
 
 ## [0.6.5] - 2026-07-15
 
