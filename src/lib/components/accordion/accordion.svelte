@@ -117,6 +117,10 @@
 		border-bottom-right-radius: var(--kit-accordion-item-radius);
 	}
 
+	.kit-accordion:not([data-spacer='true']) :global(.kit-accordion-item:first-child:last-child) {
+		border-radius: var(--kit-accordion-item-radius);
+	}
+
 	.kit-accordion[data-hide-icon='true'] :global(.kit-accordion-item__indicator) {
 		display: none;
 	}
