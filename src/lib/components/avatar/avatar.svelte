@@ -62,8 +62,8 @@
 	class={componentClass}
 	style={resolvedStyle}
 	data-type={contentType}
-	data-size={contentType === 'label' ? size : undefined}
-	data-density={contentType === 'label' ? density : undefined}
+	data-size={size}
+	data-density={density}
 	data-rounded={rounded}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
@@ -84,7 +84,6 @@
 		justify-content: center;
 		width: calc(var(--kit-avatar-h) + var(--kit-avatar-density-offset) / 2);
 		height: calc(var(--kit-avatar-h) + var(--kit-avatar-density-offset) / 2);
-		padding: calc(var(--kit-avatar-p) + var(--kit-avatar-density-offset) / 2);
 		overflow: hidden;
 		background: var(--kit-color-surface-3);
 		color: var(--kit-color-text);
@@ -167,31 +166,26 @@
 	*/
 	.kit-avatar[data-size='xs'] {
 		--kit-avatar-h: 32px;
-		--kit-avatar-p: 8px;
 		--kit-avatar-gap: var(--kit-space-compact);
 		--kit-avatar-font: var(--kit-font-xs);
 	}
 	.kit-avatar[data-size='sm'] {
 		--kit-avatar-h: 40px;
-		--kit-avatar-p: 10px;
 		--kit-avatar-gap: var(--kit-space-default);
 		--kit-avatar-font: var(--kit-font-sm);
 	}
 	.kit-avatar[data-size='md'] {
 		--kit-avatar-h: 48px;
-		--kit-avatar-p: 12px;
 		--kit-avatar-gap: var(--kit-space-default);
 		--kit-avatar-font: var(--kit-font-md);
 	}
 	.kit-avatar[data-size='lg'] {
 		--kit-avatar-h: 56px;
-		--kit-avatar-p: 16px;
 		--kit-avatar-gap: var(--kit-space-default);
 		--kit-avatar-font: var(--kit-font-lg);
 	}
 	.kit-avatar[data-size='xl'] {
 		--kit-avatar-h: 64px;
-		--kit-avatar-p: 20px;
 		--kit-avatar-gap: var(--kit-space-comfortable);
 		--kit-avatar-font: var(--kit-font-xl);
 	}
