@@ -146,10 +146,10 @@
 		--kit-appbar-density-offset: var(--kit-density-compact);
 	}
 	.kit-appbar[data-density='default'] {
-		--kit-appbar-density-offset: var(--kit-density-compact);
+		--kit-appbar-density-offset: var(--kit-density-default);
 	}
 	.kit-appbar[data-density='comfortable'] {
-		--kit-appbar-density-offset: var(--kit-density-compact);
+		--kit-appbar-density-offset: var(--kit-density-comfortable);
 	}
 
 	/** 
