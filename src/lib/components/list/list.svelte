@@ -96,21 +96,14 @@
 	 * density
 	 * @link https://lapikit.dev/docs/components/list#density 
 	 */
-	.kit-list[data-density='none'] {
-		--kit-list-density-scale: 0;
-		--kit-list-density-h-scale: 0;
-	}
 	.kit-list[data-density='compact'] {
-		--kit-list-density-scale: 0.9;
-		--kit-list-density-h-scale: 0.92;
+		--kit-list-density-offset: var(--kit-space-compact);
 	}
 	.kit-list[data-density='default'] {
-		--kit-list-density-scale: 1;
-		--kit-list-density-h-scale: 1;
+		--kit-list-density-offset: var(--kit-space-default);
 	}
 	.kit-list[data-density='comfortable'] {
-		--kit-list-density-scale: 1.1;
-		--kit-list-density-h-scale: 1.15;
+		--kit-list-density-offset: var(--kit-space-comfortable);
 	}
 
 	/** 
@@ -175,7 +168,22 @@
 	 * @link https://lapikit.dev/docs/components/list#nav 
 	 */
 	.kit-list[data-nav='true'] {
-		padding: 0.5rem;
+		padding: calc(var(--kit-space-default) + var(--kit-list-density-offset) / 2);
+	}
+	.kit-list[data-nav='true'] :global(.kit-list-item) {
+		border-radius: var(--kit-list-item-radius);
+	}
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:first-child) {
+		border-top-left-radius: var(--kit-list-item-radius);
+		border-top-right-radius: var(--kit-list-item-radius);
+	}
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:last-child) {
+		border-bottom-left-radius: var(--kit-list-item-radius);
+		border-bottom-right-radius: var(--kit-list-item-radius);
+	}
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:not(:first-child)),
+	.kit-list:not([data-nav='true']) :global(.kit-list-item:not(:last-child)) {
+		--kit-list-item-radius: 0;
 	}
 
 	/**
@@ -184,32 +192,32 @@
 	*/
 	.kit-list[data-size='xs'] :global(.kit-list-item) {
 		--kit-list-item-h: 28px;
-		--kit-list-item-px: 10px;
-		--kit-list-item-gap: 4px;
-		--kit-list-item-font: 0.75rem;
+		--kit-list-item-p: 12px;
+		--kit-list-item-gap: var(--kit-space-compact);
+		--kit-list-item-font: var(--kit-font-xs);
 	}
 	.kit-list[data-size='sm'] :global(.kit-list-item) {
-		--kit-list-item-h: 32px;
-		--kit-list-item-px: 12px;
-		--kit-list-item-gap: 6px;
-		--kit-list-item-font: 0.875rem;
+		--kit-list-item-h: 36px;
+		--kit-list-item-p: 14px;
+		--kit-list-item-gap: var(--kit-space-default);
+		--kit-list-item-font: var(--kit-font-sm);
 	}
 	.kit-list[data-size='md'] :global(.kit-list-item) {
-		--kit-list-item-h: 40px;
-		--kit-list-item-px: 16px;
-		--kit-list-item-gap: 8px;
-		--kit-list-item-font: 1rem;
+		--kit-list-item-h: 44px;
+		--kit-list-item-p: 16px;
+		--kit-list-item-gap: var(--kit-space-default);
+		--kit-list-item-font: var(--kit-font-md);
 	}
 	.kit-list[data-size='lg'] :global(.kit-list-item) {
-		--kit-list-item-h: 48px;
-		--kit-list-item-px: 20px;
-		--kit-list-item-gap: 10px;
-		--kit-list-item-font: 1.125rem;
+		--kit-list-item-h: 52px;
+		--kit-list-item-p: 20px;
+		--kit-list-item-gap: var(--kit-space-default);
+		--kit-list-item-font: var(--kit-font-lg);
 	}
 	.kit-list[data-size='xl'] :global(.kit-list-item) {
-		--kit-list-item-h: 56px;
-		--kit-list-item-px: 24px;
-		--kit-list-item-gap: 12px;
-		--kit-list-item-font: 1.25rem;
+		--kit-list-item-h: 60px;
+		--kit-list-item-p: 24px;
+		--kit-list-item-gap: var(--kit-space-comfortable);
+		--kit-list-item-font: var(--kit-font-xl);
 	}
 </style>

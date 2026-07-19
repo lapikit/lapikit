@@ -131,7 +131,8 @@
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
 		gap: var(--kit-alert-gap);
-		padding: calc(var(--kit-alert-px) * var(--kit-alert-density-scale));
+		min-height: calc(var(--kit-alert-item-h) + var(--kit-alert-density-offset) / 2);
+		padding: calc(var(--kit-alert-p) + var(--kit-alert-density-offset) / 2);
 		border-radius: var(--kit-alert-radius);
 		color: var(--kit-alert-fg);
 		background: var(--kit-alert-bg);
@@ -213,21 +214,14 @@
 	 * density
 	 * @link no links
 	 */
-	.kit-alert[data-density='none'] {
-		--kit-alert-density-scale: 0;
-		--kit-alert-density-h-scale: 0;
-	}
 	.kit-alert[data-density='compact'] {
-		--kit-alert-density-scale: 0.9;
-		--kit-alert-density-h-scale: 0.92;
+		--kit-alert-density-offset: var(--kit-density-compact);
 	}
 	.kit-alert[data-density='default'] {
-		--kit-alert-density-scale: 1;
-		--kit-alert-density-h-scale: 1;
+		--kit-alert-density-offset: var(--kit-density-default);
 	}
 	.kit-alert[data-density='comfortable'] {
-		--kit-alert-density-scale: 1.1;
-		--kit-alert-density-h-scale: 1.15;
+		--kit-alert-density-offset: var(--kit-density-comfortable);
 	}
 
 	/** 
@@ -262,29 +256,34 @@
 	* @link nothing...
 	*/
 	.kit-alert[data-size='xs'] {
-		--kit-alert-px: 10px;
-		--kit-alert-gap: 4px;
-		--kit-alert-font: 0.75rem;
+		--kit-alert-h: 32px;
+		--kit-alert-p: 8px;
+		--kit-alert-gap: var(--kit-space-compact);
+		--kit-alert-font: var(--kit-font-xs);
 	}
 	.kit-alert[data-size='sm'] {
-		--kit-alert-px: 12px;
-		--kit-alert-gap: 6px;
-		--kit-alert-font: 0.875rem;
+		--kit-alert-h: 40px;
+		--kit-alert-p: 10px;
+		--kit-alert-gap: var(--kit-space-default);
+		--kit-alert-font: var(--kit-font-sm);
 	}
 	.kit-alert[data-size='md'] {
-		--kit-alert-px: 16px;
-		--kit-alert-gap: 8px;
-		--kit-alert-font: 1rem;
+		--kit-alert-h: 48px;
+		--kit-alert-p: 12px;
+		--kit-alert-gap: var(--kit-space-default);
+		--kit-alert-font: var(--kit-font-md);
 	}
 	.kit-alert[data-size='lg'] {
-		--kit-alert-px: 20px;
-		--kit-alert-gap: 10px;
-		--kit-alert-font: 1.125rem;
+		--kit-alert-h: 56px;
+		--kit-alert-p: 16px;
+		--kit-alert-gap: var(--kit-space-default);
+		--kit-alert-font: var(--kit-font-lg);
 	}
 	.kit-alert[data-size='xl'] {
-		--kit-alert-px: 24px;
-		--kit-alert-gap: 12px;
-		--kit-alert-font: 1.25rem;
+		--kit-alert-h: 64px;
+		--kit-alert-p: 20px;
+		--kit-alert-gap: var(--kit-space-comfortable);
+		--kit-alert-font: var(--kit-font-xl);
 	}
 
 	/**

@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.6] - 2026-07-19
+
+### Added
+
+- create normalize variable size **font**
+- create normalize variable size **density**
+- add new color variable **--kit-color-transparent** for all components
+
+### Updated
+
+- normalize all sizing components
+- update variables **space**
+
+### Fixed
+
+- `kit:dialog` fix override variables colors **bg**, **fg** and **spacer**
+- `kit:accordion` fix error rounded if accordion have only one item
+- `kit:list` fix ripple effect if item has not nav props
+- `kit:avatar` fix **size** and **density** not working
+
 ## [0.6.5] - 2026-07-15
 
 ### Fixed

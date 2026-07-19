@@ -192,7 +192,7 @@
 		z-index: 1800;
 		min-width: 12rem;
 		max-width: min(22rem, calc(100vw - 1rem));
-		padding: 0.375rem calc(0.375rem * var(--kit-dropdown-density-scale));
+		padding: calc(var(--kit-space-default) + var(--kit-dropdown-density-offset) / 2);
 		border: 0;
 		border-radius: var(--kit-dropdown-radius);
 		background: var(--kit-dropdown-bg);
@@ -228,17 +228,14 @@
 	 * density
 	 * @link no url
 	 */
-	.kit-dropdown-content[data-density='none'] {
-		--kit-dropdown-density-scale: 0;
-	}
 	.kit-dropdown-content[data-density='compact'] {
-		--kit-dropdown-density-scale: 0.8;
+		--kit-dropdown-density-offset: var(--kit-density-compact);
 	}
 	.kit-dropdown-content[data-density='default'] {
-		--kit-dropdown-density-scale: 1;
+		--kit-dropdown-density-offset: var(--kit-density-default);
 	}
 	.kit-dropdown-content[data-density='comfortable'] {
-		--kit-dropdown-density-scale: 1.15;
+		--kit-dropdown-density-offset: var(--kit-density-comfortable);
 	}
 
 	@keyframes kit-dropdown-enter {

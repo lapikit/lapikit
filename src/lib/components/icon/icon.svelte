@@ -152,18 +152,18 @@
 	 * @link https://lapikit.dev/docs/components/icon#size 
 	 */
 	.kit-icon[data-size='xs'] {
-		--kit-icon-current-size: 0.875rem;
+		--kit-icon-current-size: 12px;
 	}
 	.kit-icon[data-size='sm'] {
-		--kit-icon-current-size: 1rem;
+		--kit-icon-current-size: 14px;
 	}
 	.kit-icon[data-size='md'] {
-		--kit-icon-current-size: 1.125rem;
+		--kit-icon-current-size: 16px;
 	}
 	.kit-icon[data-size='lg'] {
-		--kit-icon-current-size: 1.25rem;
+		--kit-icon-current-size: 18px;
 	}
 	.kit-icon[data-size='xl'] {
-		--kit-icon-current-size: 1.375rem;
+		--kit-icon-current-size: 20px;
 	}
 </style>
