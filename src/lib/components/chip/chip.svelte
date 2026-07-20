@@ -250,6 +250,7 @@
 		white-space: nowrap;
 		user-select: none;
 		cursor: default;
+		font-size: var(--kit-chip-font);
 		border: 0;
 		transition:
 			background 150ms ease,

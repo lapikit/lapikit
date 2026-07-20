@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `kit:appbar` fix **density** value
+- `kit:chip` fix font size not working with props **size**
 
 ## [0.6.6] - 2026-07-19
 
