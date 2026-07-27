@@ -202,7 +202,6 @@
 	}
 
 	.kit-card[data-interactive='true'][data-disabled='false']:hover {
-		translate: 0 -1px;
 		background: var(--kit-card-hover-bg);
 	}
 

@@ -279,6 +279,7 @@
 		background: var(--kit-chip-hover-bg);
 		color: var(--kit-chip-fg);
 		text-decoration: var(--kit-chip-decoration);
+		translate: 0 -1px;
 	}
 
 	:is(.kit-chip:focus-visible, .kit-chip:has(> input:focus-visible)) {

@@ -237,6 +237,7 @@
 		background: var(--kit-btn-hover-bg);
 		color: var(--kit-btn-fg);
 		text-decoration: var(--kit-btn-decoration);
+		translate: 0 -1px;
 	}
 
 	.kit-btn:has(> :is(input[type='checkbox'], input[type='radio']):checked) {
