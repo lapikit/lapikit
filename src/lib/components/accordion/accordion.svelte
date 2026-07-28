@@ -125,6 +125,16 @@
 		display: none;
 	}
 
+	.kit-accordion[data-variant='text'] :global(.kit-accordion-item),
+	.kit-accordion[data-variant='text'] :global(.kit-accordion-item:first-child:last-child) {
+		border-radius: 0 !important;
+	}
+
+	.kit-accordion:not([data-variant='text'])
+		:global(.kit-accordion-item[data-read-only='false'][data-disabled='false'] > button:hover) {
+		background: var(--kit-accordion-item-hover-bg);
+	}
+
 	/** 
 	 * rounded
 	 * @link ...

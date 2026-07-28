@@ -62,7 +62,7 @@
 		--kit-density-comfortable: 4px;
 
 		--kit-shadow-opacity: 30%;
-		--kit-shadow-ambiant-opacity: 15%;
+		--kit-shadow-ambient-opacity: 15%;
 
 		--kit-disabled-opacity: 0.55;
 		--kit-font:
@@ -261,7 +261,7 @@
 		box-shadow:
 			0 1px 2px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
 			0 3px 8px -2px
-				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 
 	:global([data-elevation='2']),
@@ -270,7 +270,7 @@
 		box-shadow:
 			0 1px 3px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
 			0 5px 12px -3px
-				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 
 	:global([data-elevation='3']),
@@ -279,7 +279,7 @@
 		box-shadow:
 			0 2px 4px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
 			0 8px 20px -4px
-				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 
 	:global([data-elevation='4']),
@@ -288,7 +288,7 @@
 		box-shadow:
 			0 3px 5px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
 			0 11px 26px -5px
-				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 
 	:global([data-elevation='5']),
@@ -297,7 +297,7 @@
 		box-shadow:
 			0 4px 6px color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
 			0 14px 32px -6px
-				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambiant-opacity), transparent);
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 	@keyframes -global-animation-l-ripple {
 		from {

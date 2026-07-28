@@ -155,7 +155,6 @@
 	}
 
 	.kit-list-item[data-interactive='true'][data-disabled='false']:hover {
-		translate: 0 -1px;
 		background: var(--kit-list-item-hover-bg);
 	}
 	.kit-list-item[data-active='true'][data-disabled='false'] {

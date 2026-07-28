@@ -136,14 +136,14 @@
 	 * variant
 	 * @link https://lapikit.dev/docs/components/list#variants
 	 */
-	.kit-list[data-variant='filled'] :global(.kit-list-item) {
+	.kit-list[data-variant='filled'] {
 		--kit-list-item-bg: var(--kit-color-surface-2);
 		--kit-list-item-fg: var(--kit-color-text);
 
 		--kit-list-item-hover-bg: color-mix(in oklab, var(---kit-list-item-bg), black 10%);
 		--kit-list-item-active-bg: color-mix(in oklab, var(--kit-list-item-bg), black 16%);
 	}
-	.kit-list[data-variant='outline'] :global(.kit-list-item) {
+	.kit-list[data-variant='outline'] {
 		--kit-list-item-bg: transparent;
 		--kit-list-item-fg: var(--kit-color-text);
 		--kit-list-item-bd: var(--kit-list-item-fg);
@@ -151,7 +151,7 @@
 		--kit-list-item-hover-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 80%);
 		--kit-list-item-active-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 92%);
 	}
-	.kit-list[data-variant='text'] :global(.kit-list-item) {
+	.kit-list[data-variant='text'] {
 		--kit-list-item-bg: transparent;
 		--kit-list-item-fg: var(--kit-color-text);
 

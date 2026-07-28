@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.8] - 2026-07-28
+
+### Updated
+
+- `kit:btn` update hover effect `translate`
+- `kit:chip` update hover effect `translate`
+
+### Fixed
+
+- `kit:icon` fix **size** value not working and default value has not set
+- `kit:accordion` fix **variant text** for hover effect
+- `kit:list` fix props color and background not working
+- `kit:card` fix hover effect `translate`
+- `kit:list` fix hover effect `translate`
+
 ## [0.6.7] - 2026-07-22
 
 ### Fixed

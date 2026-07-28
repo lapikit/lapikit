@@ -116,20 +116,26 @@
 
 <style>
 	.kit-icon {
+		--kit-icon-size-xs: 12px;
+		--kit-icon-size-sm: 14px;
+		--kit-icon-size-md: 16px;
+		--kit-icon-size-lg: 18px;
+		--kit-icon-size-xl: 20px;
+
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		text-indent: 0;
 		line-height: 1;
-		font-size: var(--kit-icon-current-size);
+		font-size: var(--kit-icon-current-size, var(--kit-icon-size-md));
 		vertical-align: middle;
 	}
 
 	.kit-icon :global(svg),
 	.kit-icon img,
 	.kit-icon .kit-icon__mask {
-		width: var(--kit-icon-current-size);
-		height: var(--kit-icon-current-size);
+		width: var(--kit-icon-current-size, var(--kit-icon-size-md));
+		height: var(--kit-icon-current-size, var(--kit-icon-size-md));
 		flex-shrink: 0;
 		display: block;
 	}
@@ -152,18 +158,18 @@
 	 * @link https://lapikit.dev/docs/components/icon#size 
 	 */
 	.kit-icon[data-size='xs'] {
-		--kit-icon-current-size: 12px;
+		--kit-icon-current-size: var(--kit-icon-size-xs);
 	}
 	.kit-icon[data-size='sm'] {
-		--kit-icon-current-size: 14px;
+		--kit-icon-current-size: var(--kit-icon-size-sm);
 	}
 	.kit-icon[data-size='md'] {
-		--kit-icon-current-size: 16px;
+		--kit-icon-current-size: var(--kit-icon-size-md);
 	}
 	.kit-icon[data-size='lg'] {
-		--kit-icon-current-size: 18px;
+		--kit-icon-current-size: var(--kit-icon-size-lg);
 	}
 	.kit-icon[data-size='xl'] {
-		--kit-icon-current-size: 20px;
+		--kit-icon-current-size: var(--kit-icon-size-xl);
 	}
 </style>

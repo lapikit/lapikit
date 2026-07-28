@@ -199,7 +199,7 @@
 	}
 
 	.kit-accordion-item__separator {
-		width: 96%;
+		width: 100%;
 		height: 1px;
 		display: block;
 		position: relative;
@@ -207,9 +207,10 @@
 		margin: 0 auto;
 	}
 
-	.kit-accordion-item[data-read-only='false'][data-disabled='false'] > button:hover {
+	/* .kit-accordion-item[data-read-only='false'][data-disabled='false']:not([data-variant='text'])
+		> button:hover {
 		background: var(--kit-accordion-item-hover-bg);
-	}
+	} */
 
 	/**I think is a good idea for not use this*/
 	/* .kit-accordion-item[data-active='true'][data-disabled='false'][data-read-only='false'] > button {
