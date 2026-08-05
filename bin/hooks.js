@@ -1,10 +1,157 @@
 #!/usr/bin/env node
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 import { terminal } from './helpers.js';
 
+const INSTALL_ARGS = {
+	npm: ['install', '--save-dev'],
+	yarn: ['add', '-D'],
+	pnpm: ['add', '--save-dev'],
+	bun: ['add', '-D']
+};
+
+export function installDependency(pkgManager, packageName, cwd) {
+	const args = INSTALL_ARGS[pkgManager];
+	if (!args) throw new Error(`Unsupported package manager: ${pkgManager}`);
+	return new Promise((resolve, reject) => {
+		const child = spawn(pkgManager, [...args, packageName], {
+			cwd,
+			stdio: 'inherit',
+			shell: process.platform === 'win32'
+		});
+		child.on('error', reject);
+		child.on('close', (code) =>
+			code === 0 ? resolve() : reject(new Error(`${pkgManager} exited with code ${code}`))
+		);
+	});
+}
+
+function findMatchingDelimiter(content, openIndex, openChar, closeChar) {
+	let depth = 0;
+	for (let i = openIndex; i < content.length; i++) {
+		const ch = content[i];
+		if (ch === '"' || ch === "'" || ch === '`') {
+			i = skipString(content, i);
+			continue;
+		}
+		if (ch === openChar) depth++;
+		else if (ch === closeChar) {
+			depth--;
+			if (depth === 0) return i;
+		}
+	}
+	return -1;
+}
+
+function skipString(source, start) {
+	const quote = source[start];
+	for (let i = start + 1; i < source.length; i++) {
+		if (source[i] === '\\') {
+			i++;
+			continue;
+		}
+		if (source[i] === quote) return i;
+	}
+	return source.length - 1;
+}
+
+function insertImportLine(content, importLine) {
+	const lines = content.split('\n');
+	let importInsertIndex = 0;
+	for (let i = 0; i < lines.length; i++) {
+		if (lines[i].trim().startsWith('import ')) importInsertIndex = i + 1;
+	}
+	lines.splice(importInsertIndex, 0, importLine);
+	return lines.join('\n');
+}
+
+function buildPreprocessCall(pluginKeys = []) {
+	if (!pluginKeys.length) return `lapikitPreprocess()`;
+	const plugins = pluginKeys.map((key) => `'${key}'`).join(', ');
+	return `lapikitPreprocess({ plugins: [${plugins}] })`;
+}
+
+function mergeExistingPreprocessCall(content, pluginKeys) {
+	if (!pluginKeys.length) return null;
+
+	const callMatch = content.match(/lapikitPreprocess\s*\(\s*(\{[\s\S]*?\})?\s*\)/);
+	if (!callMatch) return null;
+
+	const [fullMatch, optionsSource] = callMatch;
+	const pluginsMatch = optionsSource?.match(/plugins\s*:\s*\[([^\]]*)\]/);
+	const existingKeys = pluginsMatch
+		? [...pluginsMatch[1].matchAll(/'([^']+)'|"([^"]+)"/g)].map((m) => m[1] ?? m[2])
+		: [];
+
+	const merged = [...new Set([...existingKeys, ...pluginKeys])];
+	if (merged.length === existingKeys.length) return null;
+
+	const newCall = buildPreprocessCall(merged);
+	return (
+		content.slice(0, callMatch.index) + newCall + content.slice(callMatch.index + fullMatch.length)
+	);
+}
+
+function findValueEnd(source, start) {
+	let depth = 0;
+	for (let i = start; i < source.length; i++) {
+		const ch = source[i];
+		if (ch === '"' || ch === "'" || ch === '`') {
+			i = skipString(source, i);
+			continue;
+		}
+		if (ch === '(' || ch === '[' || ch === '{') depth++;
+		else if (ch === ')' || ch === ']' || ch === '}') {
+			if (depth === 0) return i;
+			depth--;
+		} else if (ch === ',' && depth === 0) return i;
+	}
+	return source.length;
+}
+
+function injectPreprocessEntry(objectSource, pluginKeys = []) {
+	const call = buildPreprocessCall(pluginKeys);
+
+	const keyMatch = objectSource.match(/preprocess\s*:\s*/);
+	if (!keyMatch) {
+		return objectSource.replace('{', `{\n\t\t\tpreprocess: [${call}],`);
+	}
+	const valueStart = keyMatch.index + keyMatch[0].length;
+
+	if (objectSource[valueStart] === '[') {
+		const openBracketIndex = valueStart;
+		const closeBracketIndex = findMatchingDelimiter(objectSource, openBracketIndex, '[', ']');
+		const inner = objectSource.slice(openBracketIndex + 1, closeBracketIndex);
+		const trimmed = inner.trim();
+
+		let newInner;
+		if (!trimmed) {
+			newInner = call;
+		} else if (inner.includes('\n')) {
+			const firstItemMatch = inner.match(/\n(\s*)\S/);
+			const indent = firstItemMatch ? firstItemMatch[1] : '\t\t';
+			const closingMatch = inner.match(/\n(\s*)$/);
+			const closingIndent = closingMatch ? closingMatch[1] : '\t';
+			const innerTrimmed = inner.trimEnd();
+			const sep = innerTrimmed.endsWith(',') ? '' : ',';
+			newInner = `${innerTrimmed}${sep}\n${indent}${call}\n${closingIndent}`;
+		} else {
+			const sep = trimmed.endsWith(',') ? ' ' : ', ';
+			newInner = `${trimmed}${sep}${call}`;
+		}
+		return (
+			objectSource.slice(0, openBracketIndex + 1) + newInner + objectSource.slice(closeBracketIndex)
+		);
+	}
+
+	const valueEnd = findValueEnd(objectSource, valueStart);
+	const expr = objectSource.slice(valueStart, valueEnd).trim();
+	return objectSource.slice(0, valueStart) + `[${expr}, ${call}]` + objectSource.slice(valueEnd);
+}
+
 export async function findSvelteConfigFile(projectPath) {
-	for (const ext of ['js', 'ts']) {
+	for (const ext of ['js', 'mjs', 'cjs', 'ts']) {
 		const file = path.join(projectPath, `svelte.config.${ext}`);
 		try {
 			await fs.access(file);
@@ -13,56 +160,159 @@ export async function findSvelteConfigFile(projectPath) {
 			// lapikit other step
 		}
 	}
-	throw new Error('No svelte.config.js or svelte.config.ts file found');
+	throw new Error('No svelte.config file found');
 }
 
-export async function addLiliPreprocess(svelteConfigFile) {
+export async function addLiliPreprocess(svelteConfigFile, pluginKeys = []) {
 	let content = await fs.readFile(svelteConfigFile, 'utf-8');
-	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/labs/preprocess';`;
+	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
 
-	if (content.includes(`from 'lapikit/labs/preprocess'`)) {
-		terminal('info', `lapikitPreprocess already imported in ${svelteConfigFile}`);
+	if (content.includes(`from 'lapikit/preprocess'`)) {
+		const updated = mergeExistingPreprocessCall(content, pluginKeys);
+		if (!updated) {
+			terminal('warn', `lapikitPreprocess already imported in ${svelteConfigFile}`);
+			return;
+		}
+		await fs.writeFile(svelteConfigFile, updated);
+		terminal('success', `lapikitPreprocess plugins updated in ${svelteConfigFile}`);
 		return;
 	}
 
-	const lines = content.split('\n');
-	let importInsertIndex = 0;
-	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].trim().startsWith('import ')) importInsertIndex = i + 1;
+	const match = content.match(/(?:const\s+\w+\s*=\s*|export\s+default\s*)(\{)/);
+	if (!match) {
+		throw new Error(`Could not find the exported config object in ${svelteConfigFile}`);
 	}
-	lines.splice(importInsertIndex, 0, lapikitImport);
-	content = lines.join('\n');
 
-	if (!content.match(/preprocess\s*:/)) {
-		content = content.replace(
-			/(const\s+\w+\s*=\s*\{|export\s+default\s*\{)/,
-			(m) => `${m}\n\tpreprocess: [lapikitPreprocess()],`
-		);
-	} else if (content.match(/preprocess\s*:\s*\[/)) {
-		content = content.replace(/preprocess\s*:\s*\[([\s\S]*?)\]/, (_, inner) => {
-			const trimmed = inner.trim();
-			if (!trimmed) return `preprocess: [lapikitPreprocess()]`;
-
-			if (inner.includes('\n')) {
-				const firstItemMatch = inner.match(/\n(\s*)\S/);
-				const indent = firstItemMatch ? firstItemMatch[1] : '\t\t';
-				const closingMatch = inner.match(/\n(\s*)$/);
-				const closingIndent = closingMatch ? closingMatch[1] : '\t';
-				const innerTrimmed = inner.trimEnd();
-				const sep = innerTrimmed.endsWith(',') ? '' : ',';
-				return `preprocess: [${innerTrimmed}${sep}\n${indent}lapikitPreprocess()\n${closingIndent}]`;
-			} else {
-				const sep = trimmed.endsWith(',') ? ' ' : ', ';
-				return `preprocess: [${trimmed}${sep}lapikitPreprocess()]`;
-			}
-		});
-	} else {
-		content = content.replace(
-			/preprocess\s*:\s*([^,\n\]{}]+)/,
-			(_, val) => `preprocess: [${val.trim()}, lapikitPreprocess()]`
-		);
+	const openBraceIndex = match.index + match[0].length - 1;
+	const closeBraceIndex = findMatchingDelimiter(content, openBraceIndex, '{', '}');
+	if (closeBraceIndex === -1) {
+		throw new Error(`Could not parse the config object in ${svelteConfigFile}`);
 	}
+
+	const objectSource = content.slice(openBraceIndex, closeBraceIndex + 1);
+	const updatedObject = injectPreprocessEntry(objectSource, pluginKeys);
+	content = content.slice(0, openBraceIndex) + updatedObject + content.slice(closeBraceIndex + 1);
+	content = insertImportLine(content, lapikitImport);
 
 	await fs.writeFile(svelteConfigFile, content);
 	terminal('success', `lapikitPreprocess added to ${svelteConfigFile}`);
+}
+
+export async function findViteConfigFile(projectPath) {
+	for (const ext of ['ts', 'js', 'mjs', 'cjs']) {
+		const file = path.join(projectPath, `vite.config.${ext}`);
+		try {
+			await fs.access(file);
+			return file;
+		} catch {
+			// lapikit other step
+		}
+	}
+	return null;
+}
+
+function findSveltekitPluginCall(content) {
+	const match = content.match(/sveltekit\s*\(\s*\{/);
+	if (!match) return null;
+
+	const openBraceIndex = match.index + match[0].length - 1;
+	const closeBraceIndex = findMatchingDelimiter(content, openBraceIndex, '{', '}');
+	if (closeBraceIndex === -1) return null;
+
+	return { openBraceIndex, closeBraceIndex };
+}
+
+export async function addLiliPreprocessToViteConfig(viteConfigFile, pluginKeys = []) {
+	let content = await fs.readFile(viteConfigFile, 'utf-8');
+	const lapikitImport = `import { lapikitPreprocess } from 'lapikit/preprocess';`;
+
+	if (content.includes(`from 'lapikit/preprocess'`)) {
+		const updated = mergeExistingPreprocessCall(content, pluginKeys);
+		if (!updated) {
+			terminal('warn', `lapikitPreprocess already imported in ${viteConfigFile}`);
+			return;
+		}
+		await fs.writeFile(viteConfigFile, updated);
+		terminal('success', `lapikitPreprocess plugins updated in ${viteConfigFile}`);
+		return;
+	}
+
+	const pluginCall = findSveltekitPluginCall(content);
+	if (!pluginCall) {
+		throw new Error(`Could not find a sveltekit({ ... }) plugin call in ${viteConfigFile}`);
+	}
+
+	const { openBraceIndex, closeBraceIndex } = pluginCall;
+	const objectSource = content.slice(openBraceIndex, closeBraceIndex + 1);
+	const updatedObject = injectPreprocessEntry(objectSource, pluginKeys);
+	content = content.slice(0, openBraceIndex) + updatedObject + content.slice(closeBraceIndex + 1);
+	content = insertImportLine(content, lapikitImport);
+
+	await fs.writeFile(viteConfigFile, content);
+	terminal('success', `lapikitPreprocess added to ${viteConfigFile}`);
+}
+
+// Since SvelteKit 2.62, Svelte/preprocess config can be passed directly to the
+// sveltekit() vite plugin instead of svelte.config.js — when it is, svelte.config.js
+// is ignored, so the vite.config plugin call takes priority when both exist.
+export async function resolveSveltePreprocessTarget(projectPath) {
+	const viteConfigFile = await findViteConfigFile(projectPath);
+	if (viteConfigFile) {
+		const content = await fs.readFile(viteConfigFile, 'utf-8');
+		if (findSveltekitPluginCall(content)) {
+			return { file: viteConfigFile, add: addLiliPreprocessToViteConfig };
+		}
+	}
+
+	try {
+		const svelteConfigFile = await findSvelteConfigFile(projectPath);
+		return { file: svelteConfigFile, add: addLiliPreprocess };
+	} catch {
+		throw new Error(
+			'No svelte.config file found, and no sveltekit({ ... }) plugin config found in vite.config.(js|ts) ' +
+				"Add lapikitPreprocess() manually: import { lapikitPreprocess } from 'lapikit/preprocess'; " +
+				'then add it to your preprocess array.'
+		);
+	}
+}
+
+export async function findEslintConfigFile(projectPath) {
+	for (const ext of ['js', 'mjs', 'cjs', 'ts']) {
+		const file = path.join(projectPath, `eslint.config.${ext}`);
+		try {
+			await fs.access(file);
+			return file;
+		} catch {
+			// lapikit other step
+		}
+	}
+	throw new Error('No eslint.config.js file found');
+}
+
+export async function addLapikitEslintConfig(eslintConfigFile) {
+	let content = await fs.readFile(eslintConfigFile, 'utf-8');
+	const lapikitImport = `import lapikitConfig from 'eslint-config-lapikit';`;
+
+	if (content.includes(`from 'eslint-config-lapikit'`)) {
+		terminal('warn', `eslint-config-lapikit already imported in ${eslintConfigFile}`);
+		return;
+	}
+
+	content = insertImportLine(content, lapikitImport);
+
+	// Matches `export default [...]` as well as wrapped forms like
+	// `export default defineConfig([...])`, `export default defineConfig(a, b)`
+	// (rest-args form, no array) and member-expression wrappers like
+	// `export default ts.config(...)`.
+	const exportArrayPattern = /export\s+default\s*(?:\[|[\w.]+\s*\()/;
+	if (!exportArrayPattern.test(content)) {
+		throw new Error(
+			`Could not find "export default [...]" in ${eslintConfigFile}. Please add "...lapikitConfig" manually.`
+		);
+	}
+
+	content = content.replace(exportArrayPattern, (m) => `${m}\n\t...lapikitConfig,`);
+
+	await fs.writeFile(eslintConfigFile, content);
+	terminal('success', `eslint-config-lapikit added to ${eslintConfigFile}`);
 }

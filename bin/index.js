@@ -1,31 +1,111 @@
 #!/usr/bin/env node
-import { ansi, terminal, createRL, toggle } from './helpers.js';
-import { addLiliPreprocess, findSvelteConfigFile } from './hooks.js';
+import { ansi, terminal, createRL, toggle, select, multiselect } from './helpers.js';
+import {
+	resolveSveltePreprocessTarget,
+	installDependency,
+	findEslintConfigFile,
+	addLapikitEslintConfig
+} from './hooks.js';
+
+const ADDONS = [{ title: '@lapikit/repl', value: '@lapikit/repl', key: 'repl' }];
+
+const PKG_MANAGER = [
+	{ title: 'npm', value: 'npm' },
+	{ title: 'yarn', value: 'yarn' },
+	{ title: 'pnpm', value: 'pnpm' },
+	{ title: 'bun', value: 'bun' }
+];
+
+function buildSteps(config, projectPath) {
+	const pluginKeys = config.addons
+		.map((value) => ADDONS.find((addon) => addon.value === value)?.key)
+		.filter(Boolean);
+
+	const steps = [];
+
+	steps.push({
+		id: 'preprocess',
+		label: 'Add lapikitPreprocess to your project',
+		run: async () => {
+			const target = await resolveSveltePreprocessTarget(projectPath);
+			await target.add(target.file, pluginKeys);
+		}
+	});
+
+	for (const addonValue of config.addons) {
+		steps.push({
+			id: `addon:${addonValue}`,
+			label: `Install ${addonValue} (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, addonValue, projectPath)
+		});
+	}
+
+	if (config.installEslintConfig) {
+		steps.push({
+			id: 'eslint-install',
+			label: `Install eslint-config-lapikit (${config.pkgManager})`,
+			run: () => installDependency(config.pkgManager, 'eslint-config-lapikit', projectPath)
+		});
+		steps.push({
+			id: 'eslint-config',
+			needs: 'eslint-install',
+			label: 'Add eslint-config-lapikit to eslint.config',
+			run: async () => {
+				const eslintConfigFile = await findEslintConfigFile(projectPath);
+				await addLapikitEslintConfig(eslintConfigFile);
+			}
+		});
+	}
+
+	return steps;
+}
+
+async function runSteps(config, projectPath) {
+	const steps = buildSteps(config, projectPath);
+	const results = [];
+	const failed = new Set();
+
+	for (let i = 0; i < steps.length; i++) {
+		const step = steps[i];
+		const tag = ansi.bold.blue(`[${i + 1}/${steps.length}]`);
+
+		if (step.needs && failed.has(step.needs)) {
+			results.push({ label: step.label, ok: false, skipped: true });
+			terminal('warn', `${tag} ${step.label} - skipped (prerequisite failed)`);
+			continue;
+		}
+
+		try {
+			await step.run();
+			results.push({ label: step.label, ok: true });
+			terminal('success', `${tag} ${step.label}`);
+		} catch (error) {
+			if (step.id) failed.add(step.id);
+			results.push({ label: step.label, ok: false, error: error.message });
+			terminal('error', `${tag} ${step.label} - ${error.message}`);
+		}
+	}
+
+	return results;
+}
 
 async function run() {
 	const rl = createRL();
+	const config = {
+		installEslintConfig: false,
+		addons: []
+	};
 
-	console.log('  _                 _ _    _ _   ');
-	console.log(' | |               (_) |  (_) |  ');
-	console.log(' | |     __ _ _ __  _| | ___| |_ ');
-	console.log(" | |    / _` | '_ \\| | |/ / | __|");
-	console.log(' | |___| (_| | |_) | |   <| | |_ ');
-	console.log(' |______\\__,_| .__/|_|_|\\_\\_|\\__|');
-	console.log('             | |                 ');
-	console.log('             |_|                 \n');
+	console.log(ansi.color.blue(' ██╗      █████╗ ██████╗ ██╗██╗  ██╗██╗████████╗'));
+	console.log(ansi.color.blue(' ██║     ██╔══██╗██╔══██╗██║██║ ██╔╝██║╚══██╔══╝'));
+	console.log(ansi.color.blue(' ██║     ███████║██████╔╝██║█████╔╝ ██║   ██║   '));
+	console.log(ansi.color.blue(' ██║     ██╔══██║██╔═══╝ ██║██╔═██╗ ██║   ██║   '));
+	console.log(ansi.color.blue(' ██████╗ ██║  ██║██║     ██║██║  ██╗██║   ██║   '));
+	console.log(ansi.color.blue(' ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚═╝   ╚═╝   '));
 
-	terminal('none', `${ansi.bold.blue('Lapikit')} - Component Library for Svelte\n\n`);
-
-	console.log(
-		'This installer will guide you through the process of installing Lapikit on your Svelte project.\n'
-	);
-
-	console.log('List actions that will be done:');
-	console.log(
-		ansi.color.green('✓') +
-			' Add lili preprocess (named: lapikitPreprocess) on your svelte.config.js file\n'
-	);
-	console.log(ansi.underline.purple('Setup will take less than 5 seconds\n'));
+	terminal('none', `${ansi.bold.blue('Lapikit')} - Components Library for Svelte`);
+	terminal('none', `Developed by ${ansi.bold.blue('Nycolaide')}`);
+	terminal('none', `Documentation: https://lapikit.dev\n`);
 
 	const confirm = await toggle(rl, 'Launch install Lapikit on your project?');
 	if (!confirm) {
@@ -33,25 +113,20 @@ async function run() {
 		process.exit(0);
 	}
 
-	console.log('\n');
+	config.installEslintConfig = await toggle(rl, 'Install eslint-config-lapikit?');
+	config.pkgManager = await select(rl, 'Select package manager:', PKG_MANAGER);
+	config.addons = await multiselect(rl, 'Select addons to install:', ADDONS);
 
-	try {
-		const svelteConfigFile = await findSvelteConfigFile(process.cwd());
-		await addLiliPreprocess(svelteConfigFile);
-	} catch (error) {
-		terminal('warn', `Warning: Could not update svelte.config file: ${error.message}`);
-	}
+	const results = await runSteps(config, process.cwd());
+	rl.close();
+	return results;
 }
 
 run()
-	.then(() => {
-		terminal('none', `\n\nThank's for installing Lapikit!\n`);
-		terminal('none', `Website: https://lapikit.dev`);
-		terminal('none', `Github: https://github.com/lapikit/lapikit`);
-		terminal('none', `Support the developement: https://buymeacoffee.com/nycolaide`);
-		process.exit(0);
+	.then((results) => {
+		process.exitCode = results?.some((r) => !r.ok) ? 1 : 0;
 	})
 	.catch((error) => {
 		terminal('error', `Error: ${error}`);
-		process.exit(1);
+		process.exitCode = 1;
 	});
