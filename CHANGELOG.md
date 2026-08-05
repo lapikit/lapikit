@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.9] - 2026-08-05
+
+### Updated
+
+- new CLI for install lapikit and addons directly with `npx lapikit` command
+
+### Fixed
+
+- CLI not working with `npx lapikit` command on new sveltekit project v2.62 and more
+
 ## [0.6.8] - 2026-07-28
 
 ### Updated
