@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.10] - 2026-09-15
 
+### Updated
+
+- Update vitest for patch **CVE-2026-84373, GHSA-82fw-gwwq-j7x9**
+
 ### Fixed
 
 - `kit:avatar` fix custom variable background and color not working
