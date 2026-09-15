@@ -79,14 +79,17 @@
 
 <style>
 	.kit-avatar {
+		--kit-avatar-bg: var(--kit-color-surface-3);
+		--kit-avatar-fg: var(--kit-color-text);
+
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		width: calc(var(--kit-avatar-h) + var(--kit-avatar-density-offset) / 2);
 		height: calc(var(--kit-avatar-h) + var(--kit-avatar-density-offset) / 2);
 		overflow: hidden;
-		background: var(--kit-color-surface-3);
-		color: var(--kit-color-text);
+		background: var(--kit-avatar-bg);
+		color: var(--kit-avatar-fg);
 		border-radius: var(--kit-avatar-radius);
 		border: 0;
 		font-weight: 600;
