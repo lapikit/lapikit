@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 
-- Ripple effect container is now created on first interaction and removed once the animation ends, instead of being mounted on every interactive component.
-- `kit:list-item` no longer renders an empty `outline` element: the `outline` variant border is drawn with CSS by `kit:list`.
+- Ripple effect has generated only on action with interactive components **btn**, **card**, **list**, **chip** and **accordion**
+- `kit:list-item` no longer renders an empty `outline` element: the `outline` variant border is drawn with CSS by `kit:list.
 
 ### Fixed
 
