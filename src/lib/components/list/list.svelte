@@ -158,9 +158,15 @@
 		--kit-list-item-hover-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 80%);
 		--kit-list-item-active-bg: color-mix(in oklab, var(--kit-list-item-fg), transparent 92%);
 	}
-	.kit-list[data-variant='text'] :global(.kit-list-item .outline),
-	.kit-list[data-variant='filled'] :global(.kit-list-item .outline) {
-		display: none;
+	.kit-list[data-variant='outline'] :global(.kit-list-item::before) {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border: 1px solid var(--kit-list-item-bd);
+		border-radius: inherit;
+		box-sizing: border-box;
+		z-index: 1;
+		pointer-events: none;
 	}
 
 	/** 

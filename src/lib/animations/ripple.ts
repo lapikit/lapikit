@@ -16,54 +16,63 @@ function getCoords(e: PointerEvent | TouchEvent) {
 }
 
 export function ripple(el: HTMLElement, options: RippleProps = {}) {
-	const rippleContainer = document.createElement('div');
+	// created on first interaction, removed once every ripple has faded out
+	let rippleContainer: HTMLDivElement | undefined;
 	const activeRipples = new Set<() => void>();
-	addClasses();
-
-	setOptions(options);
 
 	function isAriaDisabled() {
 		return el.getAttribute('aria-disabled') === 'true';
 	}
 
-	function addClasses(center?: boolean) {
-		const shouldBeCentered = center || options.center;
-
-		if (!rippleContainer.classList.contains('kit-ripple--effect')) {
-			rippleContainer.classList.add('kit-ripple--effect');
-		}
-
-		if (!shouldBeCentered && rippleContainer.classList.contains('kit-ripple--center')) {
-			rippleContainer.classList.remove('kit-ripple--center');
-		}
-
-		if (shouldBeCentered) {
-			rippleContainer.classList.add('kit-ripple--center');
-		}
-	}
-
-	function setOptions(newOptions: RippleProps) {
-		if (newOptions.disabled || isAriaDisabled()) {
-			rippleContainer.remove();
-		} else {
-			el.appendChild(rippleContainer);
-		}
-
-		if (newOptions.component) {
-			rippleContainer.style.setProperty(
+	function applyOptions(container: HTMLDivElement) {
+		if (options.component) {
+			container.style.setProperty(
 				'--system-ripple-radius',
-				`var(--kit-${newOptions.component}-radius)`
+				`var(--kit-${options.component}-radius)`
 			);
 		}
 
-		if (newOptions.color) {
-			rippleContainer.style.setProperty('--system-ripple-color', newOptions.color);
+		if (options.color) {
+			container.style.setProperty('--system-ripple-color', options.color);
 		}
 
-		const duration = resolveDuration(newOptions);
+		const duration = resolveDuration(options);
 
 		if (duration) {
-			rippleContainer.style.setProperty('--system-animation-ripple-duration', `${duration}ms`);
+			container.style.setProperty('--system-animation-ripple-duration', `${duration}ms`);
+		}
+	}
+
+	function mountContainer(center?: boolean) {
+		if (!rippleContainer) {
+			rippleContainer = document.createElement('div');
+			rippleContainer.classList.add('kit-ripple--effect');
+			applyOptions(rippleContainer);
+		}
+
+		rippleContainer.classList.toggle('kit-ripple--center', !!(center || options.center));
+
+		if (!rippleContainer.isConnected) {
+			el.appendChild(rippleContainer);
+		}
+
+		return rippleContainer;
+	}
+
+	function unmountContainer() {
+		rippleContainer?.remove();
+		rippleContainer = undefined;
+	}
+
+	function setOptions(newOptions: RippleProps) {
+		options = newOptions;
+
+		if (newOptions.disabled || isAriaDisabled()) {
+			activeRipples.forEach((cleanup) => cleanup());
+			activeRipples.clear();
+			unmountContainer();
+		} else if (rippleContainer) {
+			applyOptions(rippleContainer);
 		}
 	}
 
@@ -84,7 +93,7 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 			return;
 		}
 
-		addClasses(center);
+		const container = mountContainer(center);
 
 		const rect = el.getBoundingClientRect();
 		const { x: clientX, y: clientY } = getCoords(e);
@@ -100,7 +109,7 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		ripple.style.top = `${clientY - rect.top - radius}px`;
 		ripple.style.width = ripple.style.height = `${radius * 2}px`;
 
-		rippleContainer.appendChild(ripple);
+		container.appendChild(ripple);
 
 		let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
@@ -113,6 +122,14 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 			ripple.remove();
 		}
 
+		function release() {
+			activeRipples.delete(cleanup);
+
+			if (activeRipples.size === 0) {
+				unmountContainer();
+			}
+		}
+
 		function removeRipple() {
 			ripple.style.opacity = '0';
 
@@ -121,7 +138,7 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 			timeoutId = setTimeout(
 				() => {
 					ripple.remove();
-					activeRipples.delete(cleanup);
+					release();
 				},
 				resolveDuration(options) || 1000
 			);
@@ -144,11 +161,9 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 			activeRipples.forEach((cleanup) => cleanup());
 			activeRipples.clear();
 
-			rippleContainer.remove();
+			unmountContainer();
 		},
 		update(newOptions: RippleProps) {
-			options = newOptions;
-
 			setOptions(newOptions);
 		}
 	};
