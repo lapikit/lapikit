@@ -50,10 +50,6 @@
 	let contentRef = $state<HTMLElement | null>(null);
 	let activatorRef = $state<HTMLElement | null>(null);
 	let axis = $state(positioner.values);
-	let innerHeight = $state(0);
-	let innerWidth = $state(0);
-	let scrollX = $state(0);
-	let scrollY = $state(0);
 
 	const handleToggle = (element: HTMLElement | null) => {
 		if (element === null) return;
@@ -78,18 +74,17 @@
 	});
 
 	$effect(() => {
-		if (
-			open &&
-			contentRef &&
-			activatorRef &&
-			(scrollX > 0 || scrollY > 0 || innerHeight > 0 || innerWidth > 0)
-		) {
-			updatePosition();
-		}
-	});
+		if (!open) return;
 
-	$effect(() => {
-		if (scrollX || scrollY) open = false;
+		const close = () => (open = false);
+
+		window.addEventListener('scroll', close, { passive: true });
+		window.addEventListener('resize', updatePosition);
+
+		return () => {
+			window.removeEventListener('scroll', close);
+			window.removeEventListener('resize', updatePosition);
+		};
 	});
 
 	$effect(() => {
@@ -106,8 +101,6 @@
 			.join('; ')
 	);
 </script>
-
-<svelte:window bind:innerHeight bind:innerWidth bind:scrollX bind:scrollY />
 
 {@render activator?.(model)}
 

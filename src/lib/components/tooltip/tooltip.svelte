@@ -72,10 +72,6 @@
 	let tooltipRef = $state<HTMLElement | null>(null);
 	let axis = $state(positioner.values);
 	let timer = $state<ReturnType<typeof setTimeout> | null>(null);
-	let innerHeight = $state(0);
-	let innerWidth = $state(0);
-	let scrollX = $state(0);
-	let scrollY = $state(0);
 	const tooltipId = `kit-tooltip-${Math.random().toString(36).slice(2, 10)}`;
 
 	const clearTimer = () => {
@@ -138,14 +134,15 @@
 	});
 
 	$effect(() => {
-		if (
-			open &&
-			triggerRef &&
-			tooltipRef &&
-			(scrollX > 0 || scrollY > 0 || innerHeight > 0 || innerWidth > 0)
-		) {
-			updatePosition();
-		}
+		if (!open) return;
+
+		window.addEventListener('scroll', updatePosition, { passive: true });
+		window.addEventListener('resize', updatePosition);
+
+		return () => {
+			window.removeEventListener('scroll', updatePosition);
+			window.removeEventListener('resize', updatePosition);
+		};
 	});
 
 	$effect(() => {
@@ -156,8 +153,6 @@
 		clearTimer();
 	});
 </script>
-
-<svelte:window bind:innerHeight bind:innerWidth bind:scrollX bind:scrollY />
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <span

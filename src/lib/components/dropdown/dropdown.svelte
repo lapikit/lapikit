@@ -63,10 +63,6 @@
 	let activatorRef = $state<HTMLElement | PointerEvent | null>(null);
 	let open = $state(false);
 	let axis = $state(positioner.values);
-	let innerHeight = $state(0);
-	let innerWidth = $state(0);
-	let scrollX = $state(0);
-	let scrollY = $state(0);
 	let timeoutId = $state<ReturnType<typeof setTimeout> | null>(null);
 
 	const clearHoverTimeout = () => {
@@ -131,18 +127,17 @@
 	});
 
 	$effect(() => {
-		if (
-			open &&
-			contentRef &&
-			activatorRef &&
-			(scrollX > 0 || scrollY > 0 || innerHeight > 0 || innerWidth > 0)
-		) {
-			updatePosition();
-		}
-	});
+		if (!open) return;
 
-	$effect(() => {
-		if (scrollX || scrollY) open = false;
+		const close = () => (open = false);
+
+		window.addEventListener('scroll', close, { passive: true });
+		window.addEventListener('resize', updatePosition);
+
+		return () => {
+			window.removeEventListener('scroll', close);
+			window.removeEventListener('resize', updatePosition);
+		};
 	});
 
 	$effect(() => {
@@ -153,8 +148,6 @@
 		clearHoverTimeout();
 	});
 </script>
-
-<svelte:window bind:innerHeight bind:innerWidth bind:scrollX bind:scrollY />
 
 {@render activator?.(model, (state, element) => handleMouseEvent(state, element))}
 
