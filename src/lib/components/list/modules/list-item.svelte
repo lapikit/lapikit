@@ -81,7 +81,6 @@
 	}}
 	{...restProps}
 >
-	<span class="outline"></span>
 	{#if prepend}
 		<span class="kit-list-item__prepend">
 			{@render prepend?.()}
@@ -188,9 +187,5 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-	}
-
-	.kit-list-item .outline {
-		--outline-color: var(--kit-list-item-bd);
 	}
 </style>
