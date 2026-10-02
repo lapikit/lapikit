@@ -60,10 +60,20 @@
 			"svelte": "./dist/components/index.js",
 			"default": "./dist/components/index.js"
 		},
+		"./components/*": {
+			"types": "./dist/components/*.d.ts",
+			"svelte": "./dist/components/*",
+			"default": "./dist/components/*"
+		},
 		"./labs/components": {
 			"types": "./dist/labs/index.d.ts",
 			"svelte": "./dist/labs/index.js",
 			"default": "./dist/labs/index.js"
+		},
+		"./labs/components/*": {
+			"types": "./dist/labs/*.d.ts",
+			"svelte": "./dist/labs/*",
+			"default": "./dist/labs/*"
 		},
 		"./actions": {
 			"default": "./dist/hooks/actions.js"

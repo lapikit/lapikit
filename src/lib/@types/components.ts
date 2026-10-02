@@ -46,4 +46,6 @@ export type KitComponentScan = {
 export type ComponentInfo = {
 	name: string;
 	ref: string;
+	// true when `ref` points to the component file itself (default import)
+	direct?: boolean;
 };
