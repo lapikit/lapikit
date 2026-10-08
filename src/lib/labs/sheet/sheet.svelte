@@ -14,6 +14,7 @@
 		's-class': sClass,
 		's-style': sStyle,
 		elevation,
+		rounded,
 		...rest
 	} = $props();
 
@@ -44,6 +45,7 @@
 <div
 	class={componentClass}
 	style={componentStyle}
+	data-rounded={rounded}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
@@ -56,6 +58,7 @@
 	@use '$lib/styles' as *;
 
 	.kit-sheet {
+		display: flex;
 		background-color: var(--kit-color-surface-1);
 		color: var(--kit-color-text);
 		border-radius: var(--kit-sheet-radius);
