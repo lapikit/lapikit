@@ -3,34 +3,76 @@ import { decodeSourceMap } from './escaping.js';
 import {
 	lapikitImportsRef,
 	lapikitImportsLabsRef,
-	lapikitComponents,
-	lapikitLabsComponents,
+	lapikitComponentPaths,
+	lapikitLabsComponentPaths,
 	lapikitPlugins
 } from './constants.js';
 
-/**
- * componentName generates the component name used in imports
- * @param shortName The short name of the component
- * @returns The component name with "Kit" prefix and the first letter capitalized
- */
 export function componentName(shortName: string): string {
 	const pascal = shortName.replace(/(^|-)([a-z])/g, (_, __, letter) => letter.toUpperCase());
 	return 'Kit' + pascal;
 }
 
+export function collectDeclaredIdentifiers(content: string): Set<string> {
+	const declared = new Set<string>();
+	const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/g;
+
+	for (const [, rawScript] of content.matchAll(scriptRegex)) {
+		const script = rawScript.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+
+		const importRegex = /\bimport\s+(?:type\s+)?([^'";]*?)\s+from\s*['"]/g;
+		for (const [, clause] of script.matchAll(importRegex)) {
+			const braces = clause.match(/\{([^}]*)\}/);
+			if (braces) {
+				for (const specifier of braces[1].split(',')) {
+					const local = specifier
+						.trim()
+						.replace(/^type\s+/, '')
+						.split(/\s+as\s+/)
+						.pop();
+					if (local) declared.add(local.trim());
+				}
+			}
+
+			const outside = clause.replace(/\{[^}]*\}/, '');
+			const namespace = outside.match(/\*\s*as\s+([\w$]+)/);
+			if (namespace) declared.add(namespace[1]);
+
+			const defaultImport = outside.match(/^\s*([\w$]+)/);
+			if (defaultImport) declared.add(defaultImport[1]);
+		}
+
+		const declarationRegex = /\b(?:const|let|var|function|class)\s+([\w$]+)/g;
+		for (const [, name] of script.matchAll(declarationRegex)) {
+			declared.add(name);
+		}
+	}
+
+	return declared;
+}
+
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {
 		markup({ content }: { content: string; filename?: string }) {
-			const allComponents = [...lapikitComponents, ...lapikitLabsComponents];
-			const componentToRef = new Map<string, string>();
+			if (!content.includes('<kit:')) return;
 
-			lapikitComponents.forEach((comp) => {
-				componentToRef.set(comp, lapikitImportsRef);
-			});
+			const componentInfo = new Map<string, ComponentInfo>();
 
-			lapikitLabsComponents.forEach((comp) => {
-				componentToRef.set(comp, lapikitImportsLabsRef);
-			});
+			for (const [shortName, path] of Object.entries(lapikitComponentPaths)) {
+				componentInfo.set(shortName, {
+					name: componentName(shortName),
+					ref: `${lapikitImportsRef}/${path}`,
+					direct: true
+				});
+			}
+
+			for (const [shortName, path] of Object.entries(lapikitLabsComponentPaths)) {
+				componentInfo.set(shortName, {
+					name: componentName(shortName),
+					ref: `${lapikitImportsLabsRef}/${path}`,
+					direct: true
+				});
+			}
 
 			// plugins
 			if (options?.plugins) {
@@ -38,22 +80,9 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 					const plugin = lapikitPlugins[pluginKey as keyof typeof lapikitPlugins];
 					if (plugin) {
 						plugin.components.forEach((comp) => {
-							if (!allComponents.includes(comp)) {
-								allComponents.push(comp);
-							}
-							componentToRef.set(comp, plugin.ref);
+							componentInfo.set(comp, { name: componentName(comp), ref: plugin.ref });
 						});
 					}
-				});
-			}
-
-			if (!content.includes('<kit:')) return;
-
-			const componentInfo = new Map<string, ComponentInfo>();
-			for (const shortName of allComponents) {
-				componentInfo.set(shortName, {
-					name: componentName(shortName),
-					ref: componentToRef.get(shortName) || lapikitImportsRef
 				});
 			}
 
@@ -64,21 +93,37 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 			let processedContent = scanResult.code;
 			const importedComponents = scanResult.importedComponents;
 
+			// components already declared by the user (manual import, alias...) are not imported again
+			const declared = collectDeclaredIdentifiers(content);
+			declared.forEach((name) => importedComponents.delete(name));
+
 			if (importedComponents.size > 0) {
+				const directNames = new Set<string>();
+				componentInfo.forEach((info) => {
+					if (info.direct) directNames.add(info.name);
+				});
+
+				const directImports: string[] = [];
 				const importsByRef = new Map<string, string[]>();
 				importedComponents.forEach((ref, component) => {
+					if (directNames.has(component)) {
+						directImports.push(`\n\timport ${component} from '${ref}';`);
+						return;
+					}
 					if (!importsByRef.has(ref)) {
 						importsByRef.set(ref, []);
 					}
 					importsByRef.get(ref)!.push(component);
 				});
 
-				const importLines = Array.from(importsByRef.entries())
-					.map(([ref, components]) => {
-						const imports = components.join(', ');
-						return `\n\timport { ${imports} } from '${ref}';`;
-					})
-					.join('');
+				const importLines =
+					directImports.join('') +
+					Array.from(importsByRef.entries())
+						.map(([ref, components]) => {
+							const imports = components.join(', ');
+							return `\n\timport { ${imports} } from '${ref}';`;
+						})
+						.join('');
 
 				const scriptRegex = /<script(?![^>]*\bmodule\b)([^>]*)>/;
 				const scriptMatch = processedContent.match(scriptRegex);
