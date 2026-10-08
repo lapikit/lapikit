@@ -1,0 +1,121 @@
+@use '$lib/styles' as *;
+
+:global {
+	html {
+		--kit-shape-none: 0;
+		--kit-shape-xs: 4px;
+		--kit-shape-sm: 6px;
+		--kit-shape-md: 10px;
+		--kit-shape-lg: 14px;
+		--kit-shape-xl: 18px;
+		--kit-shape-full: 9999px;
+
+		--kit-font-xs: 13px;
+		--kit-font-sm: 14px;
+		--kit-font-md: 15px;
+		--kit-font-lg: 16px;
+		--kit-font-xl: 17px;
+
+		--kit-space-compact: 2px;
+		--kit-space-default: 4px;
+		--kit-space-comfortable: 6px;
+
+		--kit-density-compact: -4px;
+		--kit-density-default: 0px;
+		--kit-density-comfortable: 4px;
+
+		--kit-shadow-opacity: 30%;
+		--kit-shadow-ambient-opacity: 15%;
+
+		--kit-disabled-opacity: 0.55;
+		--kit-font:
+			ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+			'Segoe UI Symbol', 'Noto Color Emoji';
+
+		--kit-color-transparent: transparent;
+	}
+
+	html:not([data-kit-theme]),
+	[data-kit-theme='light'] {
+		@include theme-light;
+	}
+
+	[data-kit-theme='dark'] {
+		@include theme-dark;
+	}
+
+	@media (prefers-color-scheme: light) {
+		[data-kit-theme='system'] {
+			@include theme-light;
+		}
+	}
+
+	@media (prefers-color-scheme: dark) {
+		[data-kit-theme='system'] {
+			@include theme-dark;
+		}
+	}
+
+	.outline {
+		position: absolute;
+		inset: 0;
+		border: 1px solid var(--outline-color);
+		border-radius: inherit;
+		box-sizing: border-box;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.kit-ripple {
+		background-color: currentColor;
+		opacity: 0.1;
+		position: absolute;
+		border-radius: 50%;
+		pointer-events: none;
+		transition: 0.6s;
+		animation: animation-l-ripple var(--system-animation-ripple-duration, 0.4s)
+			cubic-bezier(0.4, 0, 0.2, 1);
+		border-radius: 50%;
+	}
+
+	.kit-ripple--center {
+		top: 50% !important;
+		left: 50% !important;
+		translate: -50% -50% !important;
+	}
+
+	.kit-ripple--effect {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		overflow: hidden;
+		background: none;
+		pointer-events: none;
+		z-index: 999;
+		border-radius: var(--system-ripple-radius);
+	}
+
+	[data-elevation='0'],
+	[data-elevation-hover='0']:hover,
+	[data-elevation-active='0']:active {
+		box-shadow: none;
+	}
+
+	@include elevation(1, 1px, 2px, 3px, 8px, -2px);
+	@include elevation(2, 1px, 3px, 5px, 12px, -3px);
+	@include elevation(3, 2px, 4px, 8px, 20px, -4px);
+	@include elevation(4, 3px, 5px, 11px, 26px, -5px);
+	@include elevation(5, 4px, 6px, 14px, 32px, -6px);
+}
+
+@keyframes -global-animation-l-ripple {
+	from {
+		scale: 0;
+	}
+
+	to {
+		scale: 1;
+	}
+}

@@ -1,0 +1,11 @@
+@mixin elevation($level, $y1, $blur1, $y2, $blur2, $spread2) {
+	[data-elevation='#{$level}'],
+	[data-elevation-hover='#{$level}']:hover,
+	[data-elevation-active='#{$level}']:active {
+		box-shadow:
+			0 $y1 $blur1
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-opacity), transparent),
+			0 $y2 $blur2 $spread2
+				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
+	}
+}
