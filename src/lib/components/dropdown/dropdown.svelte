@@ -199,22 +199,22 @@
 	 * @link ...
 	 */
 	.kit-dropdown-content[data-rounded='0'] {
-		--kit-dropdown-radius: var(--kit-shape-none);
+		--kit-dropdown-radius: var(--shape-none);
 	}
 	.kit-dropdown-content[data-rounded='xs'] {
-		--kit-dropdown-radius: var(--kit-shape-xs);
+		--kit-dropdown-radius: var(--shape-xs);
 	}
 	.kit-dropdown-content[data-rounded='sm'] {
-		--kit-dropdown-radius: var(--kit-shape-sm);
+		--kit-dropdown-radius: var(--shape-sm);
 	}
 	.kit-dropdown-content[data-rounded='md'] {
-		--kit-dropdown-radius: var(--kit-shape-md);
+		--kit-dropdown-radius: var(--shape-md);
 	}
 	.kit-dropdown-content[data-rounded='lg'] {
-		--kit-dropdown-radius: var(--kit-shape-lg);
+		--kit-dropdown-radius: var(--shape-lg);
 	}
 	.kit-dropdown-content[data-rounded='xl'] {
-		--kit-dropdown-radius: var(--kit-shape-xl);
+		--kit-dropdown-radius: var(--shape-xl);
 	}
 
 	/** 

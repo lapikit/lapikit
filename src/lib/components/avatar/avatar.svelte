@@ -127,26 +127,26 @@
 	 * @link ...
 	 */
 	.kit-avatar[data-rounded='0'] {
-		--kit-avatar-radius: var(--kit-shape-none);
+		--kit-avatar-radius: var(--shape-none);
 	}
 	.kit-avatar[data-rounded='xs'] {
-		--kit-avatar-radius: var(--kit-shape-xs);
+		--kit-avatar-radius: var(--shape-xs);
 	}
 	.kit-avatar[data-rounded='sm'] {
-		--kit-avatar-radius: var(--kit-shape-sm);
+		--kit-avatar-radius: var(--shape-sm);
 	}
 	.kit-avatar[data-rounded='md'] {
-		--kit-avatar-radius: var(--kit-shape-md);
+		--kit-avatar-radius: var(--shape-md);
 	}
 	.kit-avatar[data-rounded='lg'] {
-		--kit-avatar-radius: var(--kit-shape-lg);
+		--kit-avatar-radius: var(--shape-lg);
 	}
 	.kit-avatar[data-rounded='xl'] {
-		--kit-avatar-radius: var(--kit-shape-xl);
+		--kit-avatar-radius: var(--shape-xl);
 	}
 
 	.kit-avatar[data-rounded='full'] {
-		--kit-avatar-radius: var(--kit-shape-full);
+		--kit-avatar-radius: var(--shape-full);
 	}
 
 	/** 

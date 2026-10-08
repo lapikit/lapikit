@@ -189,25 +189,25 @@
 	 * @link ...
 	 */
 	.kit-alert[data-rounded='0'] {
-		--kit-alert-radius: var(--kit-shape-none);
+		--kit-alert-radius: var(--shape-none);
 	}
 	.kit-alert[data-rounded='xs'] {
-		--kit-alert-radius: var(--kit-shape-xs);
+		--kit-alert-radius: var(--shape-xs);
 	}
 	.kit-alert[data-rounded='sm'] {
-		--kit-alert-radius: var(--kit-shape-sm);
+		--kit-alert-radius: var(--shape-sm);
 	}
 	.kit-alert[data-rounded='md'] {
-		--kit-alert-radius: var(--kit-shape-md);
+		--kit-alert-radius: var(--shape-md);
 	}
 	.kit-alert[data-rounded='lg'] {
-		--kit-alert-radius: var(--kit-shape-lg);
+		--kit-alert-radius: var(--shape-lg);
 	}
 	.kit-alert[data-rounded='xl'] {
-		--kit-alert-radius: var(--kit-shape-xl);
+		--kit-alert-radius: var(--shape-xl);
 	}
 	.kit-alert[data-rounded='full'] {
-		--kit-alert-radius: var(--kit-shape-full);
+		--kit-alert-radius: var(--shape-full);
 	}
 
 	/** 

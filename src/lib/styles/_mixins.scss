@@ -9,3 +9,11 @@
 				color-mix(in oklab, var(--kit-color-shadow) var(--kit-shadow-ambient-opacity), transparent);
 	}
 }
+
+@mixin rounded($component, $shapes) {
+	@each $shape in $shapes {
+		.#{$component}[data-rounded='#{$shape}'] {
+			--#{$component}-radius: var(--shape-#{$shape});
+		}
+	}
+}

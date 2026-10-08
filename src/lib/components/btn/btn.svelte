@@ -456,25 +456,25 @@
 	 * @link ...
 	 */
 	.kit-btn[data-rounded='0'] {
-		--kit-btn-radius: var(--kit-shape-none);
+		--kit-btn-radius: var(--shape-none);
 	}
 	.kit-btn[data-rounded='xs'] {
-		--kit-btn-radius: var(--kit-shape-xs);
+		--kit-btn-radius: var(--shape-xs);
 	}
 	.kit-btn[data-rounded='sm'] {
-		--kit-btn-radius: var(--kit-shape-sm);
+		--kit-btn-radius: var(--shape-sm);
 	}
 	.kit-btn[data-rounded='md'] {
-		--kit-btn-radius: var(--kit-shape-md);
+		--kit-btn-radius: var(--shape-md);
 	}
 	.kit-btn[data-rounded='lg'] {
-		--kit-btn-radius: var(--kit-shape-lg);
+		--kit-btn-radius: var(--shape-lg);
 	}
 	.kit-btn[data-rounded='xl'] {
-		--kit-btn-radius: var(--kit-shape-xl);
+		--kit-btn-radius: var(--shape-xl);
 	}
 	.kit-btn[data-rounded='full'] {
-		--kit-btn-radius: var(--kit-shape-full);
+		--kit-btn-radius: var(--shape-full);
 	}
 
 	/** 

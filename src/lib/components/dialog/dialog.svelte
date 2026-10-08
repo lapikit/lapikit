@@ -247,21 +247,21 @@
 	 * @link ...
 	 */
 	.kit-dialog__content[data-rounded='0'] {
-		--kit-dialog-radius: var(--kit-shape-none);
+		--kit-dialog-radius: var(--shape-none);
 	}
 	.kit-dialog__content[data-rounded='xs'] {
-		--kit-dialog-radius: var(--kit-shape-xs);
+		--kit-dialog-radius: var(--shape-xs);
 	}
 	.kit-dialog__content[data-rounded='sm'] {
-		--kit-dialog-radius: var(--kit-shape-sm);
+		--kit-dialog-radius: var(--shape-sm);
 	}
 	.kit-dialog__content[data-rounded='md'] {
-		--kit-dialog-radius: var(--kit-shape-md);
+		--kit-dialog-radius: var(--shape-md);
 	}
 	.kit-dialog__content[data-rounded='lg'] {
-		--kit-dialog-radius: var(--kit-shape-lg);
+		--kit-dialog-radius: var(--shape-lg);
 	}
 	.kit-dialog__content[data-rounded='xl'] {
-		--kit-dialog-radius: var(--kit-shape-xl);
+		--kit-dialog-radius: var(--shape-xl);
 	}
 </style>

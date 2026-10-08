@@ -147,22 +147,22 @@
 	 * @link ...
 	 */
 	.kit-popover-content[data-rounded='0'] {
-		--kit-popover-radius: var(--kit-shape-none);
+		--kit-popover-radius: var(--shape-none);
 	}
 	.kit-popover-content[data-rounded='xs'] {
-		--kit-popover-radius: var(--kit-shape-xs);
+		--kit-popover-radius: var(--shape-xs);
 	}
 	.kit-popover-content[data-rounded='sm'] {
-		--kit-popover-radius: var(--kit-shape-sm);
+		--kit-popover-radius: var(--shape-sm);
 	}
 	.kit-popover-content[data-rounded='md'] {
-		--kit-popover-radius: var(--kit-shape-md);
+		--kit-popover-radius: var(--shape-md);
 	}
 	.kit-popover-content[data-rounded='lg'] {
-		--kit-popover-radius: var(--kit-shape-lg);
+		--kit-popover-radius: var(--shape-lg);
 	}
 	.kit-popover-content[data-rounded='xl'] {
-		--kit-popover-radius: var(--kit-shape-xl);
+		--kit-popover-radius: var(--shape-xl);
 	}
 
 	/** 
