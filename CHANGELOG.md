@@ -9,10 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Integrating Sass into component style development
 
-### Updated
-
-- CSS variables `--kit-shape-*` has rename to `--shape-*`
-
 ## [0.7.0] - 2026-10-08
 
 ### Added
