@@ -1,17 +1,93 @@
+import { DEV } from 'esm-env';
 import type {
+	ComponentAttrs,
 	ElevationProps,
 	ElevationState,
+	PropValue,
+	SStyleProp,
 	useClassNameProps,
 	useStylesProps
 } from '$lib/@types';
+import type { ClassValue } from 'svelte/elements';
+import { makeComponentProps } from '$lib/html-mapped';
+
+const endsWithSeparator = /[^a-zA-Z0-9]$/;
+const startsWithSeparator = /^[^a-zA-Z0-9]/;
+const whitespace = /\s/;
+const whitespaces = /\s+/;
+const propertyCache = new Map<string, string>();
+
+function hasKeys(value: unknown): boolean {
+	if (!value || typeof value !== 'object') return false;
+	for (const key in value) {
+		if (Object.hasOwn(value, key)) return true;
+	}
+	return false;
+}
+
+/**
+ * Adds the classes of a value (one or several, separated by spaces) to the set.
+ * The set keeps the first position of each class and drops the duplicates.
+ */
+function addClasses(classes: Set<string>, value: string) {
+	if (!whitespace.test(value)) {
+		if (value) classes.add(value);
+		return;
+	}
+	for (const name of value.split(whitespaces)) {
+		if (name) classes.add(name);
+	}
+}
+
+/**
+ * Adds a class value with the rules of clsx (class on an element): a string, an array (nested too),
+ * or an object whose keys are added when their value is truthy. Joining an array would give "a,b"
+ */
+function addClassValue(classes: Set<string>, value: unknown) {
+	if (typeof value === 'string') addClasses(classes, value);
+	else if (Array.isArray(value)) {
+		for (const item of value) addClassValue(classes, item);
+	} else if (value && typeof value === 'object') {
+		for (const key in value) {
+			if ((value as Record<string, unknown>)[key]) addClasses(classes, key);
+		}
+	}
+}
+
+/**
+ * The classes of the s-class_xxx directives (class:xxx on a kit tag):
+ * - true gives the name (class:active -> active);
+ * - a number or a text gives the name and the value, joined by a dash (class:gap={4} -> gap-4),
+ *   without a dash when the name ends or the value starts with a separator (- _ : / .):
+ *   s-class_gap-={4}, s-class_variant="-primary" and s-class_state=":active" keep working;
+ * - false, null, undefined and '' give nothing.
+ */
+export function directiveClasses(classProps: Record<string, PropValue> | undefined): string[] {
+	const classes: string[] = [];
+	if (!classProps) return classes;
+
+	for (const key in classProps) {
+		const value = classProps[key];
+		// 8 = 's-class_'.length
+		const base = key.slice(8);
+
+		if (value === true) classes.push(base);
+		else if ((typeof value === 'string' && value) || typeof value === 'number') {
+			const text = String(value);
+			const dash = endsWithSeparator.test(base) || startsWithSeparator.test(text) ? '' : '-';
+			classes.push(`${base}${dash}${text}`);
+		}
+	}
+	return classes;
+}
 
 /**
  * useClassName - Utility to compute class names for a component.
  * @param baseClass - The base class name for the component.
- * @param className - Additional class names as a string.
+ * @param className - Additional class names: a string or an array of strings.
  * @param sClass - The s-class property which can be a string, array, or object.
  * @param classProps - An object containing s-class_xxx directives.
- * @returns A computed class string.
+ * @returns A computed class string: no extra spaces, no duplicates, in the order of the inputs.
  */
 export function useClassName({
 	baseClass = '',
@@ -19,58 +95,33 @@ export function useClassName({
 	sClass,
 	classProps
 }: useClassNameProps = {}): string {
-	const classes: string[] = [];
+	if (!sClass && !className && !hasKeys(classProps)) return baseClass;
 
-	if (baseClass) {
-		classes.push(baseClass);
-	}
+	const classes = new Set<string>();
 
-	if (typeof sClass === 'string' && sClass) {
-		classes.push(sClass);
-	}
+	if (baseClass) addClasses(classes, baseClass);
 
-	if (Array.isArray(sClass)) {
+	if (typeof sClass === 'string') {
+		addClasses(classes, sClass);
+	} else if (Array.isArray(sClass)) {
 		for (const value of sClass) {
-			if (typeof value === 'string' && value) {
-				classes.push(value);
-			}
+			if (typeof value === 'string') addClasses(classes, value);
 		}
-	}
-
-	if (sClass && typeof sClass === 'object' && !Array.isArray(sClass)) {
-		const entries = Object.entries(sClass);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				if (value === true) {
-					classes.push(key);
-				} else if (typeof value === 'string' && value) {
-					classes.push(value);
-				}
-			}
+	} else if (sClass && typeof sClass === 'object') {
+		for (const key in sClass) {
+			const value = sClass[key];
+			if (value === true) addClasses(classes, key);
+			else if (typeof value === 'string') addClasses(classes, value);
 		}
 	}
 
 	if (classProps) {
-		const entries = Object.entries(classProps);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				// Use slice instead of replace for better performance (8 = 's-class_'.length)
-				const base = key.slice(8);
-
-				if (value === true) {
-					classes.push(base);
-				} else if (typeof value === 'string' && value) {
-					classes.push(`${base}${value}`);
-				}
-			}
-		}
+		for (const name of directiveClasses(classProps)) addClasses(classes, name);
 	}
 
-	if (className) {
-		classes.push(className);
-	}
+	if (className) addClassValue(classes, className);
 
-	return classes.filter(Boolean).join(' ');
+	return [...classes].join(' ');
 }
 
 /**
@@ -99,44 +150,76 @@ export function useIsInteractive(
 }
 
 /**
- * useStyles - Utility to compute style declarations for a component (optimized pure function).
- * @param styleAttr - Inline style attribute as a string.
- * @param sStyle - The s-style property which is an object of style key-value pairs.
+ * The CSS name of a property: backgroundColor gives background-color.
+ * A custom property (--x) or a name already in kebab-case is kept as it is.
+ */
+function toCssProperty(name: string): string {
+	if (name.startsWith('--') || !/[A-Z]/.test(name)) return name;
+
+	let property = propertyCache.get(name);
+	if (property === undefined) {
+		property = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+		// Vendor prefixes: WebkitMask gives -webkit-mask
+		if (/^(webkit|moz|ms)-/.test(property)) property = `-${property}`;
+		propertyCache.set(name, property);
+	}
+	return property;
+}
+
+/**
+ * The declaration of a style value, or undefined to skip it:
+ * - a number (0 included) or a non empty string is kept;
+ * - null, undefined, false, true and '' are skipped (true is not a CSS value);
+ * - a value holding ; { or } is refused: it could add other declarations (CSS injection).
+ */
+function toDeclaration(name: string, value: unknown): string | undefined {
+	if (typeof value === 'number') {
+		return Number.isFinite(value) ? `${toCssProperty(name)}: ${value}` : undefined;
+	}
+	if (typeof value !== 'string' || !value) return undefined;
+
+	if (/[;{}]/.test(value)) {
+		if (DEV) {
+			console.warn(
+				`[lapikit] the style value of "${name}" is ignored: it contains ; { or } ("${value}")`
+			);
+		}
+		return undefined;
+	}
+	return `${toCssProperty(name)}: ${value}`;
+}
+
+/**
+ * useStyles - Utility to compute style declarations for a component (pure function).
+ * @param styleAttr - Inline style attribute as a string (raw CSS, kept as it is).
+ * @param sStyle - The s-style property: an object of property / value pairs (camelCase or kebab-case).
  * @param styleProps - An object containing s-style_xxx directives.
- * @returns A computed style string.
+ * @returns A computed style string; the style attribute comes last, so it wins.
  */
 export function useStyles({ styleAttr, sStyle, styleProps }: useStylesProps = {}): string {
+	// Fast path, the most common case: nothing to merge
+	if (!hasKeys(sStyle) && !hasKeys(styleProps)) return styleAttr ?? '';
+
 	const styles: string[] = [];
 
 	if (sStyle && typeof sStyle === 'object') {
-		const entries = Object.entries(sStyle);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				if (value) {
-					styles.push(`${key}: ${value}`);
-				}
-			}
+		for (const key in sStyle) {
+			const declaration = toDeclaration(key, sStyle[key]);
+			if (declaration) styles.push(declaration);
 		}
 	}
 
 	if (styleProps) {
-		const entries = Object.entries(styleProps);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				// Use slice instead of replace for better performance (8 = 's-style_'.length)
-				const base = key.slice(8);
-				if (value) {
-					styles.push(`${base}: ${value}`);
-				}
-			}
+		for (const key in styleProps) {
+			// 8 = 's-style_'.length
+			const declaration = toDeclaration(key.slice(8), styleProps[key]);
+			if (declaration) styles.push(declaration);
 		}
 	}
 
-	if (styleAttr) {
-		styles.push(styleAttr);
-	}
+	if (styleAttr) styles.push(styleAttr);
 
-	return styles.filter(Boolean).join('; ');
+	return styles.join('; ');
 }
 
 /**
@@ -158,5 +241,36 @@ export function useElevation(elevation?: ElevationProps | null): ElevationState 
 		base: elevation.base,
 		hover: elevation.hover,
 		active: elevation.active
+	};
+}
+
+/**
+ * useComponentAttrs - The class, style and other attributes of a labs component, in one call.
+ *
+ * The class is left to Svelte (clsx): class and s-class follow the same rules as class on an element,
+ * a string, an array, or an object whose keys are added when their value is truthy
+ * ({ active: isActive } -> active). The s-class_xxx directives (class:xxx on a kit tag) keep their
+ * rule: class:gap={4} -> gap-4.
+ *
+ * @param baseClass - The class of the component ('kit-btn-v2'), '' for none.
+ * @param props - The class, s-class, style and s-style props of the component.
+ * @param rest - The rest of the props: the s-class_xxx / s-style_xxx directives are taken out of it.
+ */
+export function useComponentAttrs(
+	baseClass: string,
+	{
+		className,
+		sClass,
+		styleAttr,
+		sStyle
+	}: { className?: ClassValue; sClass?: ClassValue; styleAttr?: string; sStyle?: SStyleProp },
+	rest: Record<string, unknown>
+): ComponentAttrs {
+	const { classProps, styleProps, restProps } = makeComponentProps(rest);
+
+	return {
+		class: [baseClass, sClass, directiveClasses(classProps), className],
+		style: useStyles({ styleAttr, sStyle, styleProps }),
+		rest: restProps
 	};
 }

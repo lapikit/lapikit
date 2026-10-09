@@ -4,8 +4,7 @@
 	 * @description A simple sheet component for experimentation for developers Lapikit. Please don't use it in production.
 	 */
 
-	import { useClassName, useElevation, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
+	import { useComponentAttrs, useElevation } from '$lib/utils';
 
 	let {
 		class: className,
@@ -18,38 +17,21 @@
 		...rest
 	} = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle }, rest)
 	);
 
 	let elevationState = $derived(useElevation(elevation));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-sheet',
-			className,
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
 </script>
 
 <div
-	class={componentClass}
-	style={componentStyle}
+	class={attrs.class}
+	style={attrs.style}
 	data-rounded={rounded}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	{...restProps}
+	{...attrs.rest}
 >
 	{@render children()}
 </div>
