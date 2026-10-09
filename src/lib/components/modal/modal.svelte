@@ -261,22 +261,22 @@
 	 * @link ...
 	 */
 	.kit-modal__content[data-rounded='0'] {
-		--kit-modal-radius: var(--shape-none);
+		--kit-modal-radius: var(--kit-shape-none);
 	}
 	.kit-modal__content[data-rounded='xs'] {
-		--kit-modal-radius: var(--shape-xs);
+		--kit-modal-radius: var(--kit-shape-xs);
 	}
 	.kit-modal__content[data-rounded='sm'] {
-		--kit-modal-radius: var(--shape-sm);
+		--kit-modal-radius: var(--kit-shape-sm);
 	}
 	.kit-modal__content[data-rounded='md'] {
-		--kit-modal-radius: var(--shape-md);
+		--kit-modal-radius: var(--kit-shape-md);
 	}
 	.kit-modal__content[data-rounded='lg'] {
-		--kit-modal-radius: var(--shape-lg);
+		--kit-modal-radius: var(--kit-shape-lg);
 	}
 	.kit-modal__content[data-rounded='xl'] {
-		--kit-modal-radius: var(--shape-xl);
+		--kit-modal-radius: var(--kit-shape-xl);
 	}
 
 	/**

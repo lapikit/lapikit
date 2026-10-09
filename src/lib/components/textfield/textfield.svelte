@@ -416,22 +416,22 @@
 	 * @link ...
 	 */
 	.kit-textfield[data-rounded='0'] {
-		--kit-textfield-radius: var(--shape-none);
+		--kit-textfield-radius: var(--kit-shape-none);
 	}
 	.kit-textfield[data-rounded='xs'] {
-		--kit-textfield-radius: var(--shape-xs);
+		--kit-textfield-radius: var(--kit-shape-xs);
 	}
 	.kit-textfield[data-rounded='sm'] {
-		--kit-textfield-radius: var(--shape-sm);
+		--kit-textfield-radius: var(--kit-shape-sm);
 	}
 	.kit-textfield[data-rounded='md'] {
-		--kit-textfield-radius: var(--shape-md);
+		--kit-textfield-radius: var(--kit-shape-md);
 	}
 	.kit-textfield[data-rounded='lg'] {
-		--kit-textfield-radius: var(--shape-lg);
+		--kit-textfield-radius: var(--kit-shape-lg);
 	}
 	.kit-textfield[data-rounded='xl'] {
-		--kit-textfield-radius: var(--shape-xl);
+		--kit-textfield-radius: var(--kit-shape-xl);
 	}
 
 	.kit-textfield__prepend,

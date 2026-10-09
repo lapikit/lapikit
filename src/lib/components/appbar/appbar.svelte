@@ -117,25 +117,25 @@
 	 * @link ...
 	 */
 	.kit-appbar[data-rounded='0'] {
-		--kit-appbar-radius: var(--shape-none);
+		--kit-appbar-radius: var(--kit-shape-none);
 	}
 	.kit-appbar[data-rounded='xs'] {
-		--kit-appbar-radius: var(--shape-xs);
+		--kit-appbar-radius: var(--kit-shape-xs);
 	}
 	.kit-appbar[data-rounded='sm'] {
-		--kit-appbar-radius: var(--shape-sm);
+		--kit-appbar-radius: var(--kit-shape-sm);
 	}
 	.kit-appbar[data-rounded='md'] {
-		--kit-appbar-radius: var(--shape-md);
+		--kit-appbar-radius: var(--kit-shape-md);
 	}
 	.kit-appbar[data-rounded='lg'] {
-		--kit-appbar-radius: var(--shape-lg);
+		--kit-appbar-radius: var(--kit-shape-lg);
 	}
 	.kit-appbar[data-rounded='xl'] {
-		--kit-appbar-radius: var(--shape-xl);
+		--kit-appbar-radius: var(--kit-shape-xl);
 	}
 	.kit-appbar[data-rounded='full'] {
-		--kit-appbar-radius: var(--shape-full);
+		--kit-appbar-radius: var(--kit-shape-full);
 	}
 
 	/** 

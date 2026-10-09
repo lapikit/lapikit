@@ -463,25 +463,25 @@
 	 * @link ...
 	 */
 	.kit-chip[data-rounded='0'] {
-		--kit-chip-radius: var(--shape-none);
+		--kit-chip-radius: var(--kit-shape-none);
 	}
 	.kit-chip[data-rounded='xs'] {
-		--kit-chip-radius: var(--shape-xs);
+		--kit-chip-radius: var(--kit-shape-xs);
 	}
 	.kit-chip[data-rounded='sm'] {
-		--kit-chip-radius: var(--shape-sm);
+		--kit-chip-radius: var(--kit-shape-sm);
 	}
 	.kit-chip[data-rounded='md'] {
-		--kit-chip-radius: var(--shape-md);
+		--kit-chip-radius: var(--kit-shape-md);
 	}
 	.kit-chip[data-rounded='lg'] {
-		--kit-chip-radius: var(--shape-lg);
+		--kit-chip-radius: var(--kit-shape-lg);
 	}
 	.kit-chip[data-rounded='xl'] {
-		--kit-chip-radius: var(--shape-xl);
+		--kit-chip-radius: var(--kit-shape-xl);
 	}
 	.kit-chip[data-rounded='full'] {
-		--kit-chip-radius: var(--shape-full);
+		--kit-chip-radius: var(--kit-shape-full);
 	}
 
 	/** 

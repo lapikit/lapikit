@@ -111,25 +111,25 @@
 	 * @link ...
 	 */
 	.kit-list[data-rounded='0'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-none);
+		--kit-list-item-radius: var(--kit-shape-none);
 	}
 	.kit-list[data-rounded='xs'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-xs);
+		--kit-list-item-radius: var(--kit-shape-xs);
 	}
 	.kit-list[data-rounded='sm'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-sm);
+		--kit-list-item-radius: var(--kit-shape-sm);
 	}
 	.kit-list[data-rounded='md'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-md);
+		--kit-list-item-radius: var(--kit-shape-md);
 	}
 	.kit-list[data-rounded='lg'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-lg);
+		--kit-list-item-radius: var(--kit-shape-lg);
 	}
 	.kit-list[data-rounded='xl'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-xl);
+		--kit-list-item-radius: var(--kit-shape-xl);
 	}
 	.kit-list[data-rounded='full'] :global(.kit-list-item) {
-		--kit-list-item-radius: var(--shape-full);
+		--kit-list-item-radius: var(--kit-shape-full);
 	}
 
 	/** 

@@ -140,25 +140,25 @@
 	 * @link ...
 	 */
 	.kit-accordion[data-rounded='0'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-none);
+		--kit-accordion-item-radius: var(--kit-shape-none);
 	}
 	.kit-accordion[data-rounded='xs'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-xs);
+		--kit-accordion-item-radius: var(--kit-shape-xs);
 	}
 	.kit-accordion[data-rounded='sm'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-sm);
+		--kit-accordion-item-radius: var(--kit-shape-sm);
 	}
 	.kit-accordion[data-rounded='md'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-md);
+		--kit-accordion-item-radius: var(--kit-shape-md);
 	}
 	.kit-accordion[data-rounded='lg'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-lg);
+		--kit-accordion-item-radius: var(--kit-shape-lg);
 	}
 	.kit-accordion[data-rounded='xl'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-xl);
+		--kit-accordion-item-radius: var(--kit-shape-xl);
 	}
 	.kit-accordion[data-rounded='full'] :global(.kit-accordion-item) {
-		--kit-accordion-item-radius: var(--shape-full);
+		--kit-accordion-item-radius: var(--kit-shape-full);
 	}
 
 	/** 

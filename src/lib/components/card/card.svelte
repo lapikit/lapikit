@@ -135,22 +135,22 @@
 	 * @link ...
 	 */
 	.kit-card[data-rounded='0'] {
-		--kit-card-radius: var(--shape-none);
+		--kit-card-radius: var(--kit-shape-none);
 	}
 	.kit-card[data-rounded='xs'] {
-		--kit-card-radius: var(--shape-xs);
+		--kit-card-radius: var(--kit-shape-xs);
 	}
 	.kit-card[data-rounded='sm'] {
-		--kit-card-radius: var(--shape-sm);
+		--kit-card-radius: var(--kit-shape-sm);
 	}
 	.kit-card[data-rounded='md'] {
-		--kit-card-radius: var(--shape-md);
+		--kit-card-radius: var(--kit-shape-md);
 	}
 	.kit-card[data-rounded='lg'] {
-		--kit-card-radius: var(--shape-lg);
+		--kit-card-radius: var(--kit-shape-lg);
 	}
 	.kit-card[data-rounded='xl'] {
-		--kit-card-radius: var(--shape-xl);
+		--kit-card-radius: var(--kit-shape-xl);
 	}
 
 	/** 

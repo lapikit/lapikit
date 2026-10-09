@@ -116,25 +116,25 @@
 	 * @link ...
 	 */
 	.kit-toolbar[data-rounded='0'] {
-		--kit-toolbar-radius: var(--shape-none);
+		--kit-toolbar-radius: var(--kit-shape-none);
 	}
 	.kit-toolbar[data-rounded='xs'] {
-		--kit-toolbar-radius: var(--shape-xs);
+		--kit-toolbar-radius: var(--kit-shape-xs);
 	}
 	.kit-toolbar[data-rounded='sm'] {
-		--kit-toolbar-radius: var(--shape-sm);
+		--kit-toolbar-radius: var(--kit-shape-sm);
 	}
 	.kit-toolbar[data-rounded='md'] {
-		--kit-toolbar-radius: var(--shape-md);
+		--kit-toolbar-radius: var(--kit-shape-md);
 	}
 	.kit-toolbar[data-rounded='lg'] {
-		--kit-toolbar-radius: var(--shape-lg);
+		--kit-toolbar-radius: var(--kit-shape-lg);
 	}
 	.kit-toolbar[data-rounded='xl'] {
-		--kit-toolbar-radius: var(--shape-xl);
+		--kit-toolbar-radius: var(--kit-shape-xl);
 	}
 	.kit-toolbar[data-rounded='full'] {
-		--kit-toolbar-radius: var(--shape-full);
+		--kit-toolbar-radius: var(--kit-shape-full);
 	}
 
 	/** 

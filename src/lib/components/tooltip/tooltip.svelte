@@ -256,25 +256,25 @@
 	 * @link ...
 	 */
 	.kit-tooltip__content[data-rounded='0'] {
-		--kit-tooltip-radius: var(--shape-none);
+		--kit-tooltip-radius: var(--kit-shape-none);
 	}
 	.kit-tooltip__content[data-rounded='xs'] {
-		--kit-tooltip-radius: var(--shape-xs);
+		--kit-tooltip-radius: var(--kit-shape-xs);
 	}
 	.kit-tooltip__content[data-rounded='sm'] {
-		--kit-tooltip-radius: var(--shape-sm);
+		--kit-tooltip-radius: var(--kit-shape-sm);
 	}
 	.kit-tooltip__content[data-rounded='md'] {
-		--kit-tooltip-radius: var(--shape-md);
+		--kit-tooltip-radius: var(--kit-shape-md);
 	}
 	.kit-tooltip__content[data-rounded='lg'] {
-		--kit-tooltip-radius: var(--shape-lg);
+		--kit-tooltip-radius: var(--kit-shape-lg);
 	}
 	.kit-tooltip__content[data-rounded='xl'] {
-		--kit-tooltip-radius: var(--shape-xl);
+		--kit-tooltip-radius: var(--kit-shape-xl);
 	}
 	.kit-tooltip__content[data-rounded='full'] {
-		--kit-tooltip-radius: var(--shape-full);
+		--kit-tooltip-radius: var(--kit-shape-full);
 	}
 
 	.kit-tooltip__content[data-variant='arrow']::after {
