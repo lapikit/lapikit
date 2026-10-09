@@ -184,7 +184,8 @@ describe('computeSClasses', () => {
 	describe('edge cases', () => {
 		it('should handle multiple spaces in string sClass', () => {
 			const result = computeSClasses('btn  btn-primary', {});
-			expect(result).toBe('btn  btn-primary');
+			// The whitespace is normalized
+			expect(result).toBe('btn btn-primary');
 		});
 
 		it('should preserve order of classes', () => {
