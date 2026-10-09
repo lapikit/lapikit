@@ -14,6 +14,7 @@
 		's-style': sStyle,
 		elevation,
 		rounded,
+		active,
 		...rest
 	} = $props();
 
@@ -31,6 +32,7 @@
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
+	data-active={active}
 	{...attrs.rest}
 >
 	{@render children()}
@@ -44,6 +46,11 @@
 		background-color: var(--kit-color-surface-1);
 		color: var(--kit-color-text);
 		border-radius: var(--kit-sheet-radius);
+	}
+
+	.kit-sheet[data-active='true'] {
+		background: var(--kit-color-accent);
+		color: var(--kit-on-accent);
 	}
 
 	/** 
