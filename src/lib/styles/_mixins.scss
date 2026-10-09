@@ -13,7 +13,7 @@
 @mixin rounded($component, $shapes) {
 	@each $shape in $shapes {
 		.#{$component}[data-rounded='#{$shape}'] {
-			--#{$component}-radius: var(--shape-#{$shape});
+			--#{$component}-radius: var(--kit-shape-#{$shape});
 		}
 	}
 }
