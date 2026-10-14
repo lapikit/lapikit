@@ -26,7 +26,7 @@ describe('computeSStyles', () => {
 			expect(result).toBe('color: red');
 		});
 
-		it('should handle boolean true values', () => {
+		it('should skip boolean true values (not a CSS value)', () => {
 			const result = computeSStyles(
 				{
 					color: 'blue',
@@ -34,7 +34,7 @@ describe('computeSStyles', () => {
 				},
 				{}
 			);
-			expect(result).toBe('color: blue; visible: true');
+			expect(result).toBe('color: blue');
 		});
 
 		it('should return empty string for empty object', () => {
@@ -92,7 +92,8 @@ describe('computeSStyles', () => {
 					's-style_color': 'green'
 				}
 			);
-			expect(result).toBe('visible: true; color: green');
+			// true is not a CSS value: skipped
+			expect(result).toBe('color: green');
 		});
 
 		it('should handle hyphenated CSS properties', () => {
@@ -152,7 +153,8 @@ describe('computeSStyles', () => {
 					's-style_active': true
 				}
 			);
-			expect(result).toBe('color: blue; visible: true; display: block; active: true');
+			// true is skipped: "visible: true" was invalid CSS
+			expect(result).toBe('color: blue; display: block');
 		});
 	});
 

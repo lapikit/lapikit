@@ -38,7 +38,7 @@ describe('useStyles', () => {
 	describe('sStyle - object', () => {
 		it('should handle sStyle object with string values', () => {
 			const result = useStyles({ sStyle: { color: 'red', fontSize: '16px' } });
-			expect(result).toBe('color: red; fontSize: 16px');
+			expect(result).toBe('color: red; font-size: 16px' /* camelCase is converted */);
 		});
 
 		it('should handle sStyle object with single property', () => {
@@ -58,11 +58,11 @@ describe('useStyles', () => {
 			expect(result).toBe('');
 		});
 
-		it('should handle sStyle with boolean true values', () => {
+		it('should skip boolean true values in sStyle', () => {
 			const result = useStyles({
 				sStyle: { color: 'red', display: true as unknown as string }
 			});
-			expect(result).toBe('color: red; display: true');
+			expect(result).toBe('color: red' /* true is not a CSS value: skipped */);
 		});
 
 		it('should handle CSS custom properties (variables)', () => {
@@ -92,7 +92,9 @@ describe('useStyles', () => {
 					's-style_display': 'flex'
 				}
 			});
-			expect(result).toBe('color: red; fontSize: 16px; display: flex');
+			expect(result).toBe(
+				'color: red; font-size: 16px; display: flex' /* camelCase is converted */
+			);
 		});
 
 		it('should ignore falsy values in styleProps', () => {
@@ -121,11 +123,12 @@ describe('useStyles', () => {
 			expect(result).toBe('--primary: #3b82f6; --spacing: 1rem');
 		});
 
-		it('should handle styleProps with boolean true', () => {
+		it('should skip boolean true in styleProps', () => {
 			const result = useStyles({
 				styleProps: { 's-style_display': true as unknown as string }
 			});
-			expect(result).toBe('display: true');
+			// true is not a CSS value: skipped
+			expect(result).toBe('');
 		});
 	});
 
@@ -152,7 +155,9 @@ describe('useStyles', () => {
 				styleProps: { 's-style_fontSize': '16px' },
 				styleAttr: 'display: flex'
 			});
-			expect(result).toBe('color: red; fontSize: 16px; display: flex');
+			expect(result).toBe(
+				'color: red; font-size: 16px; display: flex' /* camelCase is converted */
+			);
 		});
 
 		it('should handle complex combination with multiple properties', () => {
@@ -165,7 +170,7 @@ describe('useStyles', () => {
 				styleAttr: 'display: flex; align-items: center'
 			});
 			expect(result).toBe(
-				'color: red; backgroundColor: white; fontSize: 16px; padding: 10px; display: flex; align-items: center'
+				'color: red; background-color: white; font-size: 16px; padding: 10px; display: flex; align-items: center' /* camelCase is converted */
 			);
 		});
 
@@ -203,7 +208,7 @@ describe('useStyles', () => {
 			const result = useStyles({
 				sStyle: { color: null as unknown as string, fontSize: '16px' }
 			});
-			expect(result).toBe('fontSize: 16px');
+			expect(result).toBe('font-size: 16px' /* camelCase is converted */);
 		});
 
 		it('should preserve semicolons in styleAttr', () => {
@@ -224,7 +229,7 @@ describe('useStyles', () => {
 				sStyle: { color: '', fontSize: '16px' },
 				styleProps: { 's-style_display': '' }
 			});
-			expect(result).toBe('fontSize: 16px');
+			expect(result).toBe('font-size: 16px' /* camelCase is converted */);
 		});
 
 		it('should handle zero values in sStyle', () => {
@@ -247,14 +252,14 @@ describe('useStyles', () => {
 			const result = useStyles({
 				sStyle: { backgroundColor: 'red', fontSize: '16px' }
 			});
-			expect(result).toBe('backgroundColor: red; fontSize: 16px');
+			expect(result).toBe('background-color: red; font-size: 16px' /* camelCase is converted */);
 		});
 
 		it('should handle mixed kebab-case and camelCase', () => {
 			const result = useStyles({
 				sStyle: { 'background-color': 'red', fontSize: '16px' }
 			});
-			expect(result).toBe('background-color: red; fontSize: 16px');
+			expect(result).toBe('background-color: red; font-size: 16px' /* camelCase is converted */);
 		});
 	});
 });

@@ -1,4 +1,5 @@
 import type { PropValue, SClassProp, SStyleProp } from '$lib/@types';
+import { useClassName, useStyles } from '$lib/utils/components.js';
 
 /**
  * Computes a string of class names based on the provided sClass and classDirectiveProps.
@@ -10,52 +11,7 @@ export function computeSClasses(
 	sClass: SClassProp,
 	classDirectiveProps: Record<string, unknown>
 ): string {
-	const classes: string[] = [];
-
-	// s-class string
-	if (typeof sClass === 'string' && sClass) {
-		classes.push(sClass);
-	}
-
-	// s-class array
-	if (Array.isArray(sClass)) {
-		for (const value of sClass) {
-			if (typeof value === 'string' && value) {
-				classes.push(value);
-			}
-		}
-	}
-
-	// s-class object
-	if (sClass && typeof sClass === 'object' && !Array.isArray(sClass)) {
-		const entries = Object.entries(sClass);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				if (value === true) {
-					classes.push(key);
-				} else if (typeof value === 'string' && value) {
-					classes.push(value);
-				}
-			}
-		}
-	}
-
-	// s-class_xxx
-	const classEntries = Object.entries(classDirectiveProps);
-	if (classEntries.length > 0) {
-		for (const [key, value] of classEntries) {
-			// Use slice instead of replace for better performance (8 = 's-class_'.length)
-			const base = key.slice(8);
-
-			if (value === true) {
-				classes.push(base);
-			} else if (typeof value === 'string' && value) {
-				classes.push(`${base}${value}`);
-			}
-		}
-	}
-
-	return classes.join(' ');
+	return useClassName({ sClass, classProps: classDirectiveProps as Record<string, PropValue> });
 }
 
 /**
@@ -68,31 +24,7 @@ export function computeSStyles(
 	sStyle: SStyleProp,
 	styleDirectiveProps: Record<string, unknown>
 ): string {
-	const styles: string[] = [];
-
-	if (sStyle && typeof sStyle === 'object') {
-		const entries = Object.entries(sStyle);
-		if (entries.length > 0) {
-			for (const [key, value] of entries) {
-				if (value) {
-					styles.push(`${key}: ${value}`);
-				}
-			}
-		}
-	}
-
-	const styleEntries = Object.entries(styleDirectiveProps);
-	if (styleEntries.length > 0) {
-		for (const [key, value] of styleEntries) {
-			// Use slice instead of replace for better performance (8 = 's-style_'.length)
-			const base = key.slice(8);
-			if (value) {
-				styles.push(`${base}: ${value}`);
-			}
-		}
-	}
-
-	return styles.join('; ');
+	return useStyles({ sStyle, styleProps: styleDirectiveProps as Record<string, PropValue> });
 }
 
 /**
@@ -115,7 +47,8 @@ export function makeComponentProps(props: Record<string, unknown>): {
 			classProps[key] = value as PropValue;
 		} else if (key.startsWith('s-style_')) {
 			styleProps[key] = value as PropValue;
-		} else if (!key.startsWith('s-class') && !key.startsWith('s-style')) {
+		} else if (key !== 's-class' && key !== 's-style') {
+			// Only the exact s-class / s-style are left out: a prop like s-classic is kept
 			restProps[key] = value;
 		}
 	}

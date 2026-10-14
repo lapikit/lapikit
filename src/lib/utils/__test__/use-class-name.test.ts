@@ -225,17 +225,14 @@ describe('useClassName', () => {
 			expect(result).toBe('');
 		});
 
-		it('should handle number values in classProps', () => {
-			// Testing runtime behavior with invalid types
-			const result = useClassName({
-				classProps: { 's-class_count': 5 } as unknown as Record<string, boolean | string>
-			});
-			expect(result).toBe('');
+		it('should append number values in classProps (a prefix and its value)', () => {
+			const result = useClassName({ classProps: { 's-class_gap-': 4 } });
+			expect(result).toBe('gap-4');
 		});
 
-		it('should preserve whitespace in class names', () => {
-			const result = useClassName({ baseClass: 'btn', className: 'my  custom' });
-			expect(result).toBe('btn my  custom');
+		it('should normalize the whitespace in class names', () => {
+			const result = useClassName({ baseClass: 'btn', className: '  my  custom ' });
+			expect(result).toBe('btn my custom');
 		});
 	});
 });

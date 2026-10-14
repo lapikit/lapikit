@@ -9,6 +9,7 @@ import type {
 	SStyleProp,
 	StylePropertiesType
 } from '$lib/@types';
+import type { ClassValue } from 'svelte/elements';
 
 export interface useClassNameProps {
 	baseClass?: string;
@@ -49,3 +50,10 @@ export type ComponentInfo = {
 	// true when `ref` points to the component file itself (default import)
 	direct?: boolean;
 };
+
+export interface ComponentAttrs {
+	/** For the class attribute of the element: Svelte applies clsx (strings, arrays, objects) */
+	class: ClassValue;
+	style: string;
+	rest: Record<string, unknown>;
+}

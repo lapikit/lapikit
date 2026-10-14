@@ -1,4 +1,5 @@
 import type { ComponentInfo, KitComponentScan } from './@types/index.js';
+import { rewriteDirectives } from './directives.js';
 
 export const decodeSourceMap = (
 	content: string,
@@ -110,7 +111,9 @@ export const decodeSourceMap = (
 
 		if (isKnown) {
 			importedComponents.set(info!.name, info!.ref);
-			parts.push(`<${info!.name}${content.slice(nameEnd, tagEnd + 1)}`);
+			// class: / style: are refused by Svelte on a component: they become s-class_ / s-style_ props
+			parts.push(`<${info!.name}${rewriteDirectives(content.slice(nameEnd, tagEnd + 1))}`);
+			changed = true;
 			changed = true;
 		} else {
 			parts.push(content.slice(nextLt, tagEnd + 1));
