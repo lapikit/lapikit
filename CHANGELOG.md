@@ -3,11 +3,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Insiders
+## [0.7.1] - 2026-10-14
 
 ### Added
 
 - Integrating Sass into component style development
+
+### Updated
+
+- Component `kit:app` has updated with Sass mixins and themes
+- Component labs `kit:sheet` has updated with new props and preview new derived props
+- Preprocessor Lili integrate **preview** read directives `style` and `class`
 
 ## [0.7.0] - 2026-10-08
 
