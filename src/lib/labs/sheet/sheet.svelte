@@ -4,7 +4,7 @@
 	 * @description A simple sheet component for experimentation for developers Lapikit. Please don't use it in production.
 	 */
 
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { resolveColor, resolveOnColor, useComponentAttrs, useElevation } from '$lib/utils';
 
 	let {
 		class: className,
@@ -15,19 +15,33 @@
 		elevation,
 		rounded,
 		active,
+		color: colorProp,
 		...rest
 	} = $props();
 
+	// states
 	let attrs = $derived(
 		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle }, rest)
 	);
-
+	let color = $derived(colorProp);
 	let elevationState = $derived(useElevation(elevation));
+	let colorValue = $derived(resolveColor(color));
+	let onColorValue = $derived(resolveOnColor(color));
+
+	let resolvedStyle = $derived(
+		[
+			attrs.style,
+			colorValue && `--kit-sheet-color: ${colorValue}`,
+			onColorValue && `--kit-sheet-on-color: ${onColorValue}`
+		]
+			.filter(Boolean)
+			.join('; ')
+	);
 </script>
 
 <div
 	class={attrs.class}
-	style={attrs.style}
+	style={resolvedStyle}
 	data-rounded={rounded}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
@@ -42,9 +56,12 @@
 	@use '$lib/styles' as *;
 
 	.kit-sheet {
+		--kit-sheet-color: var(--kit-sheet-color, var(--kit-color-surface-1));
+		--kit-sheet-on-color: var(--kit-sheet-on-color, var(--kit-color-text));
+
 		display: flex;
-		background-color: var(--kit-color-surface-1);
-		color: var(--kit-color-text);
+		background-color: var(--kit-sheet-color);
+		color: var(--kit-sheet-on-color);
 		border-radius: var(--kit-sheet-radius);
 	}
 
