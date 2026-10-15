@@ -13,6 +13,7 @@
 		's-style': sStyle,
 		elevation,
 		rounded,
+		variant = 'filled',
 		active,
 		color,
 		...rest
@@ -29,6 +30,7 @@
 	class={attrs.class}
 	style={attrs.style}
 	data-rounded={rounded}
+	data-variant={variant}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
@@ -48,6 +50,15 @@
 		background-color: var(--kit-sheet-bg);
 		color: var(--kit-sheet-fg);
 		border-radius: var(--kit-sheet-radius);
+	}
+
+	.kit-sheet[data-variant='tonal'] {
+		@include color-variant(kit-sheet, tonal);
+	}
+
+	.kit-sheet[data-variant='outline'] {
+		@include color-variant(kit-sheet, outline);
+		border: 1px solid var(--kit-sheet-border);
 	}
 
 	.kit-sheet[data-active='true'] {
