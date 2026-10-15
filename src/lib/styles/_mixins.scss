@@ -28,10 +28,16 @@
 	--#{$name}-pressed: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 14%);
 	--#{$name}-soft: color-mix(in oklab, var(--#{$name}-bg) 16%, transparent);
 	--#{$name}-border: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 20%);
+	--#{$name}-active: color-mix(in oklab, var(--#{$name}-color), var(--#{$name}-fg) 14%);
 
 	@supports (color: color(from red srgb-linear r g b)) {
 		--#{$name}-contrast: #{contrast(var(--#{$name}-color))};
 	}
+}
+
+@mixin color-active($name, $bg: var(--kit-color-accent), $fg: var(--kit-color-on-accent)) {
+	--#{$name}-bg: var(--#{$name}-active, #{$bg});
+	--#{$name}-fg: var(--#{$name}-on-color, var(--#{$name}-contrast, #{$fg}));
 }
 
 @function contrast($color) {

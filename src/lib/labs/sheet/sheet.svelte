@@ -51,8 +51,7 @@
 	}
 
 	.kit-sheet[data-active='true'] {
-		background: var(--kit-color-accent);
-		color: var(--kit-color-on-accent);
+		@include color-active(kit-sheet);
 	}
 
 	/** 
