@@ -3,8 +3,7 @@
 	 * Sheet component
 	 * @description A simple sheet component for experimentation for developers Lapikit. Please don't use it in production.
 	 */
-
-	import { resolveColor, resolveOnColor, useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, useElevation } from '$lib/utils';
 
 	let {
 		class: className,
@@ -15,33 +14,20 @@
 		elevation,
 		rounded,
 		active,
-		color: colorProp,
+		color,
 		...rest
 	} = $props();
 
 	// states
 	let attrs = $derived(
-		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle }, rest)
+		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let color = $derived(colorProp);
 	let elevationState = $derived(useElevation(elevation));
-	let colorValue = $derived(resolveColor(color));
-	let onColorValue = $derived(resolveOnColor(color));
-
-	let resolvedStyle = $derived(
-		[
-			attrs.style,
-			colorValue && `--kit-sheet-color: ${colorValue}`,
-			onColorValue && `--kit-sheet-on-color: ${onColorValue}`
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
 </script>
 
 <div
 	class={attrs.class}
-	style={resolvedStyle}
+	style={attrs.style}
 	data-rounded={rounded}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
@@ -49,25 +35,24 @@
 	data-active={active}
 	{...attrs.rest}
 >
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style lang="scss">
 	@use '$lib/styles' as *;
 
 	.kit-sheet {
-		--kit-sheet-color: var(--kit-sheet-color, var(--kit-color-surface-1));
-		--kit-sheet-on-color: var(--kit-sheet-on-color, var(--kit-color-text));
+		@include color(kit-sheet, var(--kit-color-surface-1), var(--kit-color-text));
 
 		display: flex;
-		background-color: var(--kit-sheet-color);
-		color: var(--kit-sheet-on-color);
+		background-color: var(--kit-sheet-bg);
+		color: var(--kit-sheet-fg);
 		border-radius: var(--kit-sheet-radius);
 	}
 
 	.kit-sheet[data-active='true'] {
 		background: var(--kit-color-accent);
-		color: var(--kit-on-accent);
+		color: var(--kit-color-on-accent);
 	}
 
 	/** 

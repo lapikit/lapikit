@@ -1,3 +1,5 @@
+import { DEV } from 'esm-env';
+
 const paletteName = /^[a-zA-Z][\w-]*$/;
 const unsafe = /[;{}]/;
 
@@ -5,7 +7,7 @@ function clean(color: string | null | undefined): string | undefined {
 	const value = color?.trim();
 	if (!value) return undefined;
 	if (unsafe.test(value)) {
-		console.warn(`[lapikit] color "${value}" is ignored: it cannot hold ; { or }`);
+		if (DEV) console.warn(`[lapikit] color "${value}" is ignored: it cannot hold ; { or }`);
 		return undefined;
 	}
 	return value;
@@ -28,4 +30,17 @@ export function resolveOnColor(color: string | null | undefined): string | undef
 	if (!value || !resolved) return undefined;
 	const auto = contrastColor(resolved);
 	return paletteName.test(value) ? `var(--kit-color-on-${value}, ${auto})` : auto;
+}
+
+/**
+ * colorStyle - The color variables of a component, for its style attribute.
+ * The color mixin (styles/_mixins.scss) reads them: --{name}-color and --{name}-on-color.
+ * @param name - The class of the component ('kit-sheet').
+ * @param color - A palette name ('accent') or a CSS color ('#f00', 'oklch(...)').
+ * @returns The declarations, '' when there is no color.
+ */
+export function colorStyle(name: string, color: string | null | undefined): string {
+	const value = resolveColor(color);
+	if (!name || !value) return '';
+	return `--${name}-color: ${value}; --${name}-on-color: ${resolveOnColor(color)}`;
 }

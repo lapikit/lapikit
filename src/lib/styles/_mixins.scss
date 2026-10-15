@@ -17,3 +17,22 @@
 		}
 	}
 }
+
+/**
+ * The colors of a component, from the color prop (--{name}-color / --{name}-on-color, set inline)
+ * or from the defaults. Each component maps them to its variants:
+ * --{name}-bg / -fg: the color and its text, -hover / -pressed: the states of an interactive bg,
+ * -soft: a light bg (tonal), -border: a border that goes with bg.
+ */
+@mixin color($name, $bg, $fg) {
+	// not inherited from a parent: only the inline style (color prop) sets them
+	--#{$name}-color: initial;
+	--#{$name}-on-color: initial;
+
+	--#{$name}-bg: var(--#{$name}-color, #{$bg});
+	--#{$name}-fg: var(--#{$name}-on-color, #{$fg});
+	--#{$name}-hover: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 8%);
+	--#{$name}-pressed: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 14%);
+	--#{$name}-soft: color-mix(in oklab, var(--#{$name}-bg) 16%, transparent);
+	--#{$name}-border: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 20%);
+}

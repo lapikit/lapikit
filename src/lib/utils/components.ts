@@ -10,6 +10,7 @@ import type {
 } from '$lib/@types';
 import type { ClassValue } from 'svelte/elements';
 import { makeComponentProps } from '$lib/html-mapped';
+import { colorStyle } from './color.js';
 
 const endsWithSeparator = /[^a-zA-Z0-9]$/;
 const startsWithSeparator = /^[^a-zA-Z0-9]/;
@@ -252,8 +253,11 @@ export function useElevation(elevation?: ElevationProps | null): ElevationState 
  * ({ active: isActive } -> active). The s-class_xxx directives (class:xxx on a kit tag) keep their
  * rule: class:gap={4} -> gap-4.
  *
- * @param baseClass - The class of the component ('kit-btn-v2'), '' for none.
- * @param props - The class, s-class, style and s-style props of the component.
+ * @param baseClass - The class of the component ('kit-btn'), '' for none.
+ * The color prop gives the --{baseClass}-color / --{baseClass}-on-color variables, read by the
+ * color mixin; they come before the style, so the style attribute still wins.
+ *
+ * @param props - The class, s-class, style, s-style and color props of the component.
  * @param rest - The rest of the props: the s-class_xxx / s-style_xxx directives are taken out of it.
  */
 export function useComponentAttrs(
@@ -262,15 +266,24 @@ export function useComponentAttrs(
 		className,
 		sClass,
 		styleAttr,
-		sStyle
-	}: { className?: ClassValue; sClass?: ClassValue; styleAttr?: string; sStyle?: SStyleProp },
+		sStyle,
+		color
+	}: {
+		className?: ClassValue;
+		sClass?: ClassValue;
+		styleAttr?: string;
+		sStyle?: SStyleProp;
+		color?: string | null;
+	},
 	rest: Record<string, unknown>
 ): ComponentAttrs {
 	const { classProps, styleProps, restProps } = makeComponentProps(rest);
 
 	return {
 		class: [baseClass, sClass, directiveClasses(classProps), className],
-		style: useStyles({ styleAttr, sStyle, styleProps }),
+		style: [colorStyle(baseClass, color), useStyles({ styleAttr, sStyle, styleProps })]
+			.filter(Boolean)
+			.join('; '),
 		rest: restProps
 	};
 }
