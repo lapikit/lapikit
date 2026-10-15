@@ -61,6 +61,11 @@
 		border: 1px solid var(--kit-sheet-border);
 	}
 
+	.kit-sheet[data-variant='surface'] {
+		@include color-variant(kit-sheet, surface);
+		border: 1px solid var(--kit-sheet-border);
+	}
+
 	.kit-sheet[data-active='true'] {
 		@include color-active(kit-sheet);
 	}

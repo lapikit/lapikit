@@ -58,6 +58,12 @@
 		--#{$name}-border: var(--#{$name}-color, var(--kit-color-border));
 		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 14%, transparent);
 		--#{$name}-active-fg: var(--#{$name}-ink);
+	} @else if $variant == surface {
+		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 8%, transparent);
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: color-mix(in oklab, var(--#{$name}-ink) 35%, transparent);
+		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 18%, transparent);
+		--#{$name}-active-fg: var(--#{$name}-ink);
 	}
 }
 
