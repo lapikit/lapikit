@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { colorStyle, contrastColor, resolveColor, resolveOnColor } from '../color';
+import { colorStyle, resolveColor, resolveOnColor } from '../color';
 import { useComponentAttrs } from '../components';
 
 describe('resolveColor', () => {
@@ -40,13 +40,14 @@ describe('resolveOnColor', () => {
 		expect(resolveOnColor('red;')).toBeUndefined();
 	});
 
-	it('should give the on- palette variable, with the computed contrast as fallback', () => {
-		const auto = contrastColor('var(--kit-color-accent, accent)');
-		expect(resolveOnColor('accent')).toBe(`var(--kit-color-on-accent, ${auto})`);
+	it('should give the on- palette variable, without fallback (the mixin computes the contrast)', () => {
+		expect(resolveOnColor('accent')).toBe('var(--kit-color-on-accent)');
+		expect(resolveOnColor('red')).toBe('var(--kit-color-on-red)');
 	});
 
-	it('should give the computed contrast for a CSS color', () => {
-		expect(resolveOnColor('#ff0000')).toBe(contrastColor('#ff0000'));
+	it('should return undefined for a CSS color (the mixin computes the contrast)', () => {
+		expect(resolveOnColor('#ff0000')).toBeUndefined();
+		expect(resolveOnColor('oklch(70% 0.1 200)')).toBeUndefined();
 	});
 });
 
@@ -61,10 +62,14 @@ describe('colorStyle', () => {
 		expect(colorStyle('', 'accent')).toBe('');
 	});
 
-	it('should give the color and on-color variables of the component', () => {
+	it('should give the color and on-color variables for a palette name', () => {
 		expect(colorStyle('kit-sheet', 'accent')).toBe(
-			`--kit-sheet-color: ${resolveColor('accent')}; --kit-sheet-on-color: ${resolveOnColor('accent')}`
+			'--kit-sheet-color: var(--kit-color-accent, accent); --kit-sheet-on-color: var(--kit-color-on-accent)'
 		);
+	});
+
+	it('should give only the color variable for a CSS color', () => {
+		expect(colorStyle('kit-sheet', '#ff0000')).toBe('--kit-sheet-color: #ff0000');
 	});
 });
 

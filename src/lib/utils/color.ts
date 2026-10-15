@@ -19,28 +19,17 @@ export function resolveColor(color: string | null | undefined): string | undefin
 	return paletteName.test(value) ? `var(--kit-color-${value}, ${value})` : value;
 }
 
-export function contrastColor(value: string): string {
-	const channel = 'clamp(0, (0.1791 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 100000, 1)';
-	return `color(from ${value} srgb-linear ${channel} ${channel} ${channel} / 1)`;
-}
-
 export function resolveOnColor(color: string | null | undefined): string | undefined {
 	const value = clean(color);
-	const resolved = resolveColor(value);
-	if (!value || !resolved) return undefined;
-	const auto = contrastColor(resolved);
-	return paletteName.test(value) ? `var(--kit-color-on-${value}, ${auto})` : auto;
+	if (!value || !paletteName.test(value)) return undefined;
+	return `var(--kit-color-on-${value})`;
 }
 
-/**
- * colorStyle - The color variables of a component, for its style attribute.
- * The color mixin (styles/_mixins.scss) reads them: --{name}-color and --{name}-on-color.
- * @param name - The class of the component ('kit-sheet').
- * @param color - A palette name ('accent') or a CSS color ('#f00', 'oklch(...)').
- * @returns The declarations, '' when there is no color.
- */
 export function colorStyle(name: string, color: string | null | undefined): string {
 	const value = resolveColor(color);
 	if (!name || !value) return '';
-	return `--${name}-color: ${value}; --${name}-on-color: ${resolveOnColor(color)}`;
+	const onColor = resolveOnColor(color);
+	return onColor
+		? `--${name}-color: ${value}; --${name}-on-color: ${onColor}`
+		: `--${name}-color: ${value}`;
 }
