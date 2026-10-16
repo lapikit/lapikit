@@ -11,3 +11,10 @@ export interface ElevationState {
 }
 
 export type ElevationProps = ElevationType | ElevationState;
+
+export interface ColorState {
+	base?: string;
+	active?: string;
+}
+
+export type ColorProps = string | ColorState;

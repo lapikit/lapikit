@@ -73,7 +73,56 @@ describe('colorStyle', () => {
 	});
 });
 
+describe('colorStyle with { base, active }', () => {
+	it('should be the same as a string for { base }', () => {
+		expect(colorStyle('kit-sheet', { base: 'accent' })).toBe(colorStyle('kit-sheet', 'accent'));
+		expect(colorStyle('kit-sheet', { base: 'accent' }, true)).toBe(
+			colorStyle('kit-sheet', 'accent', true)
+		);
+	});
+
+	it('should ignore the active color while the component is not active', () => {
+		expect(colorStyle('kit-sheet', { active: 'warning' })).toBe('');
+		expect(colorStyle('kit-sheet', { base: 'info', active: 'warning' })).toBe(
+			colorStyle('kit-sheet', 'info')
+		);
+	});
+
+	it('should give the active color as it is while the component is active', () => {
+		expect(colorStyle('kit-sheet', { active: 'warning' }, true)).toBe(
+			'--kit-sheet-color: var(--kit-color-warning, warning); --kit-sheet-on-color: var(--kit-color-on-warning); --kit-sheet-active-shade: 0%'
+		);
+		expect(colorStyle('kit-sheet', { base: 'info', active: '#ff8800' }, true)).toBe(
+			'--kit-sheet-color: #ff8800; --kit-sheet-active-shade: 0%'
+		);
+	});
+
+	it('should keep the stronger shade of a string color while active', () => {
+		expect(colorStyle('kit-sheet', 'accent', true)).toBe(colorStyle('kit-sheet', 'accent'));
+	});
+
+	it('should fall back to base when the active color is refused', () => {
+		expect(colorStyle('kit-sheet', { base: 'info', active: 'red;' }, true)).toBe(
+			colorStyle('kit-sheet', 'info')
+		);
+		expect(colorStyle('kit-sheet', { base: 'info', active: '  ' }, true)).toBe(
+			colorStyle('kit-sheet', 'info')
+		);
+	});
+
+	it('should return an empty string for an empty object', () => {
+		expect(colorStyle('kit-sheet', {}, true)).toBe('');
+	});
+});
+
 describe('useComponentAttrs color', () => {
+	it('should pick the active color with the active prop', () => {
+		expect(
+			useComponentAttrs('kit-sheet', { color: { active: 'warning' }, active: true }, {}).style
+		).toBe(colorStyle('kit-sheet', { active: 'warning' }, true));
+		expect(useComponentAttrs('kit-sheet', { color: { active: 'warning' } }, {}).style).toBe('');
+	});
+
 	it('should keep the style as it is when there is no color', () => {
 		expect(useComponentAttrs('kit-sheet', { styleAttr: 'margin: 0' }, {}).style).toBe('margin: 0');
 		expect(useComponentAttrs('kit-sheet', {}, {}).style).toBe('');

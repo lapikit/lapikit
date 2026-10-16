@@ -21,7 +21,7 @@
 
 	// states
 	let attrs = $derived(
-		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle, color }, rest)
+		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
 	let elevationState = $derived(useElevation(elevation));
 </script>

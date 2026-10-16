@@ -1,4 +1,5 @@
 import { DEV } from 'esm-env';
+import type { ColorProps } from '$lib/@types';
 
 const paletteName = /^[a-zA-Z][\w-]*$/;
 const unsafe = /[;{}]/;
@@ -25,11 +26,20 @@ export function resolveOnColor(color: string | null | undefined): string | undef
 	return `var(--kit-color-on-${value})`;
 }
 
-export function colorStyle(name: string, color: string | null | undefined): string {
-	const value = resolveColor(color);
+export function colorStyle(
+	name: string,
+	color: ColorProps | null | undefined,
+	active = false
+): string {
+	const exact = active && typeof color === 'object' && !!clean(color?.active);
+	const current = typeof color === 'object' ? (exact ? color?.active : color?.base) : color;
+
+	const value = resolveColor(current);
 	if (!name || !value) return '';
-	const onColor = resolveOnColor(color);
-	return onColor
-		? `--${name}-color: ${value}; --${name}-on-color: ${onColor}`
-		: `--${name}-color: ${value}`;
+
+	const styles = [`--${name}-color: ${value}`];
+	const onColor = resolveOnColor(current);
+	if (onColor) styles.push(`--${name}-on-color: ${onColor}`);
+	if (exact) styles.push(`--${name}-active-shade: 0%`);
+	return styles.join('; ');
 }

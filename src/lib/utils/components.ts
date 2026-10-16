@@ -1,5 +1,6 @@
 import { DEV } from 'esm-env';
 import type {
+	ColorProps,
 	ComponentAttrs,
 	ElevationProps,
 	ElevationState,
@@ -256,8 +257,9 @@ export function useElevation(elevation?: ElevationProps | null): ElevationState 
  * @param baseClass - The class of the component ('kit-btn'), '' for none.
  * The color prop gives the --{baseClass}-color / --{baseClass}-on-color variables, read by the
  * color mixin; they come before the style, so the style attribute still wins.
+ * With { base, active }, active picks the color of the active state.
  *
- * @param props - The class, s-class, style, s-style and color props of the component.
+ * @param props - The class, s-class, style, s-style, color and active props of the component.
  * @param rest - The rest of the props: the s-class_xxx / s-style_xxx directives are taken out of it.
  */
 export function useComponentAttrs(
@@ -267,13 +269,15 @@ export function useComponentAttrs(
 		sClass,
 		styleAttr,
 		sStyle,
-		color
+		color,
+		active
 	}: {
 		className?: ClassValue;
 		sClass?: ClassValue;
 		styleAttr?: string;
 		sStyle?: SStyleProp;
-		color?: string | null;
+		color?: ColorProps | null;
+		active?: boolean;
 	},
 	rest: Record<string, unknown>
 ): ComponentAttrs {
@@ -281,7 +285,7 @@ export function useComponentAttrs(
 
 	return {
 		class: [baseClass, sClass, directiveClasses(classProps), className],
-		style: [colorStyle(baseClass, color), useStyles({ styleAttr, sStyle, styleProps })]
+		style: [colorStyle(baseClass, color, active), useStyles({ styleAttr, sStyle, styleProps })]
 			.filter(Boolean)
 			.join('; '),
 		rest: restProps
