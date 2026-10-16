@@ -50,6 +50,7 @@
 		background-color: var(--kit-sheet-bg);
 		color: var(--kit-sheet-fg);
 		border-radius: var(--kit-sheet-radius);
+		@include color-transition((background-color, color, border-color, box-shadow));
 	}
 
 	.kit-sheet[data-variant='tonal'] {

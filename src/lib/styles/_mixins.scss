@@ -67,6 +67,22 @@
 	}
 }
 
+@mixin color-transition(
+	$properties: (
+		background-color,
+		color,
+		border-color
+	)
+) {
+	transition-property: $properties;
+	transition-duration: var(--kit-animation-component);
+	transition-timing-function: ease;
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
 @function contrast($color) {
 	$channel: 'clamp(0, (0.1791 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 100000, 1)';
 	@return color(from #{$color} srgb-linear #{$channel} #{$channel} #{$channel} / 1);
