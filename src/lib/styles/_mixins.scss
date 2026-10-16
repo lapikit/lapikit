@@ -17,3 +17,78 @@
 		}
 	}
 }
+
+@mixin color($name, $bg, $fg) {
+	--#{$name}-color: initial;
+	--#{$name}-on-color: initial;
+	--#{$name}-active-fg: initial;
+	--#{$name}-active-shade: initial;
+
+	--#{$name}-bg: var(--#{$name}-color, #{$bg});
+	--#{$name}-fg: var(--#{$name}-on-color, var(--#{$name}-contrast, #{$fg}));
+	--#{$name}-ink: var(--#{$name}-color, #{$fg});
+	--#{$name}-hover: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 8%);
+	--#{$name}-pressed: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 14%);
+	--#{$name}-soft: color-mix(in oklab, var(--#{$name}-bg) 16%, transparent);
+	--#{$name}-border: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 20%);
+	--#{$name}-active: color-mix(
+		in oklab,
+		var(--#{$name}-color),
+		var(--#{$name}-fg) var(--#{$name}-active-shade, 14%)
+	);
+
+	@supports (color: color(from red srgb-linear r g b)) {
+		--#{$name}-contrast: #{contrast(var(--#{$name}-color))};
+	}
+}
+
+@mixin color-active($name, $bg: var(--kit-color-accent), $fg: var(--kit-color-on-accent)) {
+	--#{$name}-bg: var(--#{$name}-active, #{$bg});
+	--#{$name}-fg: var(
+		--#{$name}-active-fg,
+		var(--#{$name}-on-color, var(--#{$name}-contrast, #{$fg}))
+	);
+}
+
+@mixin color-variant($name, $variant) {
+	@if $variant == tonal {
+		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 16%, transparent);
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: transparent;
+		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 28%, transparent);
+		--#{$name}-active-fg: var(--#{$name}-ink);
+	} @else if $variant == outline {
+		--#{$name}-bg: transparent;
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: var(--#{$name}-color, var(--kit-color-border));
+		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 14%, transparent);
+		--#{$name}-active-fg: var(--#{$name}-ink);
+	} @else if $variant == surface {
+		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 8%, transparent);
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: color-mix(in oklab, var(--#{$name}-ink) 35%, transparent);
+		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 18%, transparent);
+		--#{$name}-active-fg: var(--#{$name}-ink);
+	}
+}
+
+@mixin color-transition(
+	$properties: (
+		background-color,
+		color,
+		border-color
+	)
+) {
+	transition-property: $properties;
+	transition-duration: var(--kit-animation-component);
+	transition-timing-function: ease;
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
+	}
+}
+
+@function contrast($color) {
+	$channel: 'clamp(0, (0.1791 - (0.2126 * r + 0.7152 * g + 0.0722 * b)) * 100000, 1)';
+	@return color(from #{$color} srgb-linear #{$channel} #{$channel} #{$channel} / 1);
+}
