@@ -12,8 +12,14 @@
 
 @mixin rounded($component, $shapes) {
 	@each $shape in $shapes {
+		// the prop value 0 reads the --kit-shape-none token
+		$token: $shape;
+		@if $shape == 0 {
+			$token: none;
+		}
+
 		.#{$component}[data-rounded='#{$shape}'] {
-			--#{$component}-radius: var(--kit-shape-#{$shape});
+			--#{$component}-radius: var(--kit-shape-#{$token});
 		}
 	}
 }
@@ -23,6 +29,8 @@
 	--#{$name}-on-color: initial;
 	--#{$name}-active-fg: initial;
 	--#{$name}-active-shade: initial;
+	--#{$name}-hover-fg: initial;
+	--#{$name}-pressed-fg: initial;
 
 	--#{$name}-bg: var(--#{$name}-color, #{$bg});
 	--#{$name}-fg: var(--#{$name}-on-color, var(--#{$name}-contrast, #{$fg}));
@@ -63,12 +71,59 @@
 		--#{$name}-border: var(--#{$name}-color, var(--kit-color-border));
 		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 14%, transparent);
 		--#{$name}-active-fg: var(--#{$name}-ink);
+	} @else if $variant == text {
+		--#{$name}-bg: transparent;
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: transparent;
+		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 14%, transparent);
+		--#{$name}-active-fg: var(--#{$name}-ink);
+	} @else if $variant == plain {
+		// no background, even on hover: only the text color reacts
+		--#{$name}-bg: transparent;
+		--#{$name}-fg: var(--#{$name}-ink);
+		--#{$name}-border: transparent;
+		--#{$name}-hover: transparent;
+		--#{$name}-pressed: transparent;
+		--#{$name}-hover-fg: color-mix(in oklab, var(--#{$name}-fg) 72%, transparent);
+		--#{$name}-pressed-fg: color-mix(in oklab, var(--#{$name}-fg) 56%, transparent);
+		--#{$name}-active: transparent;
+		--#{$name}-active-fg: var(--#{$name}-color, var(--kit-color-accent));
 	} @else if $variant == surface {
 		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 8%, transparent);
 		--#{$name}-fg: var(--#{$name}-ink);
 		--#{$name}-border: color-mix(in oklab, var(--#{$name}-ink) 35%, transparent);
 		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 18%, transparent);
 		--#{$name}-active-fg: var(--#{$name}-ink);
+	}
+}
+
+// The states of an interactive component (data-interactive / data-disabled).
+// hover and pressed mix the current background (variant and active included) with the text color,
+// so a transparent background gets a light tint of the text color.
+@mixin interactive($name) {
+	.#{$name}[data-interactive='true']:not([data-disabled='true']) {
+		cursor: pointer;
+
+		&:hover {
+			background-color: var(--#{$name}-hover);
+			color: var(--#{$name}-hover-fg, var(--#{$name}-fg));
+		}
+
+		&:active {
+			background-color: var(--#{$name}-pressed);
+			color: var(--#{$name}-pressed-fg, var(--#{$name}-fg));
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--kit-color-focus);
+			outline-offset: 2px;
+		}
+	}
+
+	.#{$name}[data-disabled='true'] {
+		opacity: var(--kit-disabled-opacity, 0.55);
+		pointer-events: none;
+		user-select: none;
 	}
 }
 
