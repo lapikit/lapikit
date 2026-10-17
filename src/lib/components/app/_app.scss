@@ -29,9 +29,11 @@
 		--kit-space-default: 4px;
 		--kit-space-comfortable: 6px;
 
+		--kit-density-dense: -8px;
 		--kit-density-compact: -4px;
 		--kit-density-default: 0px;
 		--kit-density-comfortable: 4px;
+		--kit-density-spacious: 8px;
 
 		--kit-shadow-opacity: 30%;
 		--kit-shadow-ambient-opacity: 15%;
@@ -68,7 +70,7 @@
 	.outline {
 		position: absolute;
 		inset: 0;
-		border: 1px solid var(--outline-color);
+		border: var(--kit-outline-weight) solid var(--outline-color);
 		border-radius: inherit;
 		box-sizing: border-box;
 		z-index: 1;

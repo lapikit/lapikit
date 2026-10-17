@@ -19,10 +19,11 @@
 		's-style': sStyle,
 		elevation,
 		rounded,
+		density = 'default',
 		variant = 'filled',
 		active,
 		color,
-		interactive = false,
+		interactive,
 		disabled = false,
 		noRipple,
 		...rest
@@ -34,7 +35,8 @@
 	);
 	let elevationState = $derived(useElevation(elevation));
 	let tag = $derived((href && 'a') || is);
-	let isInteractive = $derived(useIsInteractive(rest, tag, ['a', 'button'], interactive));
+	// undefined: detected (a, button, onclick...), true: forced, false: no visual feedback (still clickable)
+	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
 	let isDisabled = $derived(!!disabled);
 	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
 	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
@@ -52,6 +54,7 @@
 	disabled={resolvedDisabled}
 	tabindex={resolvedTabIndex}
 	data-rounded={rounded}
+	data-density={density}
 	data-variant={variant}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
@@ -75,8 +78,12 @@
 	.kit-sheet {
 		@include color(kit-sheet, var(--kit-color-surface-1), var(--kit-color-text));
 
+		--kit-sheet-p: 12px;
+
 		display: flex;
 		position: relative;
+		gap: calc(var(--kit-space-default) + var(--kit-sheet-density-offset) / 2);
+		padding: calc(var(--kit-sheet-p) + var(--kit-sheet-density-offset) / 2);
 		background-color: var(--kit-sheet-bg);
 		color: var(--kit-sheet-fg);
 		border-radius: var(--kit-sheet-radius);
@@ -132,4 +139,10 @@
 	 * @link https://lapikit.dev/docs/customize
 	 */
 	@include rounded(kit-sheet, (0, xs, sm, md, lg, xl, full));
+
+	/**
+	 * density
+	 * @link https://lapikit.dev/docs/customize
+	 */
+	@include density(kit-sheet);
 </style>

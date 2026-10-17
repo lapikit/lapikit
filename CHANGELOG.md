@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Insiders
+
+### Added
+
+- New global variable `--kit-outline-weight` for customize size border on outline variant component
+- Add new variant `surface`, `plain`, `tonal`
+
+### Updated
+
+- `--kit-density-*` integrate new graduiation props `dense`, `compact`, `default`, `comfortable`, `spacious`
+- component `kit:card` use new structural lapikit component.
+- props `interactive` use 3 possibility `false`, `undefined` and `true`
+- props `density` use 5 possibily `dense`, `compact`, `default`, `comfortable` and `spacious`
+
 ## [0.7.2] - 2026-10-16
 
 ### Updated

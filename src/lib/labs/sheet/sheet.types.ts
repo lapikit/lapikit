@@ -7,6 +7,7 @@ export interface SheetProps extends Component {
 	type?: 'button' | 'submit' | 'reset';
 	variant?: 'filled' | 'tonal' | 'outline' | 'text' | 'plain' | 'surface';
 	rounded?: RoundedType | 'full';
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	elevation?: ElevationProps;
 	active?: boolean;
 	color?: ColorProps;

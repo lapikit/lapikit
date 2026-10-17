@@ -24,6 +24,15 @@
 	}
 }
 
+// The offset of each density, read by the component: calc(base + var(--name-density-offset) / 2)
+@mixin density($component, $densities: (dense, compact, default, comfortable, spacious)) {
+	@each $density in $densities {
+		.#{$component}[data-density='#{$density}'] {
+			--#{$component}-density-offset: var(--kit-density-#{$density});
+		}
+	}
+}
+
 @mixin color($name, $bg, $fg) {
 	--#{$name}-color: initial;
 	--#{$name}-on-color: initial;
@@ -113,11 +122,12 @@
 			background-color: var(--#{$name}-pressed);
 			color: var(--#{$name}-pressed-fg, var(--#{$name}-fg));
 		}
+	}
 
-		&:focus-visible {
-			outline: 2px solid var(--kit-color-focus);
-			outline-offset: 2px;
-		}
+	// apart from data-interactive: a focusable element always shows where the focus is
+	.#{$name}:not([data-disabled='true']):focus-visible {
+		outline: 2px solid var(--kit-color-focus);
+		outline-offset: 2px;
 	}
 
 	.#{$name}[data-disabled='true'] {
