@@ -110,12 +110,12 @@
 
 	.kit-sheet[data-variant='outline'] {
 		@include color-variant(kit-sheet, outline);
-		border: 1px solid var(--kit-sheet-border);
+		border: var(--kit-outline-weight) solid var(--kit-sheet-border);
 	}
 
 	.kit-sheet[data-variant='surface'] {
 		@include color-variant(kit-sheet, surface);
-		border: 1px solid var(--kit-sheet-border);
+		border: var(--kit-outline-weight) solid var(--kit-sheet-border);
 	}
 
 	.kit-sheet[data-active='true'] {
