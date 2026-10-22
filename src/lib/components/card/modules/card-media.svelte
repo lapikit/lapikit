@@ -1,52 +1,34 @@
 <script lang="ts">
 	import type { CardMediaProps } from '../card.types';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useComponentAttrs } from '$lib/utils';
 
 	let {
 		ref = $bindable(),
 		is = 'div',
 		children,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		...rest
 	}: CardMediaProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(makeComponentProps(rest));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-card-media',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
+	let attrs = $derived(
+		useComponentAttrs('kit-card-media', { className, sClass, styleAttr, sStyle }, rest)
 	);
 </script>
 
-<svelte:element
-	this={is}
-	bind:this={ref}
-	class={componentClass}
-	style={componentStyle}
-	{...restProps}
->
+<svelte:element this={is} bind:this={ref} class={attrs.class} style={attrs.style} {...attrs.rest}>
 	{@render children?.()}
 </svelte:element>
 
-<style>
+<style lang="scss">
 	.kit-card-media {
 		overflow: hidden;
-		border-radius: calc(var(--kit-card-radius) - 2px);
+		// concentric with the card (radius - padding), never sharper than xs nor rounder than the card
+		border-radius: min(
+			var(--kit-card-radius),
+			max(calc(var(--kit-card-radius) - var(--kit-card-padding)), var(--kit-shape-xs))
+		);
 	}
 </style>
