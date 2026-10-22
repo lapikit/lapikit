@@ -13,8 +13,9 @@ export interface ElevationState {
 export type ElevationProps = ElevationType | ElevationState;
 
 export interface ColorState {
-	base?: string;
-	active?: string;
+	base?: string | false;
+	active?: string | false;
 }
 
-export type ColorProps = string | ColorState;
+// false gives no color: color={isActive && 'accent'}
+export type ColorProps = string | false | ColorState;

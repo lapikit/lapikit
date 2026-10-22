@@ -110,7 +110,9 @@
 			{#if prepend}
 				<span class="kit-btn__prepend">{@render prepend()}</span>
 			{/if}
-			<span class="kit-btn__content">{@render children?.()}</span>
+			{#if children}
+				<span class="kit-btn__content">{@render children()}</span>
+			{/if}
 			{#if append}
 				<span class="kit-btn__append">{@render append()}</span>
 			{/if}

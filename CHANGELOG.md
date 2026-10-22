@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - component `kit:btn` props `rounded` accepts `full`
 - component `kit:btn` props `background` is removed, use `color`
 - component `kit:btn` font size follows the `size` props
+- props `color` accepts `false`, for `color={isActive && 'accent'}`
 
 ### Fixed
 
@@ -22,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `kit:btn` with `is="input"` renders the input in a wrapper
 - `kit:btn` as a disabled link is removed from the keyboard navigation
 - `kit:btn` with `input` uses the `load` snippet
+- props `color` no longer crashes with a value that is not a string (`false`, a number...)
+- `kit:btn` with only `prepend` or `append` centers its icon
 
 ## [0.7.3] - 2026-10-22
 
