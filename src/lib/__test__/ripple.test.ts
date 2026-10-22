@@ -69,6 +69,96 @@ describe('ripple', () => {
 		expect(container(el)).toBeNull();
 	});
 
+	it('keeps the native Enter and Space actions', () => {
+		const { el } = setup();
+
+		for (const [key, code] of [
+			['Enter', 'Enter'],
+			[' ', 'Space']
+		]) {
+			const event = new KeyboardEvent('keydown', { key, code, bubbles: true, cancelable: true });
+			el.dispatchEvent(event);
+			expect(event.defaultPrevented).toBe(false);
+		}
+		expect(el.querySelectorAll('.kit-ripple').length).toBe(2);
+	});
+
+	it('ignores the keys pressed inside a child (an input in a card)', () => {
+		const { el } = setup();
+		const input = document.createElement('input');
+		el.appendChild(input);
+
+		const event = new KeyboardEvent('keydown', {
+			key: ' ',
+			code: 'Space',
+			bubbles: true,
+			cancelable: true
+		});
+		input.dispatchEvent(event);
+
+		expect(event.defaultPrevented).toBe(false);
+		expect(container(el)).toBeNull();
+	});
+
+	it('creates one ripple only on touch (pointerdown and touchstart)', () => {
+		const { el } = setup();
+		el.dispatchEvent(new PointerEvent('pointerdown', { pointerType: 'touch' } as PointerEventInit));
+		el.dispatchEvent(new Event('touchstart'));
+		expect(el.querySelectorAll('.kit-ripple').length).toBe(1);
+	});
+
+	it('ignores the secondary mouse buttons', () => {
+		const { el } = setup();
+		el.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+		expect(container(el)).toBeNull();
+	});
+
+	it('removes the keyboard ripple when the element loses the focus', () => {
+		vi.useFakeTimers();
+		const { el } = setup({ duration: 200 });
+		el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter' }));
+		el.dispatchEvent(new FocusEvent('blur'));
+		vi.advanceTimersByTime(200);
+		expect(container(el)).toBeNull();
+	});
+
+	it('leaves the click on a nested ripple (a button in a card) to the nested one', () => {
+		const { el: card } = setup();
+		const btn = document.createElement('button');
+		const icon = document.createElement('span');
+		btn.appendChild(icon);
+		card.appendChild(btn);
+		ripple(btn);
+
+		icon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+
+		expect(btn.querySelector('.kit-ripple--effect')).not.toBeNull();
+		expect([...card.children].some((child) => child.matches('.kit-ripple--effect'))).toBe(false);
+	});
+
+	it('leaves the click on a nested native control (an input in a card) to it', () => {
+		const card = document.createElement('div');
+		document.body.appendChild(card);
+		ripple(card);
+		const input = document.createElement('input');
+		card.appendChild(input);
+
+		input.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		expect(container(card)).toBeNull();
+	});
+
+	it('still ripples when the nested ripple is disabled', () => {
+		const card = document.createElement('div');
+		document.body.appendChild(card);
+		ripple(card);
+		const inner = document.createElement('div');
+		card.appendChild(inner);
+		ripple(inner, { disabled: true });
+
+		inner.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		expect(container(card)).not.toBeNull();
+	});
+
 	it('cleans up on destroy', () => {
 		const { el, action } = setup();
 		el.dispatchEvent(new PointerEvent('pointerdown'));

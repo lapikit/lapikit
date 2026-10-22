@@ -1,18 +1,14 @@
 import type { RippleProps } from '$lib/@types';
 
-const triggerEvents = ['pointerdown', 'touchstart', 'keydown'] as const;
-const cancelEvents = ['mouseleave', 'dragleave', 'touchmove', 'touchcancel', 'pointerup', 'keyup'];
+const triggerEvents = ['pointerdown', 'keydown'] as const;
+const cancelEvents = ['pointerleave', 'pointercancel', 'dragleave', 'pointerup', 'keyup', 'blur'];
+const activationKeys = ['Enter', ' '];
+const nestedControls =
+	'a[href], button, input, select, textarea, summary, [role="button"], [role="link"]';
+const hosts = new WeakMap<Element, () => boolean>();
 
 function resolveDuration(options: RippleProps) {
 	return options.duration && options.duration > 0 ? options.duration : undefined;
-}
-
-function getCoords(e: PointerEvent | TouchEvent) {
-	if (window.TouchEvent && e instanceof TouchEvent) {
-		return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-	}
-
-	return { x: (e as PointerEvent).clientX, y: (e as PointerEvent).clientY };
 }
 
 export function ripple(el: HTMLElement, options: RippleProps = {}) {
@@ -22,6 +18,17 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 
 	function isAriaDisabled() {
 		return el.getAttribute('aria-disabled') === 'true';
+	}
+
+	/** The click starts in a child that handles it itself: an enabled ripple (a btn in a card) or a native control */
+	function isFromNestedControl(target: EventTarget | null) {
+		let node = target instanceof Element ? target : null;
+
+		while (node && node !== el) {
+			if (hosts.get(node)?.() || node.matches(nestedControls)) return true;
+			node = node.parentElement;
+		}
+		return false;
 	}
 
 	function applyOptions(container: HTMLDivElement) {
@@ -76,27 +83,26 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		}
 	}
 
-	function createRipple(e: PointerEvent | KeyboardEvent | TouchEvent, center?: boolean) {
+	function createRipple(e: PointerEvent | KeyboardEvent) {
 		if (options.disabled || isAriaDisabled()) {
 			return;
 		}
 
-		if (e instanceof KeyboardEvent) {
-			if (!['Enter', 'Space'].includes(e.code) || e.repeat) {
+		const isKeyboard = e instanceof KeyboardEvent;
+
+		if (isKeyboard) {
+			if (!activationKeys.includes(e.key) || e.repeat || e.target !== el) {
 				return;
 			}
-
-			e.preventDefault();
-			const click = new PointerEvent('pointerdown');
-			createRipple(click, true);
-
+		} else if (e.button !== 0 || isFromNestedControl(e.target)) {
 			return;
 		}
 
-		const container = mountContainer(center);
+		const container = mountContainer(isKeyboard);
 
 		const rect = el.getBoundingClientRect();
-		const { x: clientX, y: clientY } = getCoords(e);
+		const clientX = isKeyboard ? rect.left + rect.width / 2 : e.clientX;
+		const clientY = isKeyboard ? rect.top + rect.height / 2 : e.clientY;
 
 		const x = clientX - rect.left > el.offsetWidth / 2 ? 0 : el.offsetWidth;
 		const y = clientY - rect.top > el.offsetHeight / 2 ? 0 : el.offsetHeight;
@@ -148,12 +154,12 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		cancelEvents.forEach((event) => el.addEventListener(event, removeRipple, { passive: true }));
 	}
 
-	triggerEvents.forEach((event) =>
-		el.addEventListener(event, createRipple, { passive: event === 'touchstart' })
-	);
+	hosts.set(el, () => !options.disabled && !isAriaDisabled());
+	triggerEvents.forEach((event) => el.addEventListener(event, createRipple, { passive: true }));
 
 	return {
 		destroy() {
+			hosts.delete(el);
 			triggerEvents.forEach((event) => {
 				el.removeEventListener(event, createRipple);
 			});
