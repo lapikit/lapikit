@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Insiders
+## [0.7.3] - 2026-10-22
 
 ### Added
 
@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - component `kit:card` use new structural lapikit component.
 - props `interactive` use 3 possibility `false`, `undefined` and `true`
 - props `density` use 5 possibily `dense`, `compact`, `default`, `comfortable` and `spacious`
+- component `kit:card` has new css variable `--kit-card-padding`
+- component `kit:card-media` radius follows the card radius and density
+
+### Fixed
+
+- Ripple no longer blocks `Enter` and `Space` on buttons and links
+- Ripple ignores keys pressed inside a child (an input in a card)
+- Ripple no longer triggers twice on touch devices
+- Ripple ignores right click
+- Ripple on keyboard starts from the center
+- Ripple no longer triggers the parent on a nested `kit:btn` or native control
 
 ## [0.7.2] - 2026-10-16
 
