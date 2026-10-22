@@ -1,24 +1,24 @@
 @use '$lib/styles' as *;
 
-:root {
-	// shape
-	--kit-shape-none: 0;
-	--kit-shape-xs: 0.25rem;
-	--kit-shape-sm: 0.375rem;
-	--kit-shape-md: 0.625rem;
-	--kit-shape-lg: 0.875rem;
-	--kit-shape-xl: 1.125rem;
-	--kit-shape-full: 9999px;
-
-	// animations
-	--kit-animation-component: 150ms;
-
-	// components
-	--kit-outline-weight: 1px;
-}
-
 :global {
-	html {
+	:where(:root) {
+		// shape
+		--kit-shape-none: 0;
+		--kit-shape-xs: 0.25rem;
+		--kit-shape-sm: 0.375rem;
+		--kit-shape-md: 0.625rem;
+		--kit-shape-lg: 0.875rem;
+		--kit-shape-xl: 1.125rem;
+		--kit-shape-full: 9999px;
+
+		// animations
+		--kit-animation-component: 150ms;
+
+		// components
+		--kit-outline-weight: 1px;
+	}
+
+	:where(html) {
 		--kit-font-xs: 0.8125rem;
 		--kit-font-sm: 0.875rem;
 		--kit-font-md: 0.9375rem;
@@ -46,23 +46,22 @@
 		--kit-color-transparent: transparent;
 	}
 
-	html:not([data-kit-theme]),
-	[data-kit-theme='light'] {
+	:where(html:not([data-kit-theme]), [data-kit-theme='light']) {
 		@include theme-light;
 	}
 
-	[data-kit-theme='dark'] {
+	:where([data-kit-theme='dark']) {
 		@include theme-dark;
 	}
 
 	@media (prefers-color-scheme: light) {
-		[data-kit-theme='system'] {
+		:where([data-kit-theme='system']) {
 			@include theme-light;
 		}
 	}
 
 	@media (prefers-color-scheme: dark) {
-		[data-kit-theme='system'] {
+		:where([data-kit-theme='system']) {
 			@include theme-dark;
 		}
 	}

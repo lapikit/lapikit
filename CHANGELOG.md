@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--kit-font-*` use `rem`, they follow the font size of the browser
 - component `kit:btn` sizes use `rem` and the `--kit-font-*` variables
 - component `kit:btn` has a larger gap between icon and text
+- variables of `kit:app`, `kit:btn` and `kit:card` use `:where()`, a simple selector overrides them
 
 ### Fixed
 

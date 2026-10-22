@@ -26,7 +26,6 @@
 	}: CardProps = $props();
 
 	let tag = $derived((href && 'a') || is);
-	// undefined: detected (a, button, onclick...), true: forced, false: no visual feedback (still clickable)
 	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
 	let isDisabled = $derived(!!disabled);
 	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
@@ -38,7 +37,6 @@
 		useComponentAttrs('kit-card', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
 	let elevationState = $derived(useElevation(elevation));
-	// the border is drawn over the content, so the outline and surface variants keep the same box
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 </script>
 
@@ -75,86 +73,5 @@
 </svelte:element>
 
 <style lang="scss">
-	@use '$lib/styles' as *;
-
-	.kit-card {
-		@include color(kit-card, var(--kit-color-surface-1), var(--kit-color-text));
-
-		// modules vars
-		--kit-card-gap: calc(var(--kit-space-default) + var(--kit-card-density-offset) / 2);
-		--kit-card-padding: calc(10px + var(--kit-card-density-offset) / 2);
-
-		display: flex;
-		position: relative;
-		flex-direction: column;
-		gap: var(--kit-card-gap);
-		background-color: var(--kit-card-bg);
-		color: var(--kit-card-fg);
-		border-radius: var(--kit-card-radius);
-		border: 0;
-		box-sizing: border-box;
-		padding: var(--kit-card-padding);
-		@include color-transition((background-color, color, border-color, box-shadow));
-	}
-
-	/* native resets: no background here, it would beat the background of .kit-card */
-	a.kit-card {
-		text-decoration: none;
-	}
-
-	button.kit-card {
-		appearance: none;
-		border: 0;
-		font: inherit;
-		text-align: inherit;
-	}
-
-	/**
-	 * variant
-	 * @link https://lapikit.dev/docs/components/card#variants
-	 */
-	.kit-card[data-variant='tonal'] {
-		@include color-variant(kit-card, tonal);
-	}
-
-	.kit-card[data-variant='text'] {
-		@include color-variant(kit-card, text);
-	}
-
-	.kit-card[data-variant='plain'] {
-		@include color-variant(kit-card, plain);
-	}
-
-	.kit-card[data-variant='outline'] {
-		@include color-variant(kit-card, outline);
-	}
-
-	.kit-card[data-variant='surface'] {
-		@include color-variant(kit-card, surface);
-	}
-
-	.kit-card .outline {
-		--outline-color: var(--kit-card-border);
-	}
-
-	.kit-card[data-active='true'] {
-		@include color-active(kit-card);
-	}
-
-	/**
-	 * interactive: hover, pressed, focus-visible and disabled
-	 */
-	@include interactive(kit-card);
-
-	/**
-	 * rounded
-	 * @link https://lapikit.dev/docs/customize
-	 */
-	@include rounded(kit-card, (0, xs, sm, md, lg, xl));
-
-	/**
-	 * density
-	 * @link https://lapikit.dev/docs/components/card#density
-	 */
-	@include density(kit-card);
+	@use './card';
 </style>

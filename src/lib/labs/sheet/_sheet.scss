@@ -1,0 +1,76 @@
+@use '$lib/styles' as *;
+
+:where(.kit-sheet) {
+	@include color(kit-sheet, var(--kit-color-surface-1), var(--kit-color-text));
+
+	--kit-sheet-p: 12px;
+}
+
+.kit-sheet {
+	display: flex;
+	position: relative;
+	gap: calc(var(--kit-space-default) + var(--kit-sheet-density-offset) / 2);
+	padding: calc(var(--kit-sheet-p) + var(--kit-sheet-density-offset) / 2);
+	background-color: var(--kit-sheet-bg);
+	color: var(--kit-sheet-fg);
+	border-radius: var(--kit-sheet-radius);
+	@include color-transition((background-color, color, border-color, box-shadow));
+}
+
+/* native resets: no background here, it would beat the background of .kit-sheet */
+a.kit-sheet {
+	text-decoration: none;
+}
+
+button.kit-sheet {
+	appearance: none;
+	border: 0;
+	padding: 0;
+	font: inherit;
+	text-align: inherit;
+}
+
+:where(.kit-sheet[data-variant='tonal']) {
+	@include color-variant(kit-sheet, tonal);
+}
+
+:where(.kit-sheet[data-variant='text']) {
+	@include color-variant(kit-sheet, text);
+}
+
+:where(.kit-sheet[data-variant='plain']) {
+	@include color-variant(kit-sheet, plain);
+}
+
+:where(.kit-sheet[data-variant='outline']) {
+	@include color-variant(kit-sheet, outline);
+}
+
+:where(.kit-sheet[data-variant='surface']) {
+	@include color-variant(kit-sheet, surface);
+}
+
+.kit-sheet:is([data-variant='outline'], [data-variant='surface']) {
+	border: var(--kit-outline-weight) solid var(--kit-sheet-border);
+}
+
+:where(.kit-sheet[data-active='true']) {
+	@include color-active(kit-sheet);
+}
+
+/**
+ * interactive: hover, pressed, focus-visible and disabled
+ */
+@include interactive(kit-sheet);
+
+/** 
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-sheet, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/customize
+ */
+@include density(kit-sheet);

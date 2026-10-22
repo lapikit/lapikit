@@ -24,9 +24,11 @@
 </svelte:element>
 
 <style lang="scss">
-	.kit-card-content {
+	:where(.kit-card-content) {
 		--kit-card-content-color: initial;
+	}
 
+	.kit-card-content {
 		color: var(--kit-card-content-color, currentColor);
 		display: block;
 		line-height: 1.45;

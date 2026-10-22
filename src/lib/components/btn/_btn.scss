@@ -1,0 +1,191 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+@use './variables' as *;
+
+:where(.kit-btn) {
+	@include color(kit-btn, var(--kit-color-surface-2), var(--kit-color-text));
+
+	--kit-btn-height: calc(var(--kit-btn-h) + var(--kit-btn-density-offset) / 2);
+}
+
+.kit-btn {
+	position: relative;
+	display: inline-flex;
+	box-sizing: border-box;
+	align-items: center;
+	justify-content: center;
+	height: var(--kit-btn-height);
+	padding-inline: calc(var(--kit-btn-p) + var(--kit-btn-density-offset) / 2);
+	border: 0;
+	border-radius: var(--kit-btn-radius);
+	background-color: var(--kit-btn-bg);
+	color: var(--kit-btn-fg);
+	font: inherit;
+	font-family: var(--kit-font);
+	font-size: var(--kit-btn-font);
+	text-decoration: none;
+	white-space: nowrap;
+	user-select: none;
+	@include color-transition((background-color, color, border-color, box-shadow));
+
+	&__inner {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--kit-btn-gap);
+		line-height: 1;
+	}
+
+	&__content,
+	&__prepend,
+	&__append {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+
+		:global(.kit-icon) {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			vertical-align: middle;
+		}
+
+		:global(svg),
+		:global(img) {
+			display: block;
+		}
+	}
+
+	&__input {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+
+		&:focus-visible {
+			outline: none;
+		}
+
+		&:is([type='checkbox'], [type='radio']) {
+			appearance: none;
+
+			&::after {
+				content: attr(aria-label);
+			}
+		}
+	}
+
+	&__spinner {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&:has(> .kit-btn__input:focus-visible) {
+		outline: 2px solid var(--kit-color-focus);
+		outline-offset: 2px;
+	}
+
+	&[data-loading='true'] {
+		pointer-events: none;
+
+		.kit-btn__inner,
+		.kit-btn__input {
+			opacity: 0;
+		}
+	}
+
+	&[data-block='true'] {
+		display: flex;
+		width: 100%;
+	}
+
+	&[data-wide='true'] {
+		width: 100%;
+		max-width: 16rem;
+	}
+
+	&[data-icon='true'] {
+		width: max(1.75rem, var(--kit-btn-height));
+		min-width: max(1.75rem, var(--kit-btn-height));
+		padding-inline: 0;
+
+		.kit-btn__inner {
+			gap: 0;
+		}
+	}
+}
+
+/* native resets: no background here, it would beat the background of .kit-btn */
+button.kit-btn {
+	appearance: none;
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/button#size
+ */
+@each $size, $values in $sizes {
+	:where(.kit-btn[data-size='#{$size}']) {
+		--kit-btn-h: #{list.nth($values, 1)};
+		--kit-btn-p: #{list.nth($values, 2)};
+		--kit-btn-gap: #{list.nth($values, 3)};
+		--kit-btn-font: #{list.nth($values, 4)};
+
+		:global(.kit-icon:not([data-size])) {
+			--kit-icon-current-size: var(--kit-icon-size-#{$size});
+		}
+	}
+}
+
+/**
+ * variant
+ * @link https://lapikit.dev/docs/components/button#variants
+ */
+@each $variant in (tonal, outline, surface, text, plain) {
+	:where(.kit-btn[data-variant='#{$variant}']) {
+		@include color-variant(kit-btn, $variant);
+	}
+}
+
+// a plain variant, underlined and without the box of a button
+:where(.kit-btn[data-variant='link']) {
+	@include color-variant(kit-btn, plain);
+}
+
+.kit-btn[data-variant='link'] {
+	height: auto;
+	padding: 0;
+	text-decoration: underline;
+}
+
+:where(.kit-btn .outline) {
+	--outline-color: var(--kit-btn-border);
+}
+
+:where(.kit-btn[data-active='true'], .kit-btn:has(> .kit-btn__input:checked)) {
+	@include color-active(kit-btn);
+}
+
+/**
+ * interactive: hover, pressed, focus-visible and disabled
+ */
+@include interactive(kit-btn);
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-btn, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/button#density
+ */
+@include density(kit-btn);

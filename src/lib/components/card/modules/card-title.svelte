@@ -24,9 +24,11 @@
 </svelte:element>
 
 <style lang="scss">
-	.kit-card-title {
+	:where(.kit-card-title) {
 		--kit-card-title-color: initial;
+	}
 
+	.kit-card-title {
 		display: flex;
 		align-items: center;
 		gap: var(--kit-card-gap);
