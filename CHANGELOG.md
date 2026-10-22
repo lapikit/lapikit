@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - props `background` on all components, use `color`
-- `density="none"`, use `dense`
+- `density="none"`, use `dense` (or the size variables set to `0`)
 - `--kit-textfield-*` variables, renamed `--kit-field-*`
 - class `kit-tooltip__content`, the tooltip content has the class `kit-tooltip`
 
