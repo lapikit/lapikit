@@ -323,7 +323,6 @@
 
 		height: auto;
 		padding: 0;
-		font-size: inherit;
 		text-decoration: underline;
 	}
 
