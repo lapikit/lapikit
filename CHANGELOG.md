@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - component `kit:btn` props `background` is removed, use `color`
 - component `kit:btn` font size follows the `size` props
 - props `color` accepts `false`, for `color={isActive && 'accent'}`
+- `--kit-font-*` use `rem`, they follow the font size of the browser
+- component `kit:btn` sizes use `rem` and the `--kit-font-*` variables
+- component `kit:btn` has a larger gap between icon and text
 
 ### Fixed
 

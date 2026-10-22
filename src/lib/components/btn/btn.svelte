@@ -136,34 +136,34 @@
 
 	$sizes: (
 		xs: (
-			24px,
-			8px,
-			var(--kit-space-compact),
-			12px
+			1.5rem,
+			0.5rem,
+			0.25rem,
+			0.75rem
 		),
 		sm: (
-			32px,
-			12px,
-			var(--kit-space-default),
-			13px
+			2rem,
+			0.75rem,
+			0.375rem,
+			var(--kit-font-xs)
 		),
 		md: (
-			40px,
-			16px,
-			var(--kit-space-default),
-			14px
+			2.5rem,
+			1rem,
+			0.5rem,
+			var(--kit-font-sm)
 		),
 		lg: (
-			48px,
-			20px,
-			var(--kit-space-default),
-			16px
+			3rem,
+			1.25rem,
+			0.5625rem,
+			var(--kit-font-lg)
 		),
 		xl: (
-			56px,
-			24px,
-			var(--kit-space-comfortable),
-			17px
+			3.5rem,
+			1.5rem,
+			0.625rem,
+			var(--kit-font-xl)
 		)
 	);
 
@@ -275,8 +275,8 @@
 		}
 
 		&[data-icon='true'] {
-			width: max(28px, var(--kit-btn-height));
-			min-width: max(28px, var(--kit-btn-height));
+			width: max(1.75rem, var(--kit-btn-height));
+			min-width: max(1.75rem, var(--kit-btn-height));
 			padding-inline: 0;
 
 			.kit-btn__inner {
