@@ -27,6 +27,10 @@
 		useComponentAttrs('kit-accordion-item', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
 
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+	const contentId = `${uid}-content`;
+
 	let safeOpen = $derived(!!open);
 	let model: AccordionItemModelProps = {
 		get open() {
@@ -58,10 +62,12 @@
 	<span class="outline"></span>
 
 	<button
+		id={triggerId}
 		class="kit-accordion-item__trigger"
 		type="button"
 		onclick={handleToggle}
 		aria-expanded={safeOpen}
+		aria-controls={contentId}
 		aria-disabled={disabled || readOnly || undefined}
 		{disabled}
 	>
@@ -90,7 +96,13 @@
 
 	<span class="kit-accordion-item__separator"></span>
 
-	<div class="kit-accordion-item__content" hidden={!safeOpen}>
+	<div
+		id={contentId}
+		class="kit-accordion-item__content"
+		role="region"
+		aria-labelledby={triggerId}
+		hidden={!safeOpen}
+	>
 		<div class="kit-accordion-item__content-inner">
 			{@render children?.()}
 		</div>
