@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
+	import { useComponentAttrs } from '$lib/utils';
 	import type { AspectRatioProps, AspectRatioValue } from './aspect-ratio.types.ts';
 
 	const FALLBACK_RATIO = 16 / 9;
@@ -36,8 +35,8 @@
 		ref = $bindable(),
 		is = 'div',
 		children = undefined,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		ratio = undefined,
@@ -47,75 +46,34 @@
 		...rest
 	}: AspectRatioProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
-	);
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-aspect-ratio',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
 	let resolvedRatio = $derived(resolveRatio(ratio ?? aspectRatio));
+	let attrs = $derived(
+		useComponentAttrs(
+			'kit-aspect-ratio',
+			{
+				className,
+				sClass,
+				styleAttr,
+				sStyle: { '--kit-aspect-ratio': String(resolvedRatio), '--kit-aspect-fit': fit, ...sStyle }
+			},
+			rest
+		)
+	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
-	class={componentClass}
-	style={componentStyle}
+	class={attrs.class}
+	style={attrs.style}
 	data-inline={inline}
-	style:--kit-aspect-ratio={resolvedRatio}
-	style:--kit-aspect-fit={fit}
-	{...restProps}
+	{...attrs.rest}
 >
 	<div class="kit-aspect-ratio__inner">
 		{@render children?.()}
 	</div>
 </svelte:element>
 
-<style>
-	.kit-aspect-ratio {
-		display: block;
-		position: relative;
-		width: 100%;
-		max-width: 100%;
-		overflow: hidden;
-		aspect-ratio: var(--kit-aspect-ratio, 1.7777777778);
-	}
-
-	.kit-aspect-ratio[data-inline='true'] {
-		display: inline-block;
-		width: auto;
-	}
-
-	.kit-aspect-ratio__inner {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-	.kit-aspect-ratio :global(img),
-	.kit-aspect-ratio :global(video),
-	.kit-aspect-ratio :global(iframe),
-	.kit-aspect-ratio :global(canvas),
-	.kit-aspect-ratio :global(svg) {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: var(--kit-aspect-fit, cover);
-	}
+<style lang="scss">
+	@use './aspect-ratio';
 </style>

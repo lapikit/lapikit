@@ -1,0 +1,114 @@
+@use '$lib/styles' as *;
+
+:where(.kit-tooltip) {
+	@include color(kit-tooltip, var(--kit-color-surface-2), var(--kit-color-text));
+
+	--kit-tooltip-arrow: 0.35rem;
+}
+
+.kit-tooltip-trigger {
+	display: inline-flex;
+	align-self: start;
+	justify-self: start;
+	width: fit-content;
+	max-width: max-content;
+
+	&:focus-visible {
+		outline: 2px solid var(--kit-color-focus);
+		outline-offset: 2px;
+	}
+}
+
+.kit-tooltip {
+	position: fixed;
+	inset: auto;
+	z-index: 2000;
+	box-sizing: border-box;
+	width: max-content;
+	max-width: min(20rem, calc(100vw - 1rem));
+	margin: 0;
+	padding: calc(var(--kit-space-default) + var(--kit-tooltip-density-offset) / 2);
+	overflow: visible;
+	border: 0;
+	border-radius: var(--kit-tooltip-radius);
+	background-color: var(--kit-tooltip-bg);
+	color: var(--kit-tooltip-fg);
+	font-size: 0.875rem;
+	overflow-wrap: break-word;
+	pointer-events: none;
+	box-shadow: 0 16px 29px -10px color-mix(in oklab, var(--kit-color-shadow) 18%, transparent);
+	animation: kit-tooltip-enter 150ms ease;
+
+	&[data-side='top'] {
+		--kit-tooltip-enter-y: 0.5rem;
+	}
+
+	&[data-side='bottom'] {
+		--kit-tooltip-enter-y: -0.5rem;
+	}
+
+	&[data-side='right'] {
+		--kit-tooltip-enter-x: -0.5rem;
+	}
+
+	&[data-side='left'] {
+		--kit-tooltip-enter-x: 0.5rem;
+	}
+
+	// the arrow points to the center of the trigger, even when the tooltip is shifted
+	&[data-variant='arrow']::after {
+		content: '';
+		position: absolute;
+		border: var(--kit-tooltip-arrow) solid transparent;
+	}
+
+	&[data-variant='arrow']:is([data-side='top'], [data-side='bottom'])::after {
+		left: var(--kit-floating-arrow, 50%);
+		margin-left: calc(var(--kit-tooltip-arrow) * -1);
+	}
+
+	&[data-variant='arrow']:is([data-side='left'], [data-side='right'])::after {
+		top: var(--kit-floating-arrow, 50%);
+		margin-top: calc(var(--kit-tooltip-arrow) * -1);
+	}
+
+	&[data-variant='arrow'][data-side='bottom']::after {
+		bottom: 100%;
+		border-bottom-color: var(--kit-tooltip-bg);
+	}
+
+	&[data-variant='arrow'][data-side='top']::after {
+		top: 100%;
+		border-top-color: var(--kit-tooltip-bg);
+	}
+
+	&[data-variant='arrow'][data-side='right']::after {
+		right: 100%;
+		border-right-color: var(--kit-tooltip-bg);
+	}
+
+	&[data-variant='arrow'][data-side='left']::after {
+		left: 100%;
+		border-left-color: var(--kit-tooltip-bg);
+	}
+}
+
+@keyframes kit-tooltip-enter {
+	from {
+		opacity: 0;
+		translate: var(--kit-tooltip-enter-x, 0) var(--kit-tooltip-enter-y, 0);
+		scale: 0.95;
+	}
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-tooltip, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/tooltip#density
+ */
+@include density(kit-tooltip);

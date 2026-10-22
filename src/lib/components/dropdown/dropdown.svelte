@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { useClassName, useStyles, clickOutside, useElevation } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { getPositions } from './dropdown.svelte.ts';
+	import {
+		clickOutside,
+		floating,
+		useComponentAttrs,
+		useElevation,
+		type FloatingAnchor
+	} from '$lib/utils';
 	import type { DropdownProps, ModelDropdownProps } from './dropdown.types.ts';
 
 	let {
@@ -14,68 +18,37 @@
 		closeOnClick = false,
 		openOnHover = false,
 		color,
-		background,
 		density = 'default',
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		elevation,
 		...rest
 	}: DropdownProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs('kit-dropdown-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-
 	let elevationState = $derived(useElevation(elevation));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-dropdown-content',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-dropdown-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-dropdown-bg:${background && `var(--kit-color-${background})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
-
-	const positioner = getPositions();
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let activatorRef = $state<HTMLElement | PointerEvent | null>(null);
 	let open = $state(false);
-	let axis = $state(positioner.values);
-	let timeoutId = $state<ReturnType<typeof setTimeout> | null>(null);
+	let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+	// a pointer event opens the menu at the position of the pointer (context menu)
+	let anchor = $derived<FloatingAnchor | null>(
+		activatorRef instanceof HTMLElement
+			? activatorRef
+			: activatorRef
+				? { x: activatorRef.clientX, y: activatorRef.clientY }
+				: null
+	);
 
 	const clearHoverTimeout = () => {
-		if (timeoutId) {
-			clearTimeout(timeoutId);
-			timeoutId = null;
-		}
-	};
-
-	const updatePosition = () => {
-		if (!contentRef || !activatorRef) return;
-		positioner.update(activatorRef, contentRef, position, false, true);
-		axis = positioner.values;
+		if (timeoutId) clearTimeout(timeoutId);
+		timeoutId = null;
 	};
 
 	const handleToggle = (element: HTMLElement | PointerEvent | null) => {
@@ -87,10 +60,6 @@
 	const handleClose = () => {
 		clearHoverTimeout();
 		open = false;
-	};
-
-	const handleContentClick = () => {
-		if (closeOnClick && open) open = false;
 	};
 
 	const handleMouseEvent = (
@@ -112,41 +81,30 @@
 		}, 150);
 	};
 
-	let model: ModelDropdownProps = {
+	const model: ModelDropdownProps = {
 		get open() {
 			return open;
 		},
-		close: () => handleClose(),
-		toggle: (element) => handleToggle(element)
+		close: handleClose,
+		toggle: handleToggle
 	};
-
-	$effect(() => {
-		if (open && contentRef && activatorRef) {
-			updatePosition();
-		}
-	});
-
-	$effect(() => {
-		if (!open) return;
-
-		const close = () => (open = false);
-
-		window.addEventListener('scroll', close, { passive: true });
-		window.addEventListener('resize', updatePosition);
-
-		return () => {
-			window.removeEventListener('scroll', close);
-			window.removeEventListener('resize', updatePosition);
-		};
-	});
 
 	$effect(() => {
 		ref = contentRef;
 	});
 
-	onDestroy(() => {
-		clearHoverTimeout();
+	$effect(() => {
+		if (!open) return;
+
+		const onKeydown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') handleClose();
+		};
+
+		document.addEventListener('keydown', onKeydown);
+		return () => document.removeEventListener('keydown', onKeydown);
 	});
+
+	onDestroy(clearHoverTimeout);
 </script>
 
 {@render activator?.(model, (state, element) => handleMouseEvent(state, element))}
@@ -154,87 +112,29 @@
 {#if open}
 	<div
 		bind:this={contentRef}
-		class={componentClass}
-		style={`left:${axis.x}px; top:${axis.y}px; ${resolvedStyle}`}
+		popover="manual"
+		class={attrs.class}
+		style={attrs.style}
 		role="menu"
 		data-rounded={rounded}
-		data-position={axis.location ?? position}
 		data-density={density}
+		data-elevation={elevationState.base}
+		data-elevation-hover={elevationState.hover}
+		data-elevation-active={elevationState.active}
 		onmouseover={() => handleMouseEvent('open', activatorRef)}
 		onmouseleave={() => handleMouseEvent('close', activatorRef)}
 		onclick={(event) => {
 			event.stopPropagation();
-			handleContentClick();
+			if (closeOnClick) handleClose();
 		}}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		use:floating={{ anchor, side: position, offset: 0 }}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: handleClose }}
-		{...restProps}
+		{...attrs.rest}
 	>
 		{@render children?.()}
 	</div>
 {/if}
 
-<style>
-	.kit-dropdown-content {
-		--kit-dropdown-bg: var(--kit-color-surface-3);
-		--kit-dropdown-fg: var(--kit-color-text);
-
-		position: fixed;
-		z-index: 1800;
-		min-width: 12rem;
-		max-width: min(22rem, calc(100vw - 1rem));
-		padding: calc(var(--kit-space-default) + var(--kit-dropdown-density-offset) / 2);
-		border: 0;
-		border-radius: var(--kit-dropdown-radius);
-		background: var(--kit-dropdown-bg);
-		color: var(--kit-dropdown-fg);
-		transform-origin: top left;
-		animation: kit-dropdown-enter 140ms ease;
-	}
-
-	/** 
-	 * rounded
-	 * @link ...
-	 */
-	.kit-dropdown-content[data-rounded='0'] {
-		--kit-dropdown-radius: var(--kit-shape-none);
-	}
-	.kit-dropdown-content[data-rounded='xs'] {
-		--kit-dropdown-radius: var(--kit-shape-xs);
-	}
-	.kit-dropdown-content[data-rounded='sm'] {
-		--kit-dropdown-radius: var(--kit-shape-sm);
-	}
-	.kit-dropdown-content[data-rounded='md'] {
-		--kit-dropdown-radius: var(--kit-shape-md);
-	}
-	.kit-dropdown-content[data-rounded='lg'] {
-		--kit-dropdown-radius: var(--kit-shape-lg);
-	}
-	.kit-dropdown-content[data-rounded='xl'] {
-		--kit-dropdown-radius: var(--kit-shape-xl);
-	}
-
-	/** 
-	 * density
-	 * @link no url
-	 */
-	.kit-dropdown-content[data-density='compact'] {
-		--kit-dropdown-density-offset: var(--kit-density-compact);
-	}
-	.kit-dropdown-content[data-density='default'] {
-		--kit-dropdown-density-offset: var(--kit-density-default);
-	}
-	.kit-dropdown-content[data-density='comfortable'] {
-		--kit-dropdown-density-offset: var(--kit-density-comfortable);
-	}
-
-	@keyframes kit-dropdown-enter {
-		from {
-			opacity: 0;
-			scale: 0.98;
-		}
-	}
+<style lang="scss">
+	@use './dropdown';
 </style>

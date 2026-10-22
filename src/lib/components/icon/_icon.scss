@@ -1,0 +1,50 @@
+:where(.kit-icon) {
+	--kit-icon-size-xs: 0.75rem;
+	--kit-icon-size-sm: 0.875rem;
+	--kit-icon-size-md: 1rem;
+	--kit-icon-size-lg: 1.125rem;
+	--kit-icon-size-xl: 1.25rem;
+}
+
+.kit-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--kit-icon-color, currentColor);
+	font-size: var(--kit-icon-current-size, var(--kit-icon-size-md));
+	line-height: 1;
+	text-indent: 0;
+	vertical-align: middle;
+
+	:global(svg),
+	img,
+	.kit-icon__mask {
+		display: block;
+		flex-shrink: 0;
+		width: var(--kit-icon-current-size, var(--kit-icon-size-md));
+		height: var(--kit-icon-current-size, var(--kit-icon-size-md));
+	}
+
+	.kit-icon__mask {
+		display: inline-block;
+		background-color: var(--kit-icon-color, currentColor);
+		mask-image: var(--kit-icon-mask-image);
+		mask-repeat: no-repeat;
+		mask-size: contain;
+		mask-position: center;
+		-webkit-mask-image: var(--kit-icon-mask-image);
+		-webkit-mask-repeat: no-repeat;
+		-webkit-mask-size: contain;
+		-webkit-mask-position: center;
+	}
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/icon#size
+ */
+@each $size in (xs, sm, md, lg, xl) {
+	:where(.kit-icon[data-size='#{$size}']) {
+		--kit-icon-current-size: var(--kit-icon-size-#{$size});
+	}
+}

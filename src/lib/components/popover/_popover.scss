@@ -1,0 +1,41 @@
+@use '$lib/styles' as *;
+
+:where(.kit-popover-content) {
+	@include color(kit-popover-content, var(--kit-color-surface-3), var(--kit-color-text));
+}
+
+.kit-popover-content {
+	position: fixed;
+	inset: auto;
+	z-index: 1900;
+	display: inline-block;
+	box-sizing: border-box;
+	width: auto;
+	max-width: min(28rem, calc(100vw - 1rem));
+	margin: 0;
+	padding: calc(var(--kit-space-default) + var(--kit-popover-content-density-offset) / 2);
+	overflow: visible;
+	border: 0;
+	border-radius: var(--kit-popover-content-radius);
+	background-color: var(--kit-popover-content-bg);
+	color: var(--kit-popover-content-fg);
+	animation: kit-popover-enter 140ms ease;
+}
+
+@keyframes kit-popover-enter {
+	from {
+		opacity: 0;
+	}
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-popover-content, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/popover#density
+ */
+@include density(kit-popover-content);

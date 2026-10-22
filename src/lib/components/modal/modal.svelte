@@ -1,19 +1,22 @@
+<script module lang="ts">
+	let uid = 0;
+</script>
+
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useElevation, useStyles } from '$lib/utils';
+	import { useComponentAttrs, useElevation } from '$lib/utils';
 	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from './modal.ts';
 	import type { ModalProps } from './modal.types.ts';
 
-	const modalId = crypto.randomUUID();
+	const modalId = `kit-modal-${++uid}`;
 	let wasPushed = $state(false);
 
 	let {
 		ref = $bindable(),
 		children = undefined,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		open = $bindable(false),
@@ -23,43 +26,28 @@
 		position = 'center',
 		rounded = 'md',
 		density = 'default',
-		classContent = '',
+		classContent,
 		color,
-		background,
 		closeWithEsc = true,
 		space,
 		elevation = '2',
 		...rest
 	}: ModalProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs(
+			'kit-modal',
+			{
+				className,
+				sClass,
+				styleAttr,
+				sStyle: space ? { '--kit-modal-space': space, ...sStyle } : sStyle,
+				color
+			},
+			rest
+		)
 	);
-
 	let elevationState = $derived(useElevation(elevation));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-modal',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	let contentClass = $derived(
-		Array.isArray(classContent)
-			? classContent.filter(Boolean).join(' ')
-			: `${classContent ?? ''}`.trim()
-	);
 
 	$effect(() => {
 		if (open && !wasPushed) {
@@ -109,39 +97,28 @@
 	function handleClose() {
 		if (!persistent) open = false;
 	}
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-modal-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-modal-bg:${background && `var(--kit-color-${background})`}` : '',
-			space ? `--kit-modal-space:${space}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
 </script>
 
 {#if open}
 	<div
 		bind:this={ref}
-		class={componentClass}
-		style={resolvedStyle}
+		class={attrs.class}
+		style={attrs.style}
 		role="dialog"
 		aria-modal={!contain}
 		data-contain={contain}
+		data-density={density}
+		data-rounded={rounded}
 	>
 		{#if contain}
 			<div class="kit-modal__overlay" role="presentation" onclick={handleClose}></div>
 		{/if}
 
 		<div
-			{...restProps}
-			class={['kit-modal__content', contentClass]}
+			{...attrs.rest}
+			class={['kit-modal__content', classContent]}
 			data-size={size}
 			data-position={position}
-			data-density={density}
-			data-rounded={rounded}
 			data-elevation={elevationState.base}
 			data-elevation-hover={elevationState.hover}
 			data-elevation-active={elevationState.active}
@@ -152,175 +129,6 @@
 	</div>
 {/if}
 
-<style>
-	.kit-modal {
-		--kit-modal-max: min(32rem, calc(100vw - 2rem));
-
-		position: fixed;
-		inset: 0;
-		z-index: 9100;
-		pointer-events: none;
-	}
-
-	.kit-modal[data-contain='true'] {
-		position: absolute;
-	}
-
-	.kit-modal__overlay {
-		position: absolute;
-		inset: 0;
-		background: color-mix(in oklab, var(--kit-color-shadow), transparent 70%);
-		backdrop-filter: blur(2px);
-		pointer-events: auto;
-	}
-
-	.kit-modal__content {
-		--kit-modal-bg: var(--kit-color-surface-1);
-		--kit-modal-fg: var(--kit-color-text);
-
-		position: fixed;
-		left: var(--kit-modal-left);
-		right: var(--kit-modal-right);
-		top: var(--kit-modal-top);
-		bottom: var(--kit-modal-bottom);
-		translate: var(--kit-modal-translate-x) var(--kit-modal-translate-y);
-		box-sizing: border-box;
-		width: min(calc(100vw - 2rem), var(--kit-modal-max));
-		max-height: calc(100dvh - 2rem);
-		overflow: auto;
-		padding: calc(var(--kit-modal-p) + var(--kit-modal-density-offset) / 2);
-		border: 0;
-		border-radius: var(--kit-modal-radius);
-		background: var(--kit-modal-bg);
-		color: var(--kit-modal-fg);
-		pointer-events: auto;
-	}
-
-	.kit-modal[data-contain='true'] .kit-modal__content {
-		position: absolute;
-	}
-
-	/**
-	* size
-	* @link nothing...
-	*/
-	.kit-modal__content[data-size='xs'] {
-		--kit-modal-max: 20rem;
-		--kit-modal-p: 12px;
-	}
-
-	.kit-modal__content[data-size='sm'] {
-		--kit-modal-max: 24rem;
-		--kit-modal-p: 14px;
-	}
-
-	.kit-modal__content[data-size='md'] {
-		--kit-modal-max: 32rem;
-		--kit-modal-p: 16px;
-	}
-
-	.kit-modal__content[data-size='lg'] {
-		--kit-modal-max: 42rem;
-		--kit-modal-p: 20px;
-	}
-
-	.kit-modal__content[data-size='xl'] {
-		--kit-modal-max: 56rem;
-		--kit-modal-p: 24px;
-	}
-
-	.kit-modal__content[data-size='full'] {
-		top: auto;
-		bottom: 0;
-		left: 0;
-		translate: 0 0;
-		width: 100%;
-		max-width: 100%;
-		max-height: 100dvh;
-		height: min(100dvh, 100%);
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-
-	/** 
-	 * density
-	 * @link no links
-	 */
-	.kit-modal__content[data-density='compact'] {
-		--kit-modal-density-offset: var(--kit-space-compact);
-	}
-	.kit-modal__content[data-density='default'] {
-		--kit-modal-density-offset: var(--kit-space-default);
-	}
-	.kit-modal__content[data-density='comfortable'] {
-		--kit-modal-density-offset: var(--kit-space-comfortable);
-	}
-
-	/** 
-	 * rounded
-	 * @link ...
-	 */
-	.kit-modal__content[data-rounded='0'] {
-		--kit-modal-radius: var(--kit-shape-none);
-	}
-	.kit-modal__content[data-rounded='xs'] {
-		--kit-modal-radius: var(--kit-shape-xs);
-	}
-	.kit-modal__content[data-rounded='sm'] {
-		--kit-modal-radius: var(--kit-shape-sm);
-	}
-	.kit-modal__content[data-rounded='md'] {
-		--kit-modal-radius: var(--kit-shape-md);
-	}
-	.kit-modal__content[data-rounded='lg'] {
-		--kit-modal-radius: var(--kit-shape-lg);
-	}
-	.kit-modal__content[data-rounded='xl'] {
-		--kit-modal-radius: var(--kit-shape-xl);
-	}
-
-	/**
-	* position
-	* @link nothing...
-	*/
-
-	.kit-modal__content[data-position='top'],
-	.kit-modal__content[data-position='center'],
-	.kit-modal__content[data-position='bottom'] {
-		--kit-modal-translate-x: -50%;
-		--kit-modal-left: 50%;
-	}
-	.kit-modal__content[data-position='top'],
-	.kit-modal__content[data-position='top-left'],
-	.kit-modal__content[data-position='top-right'] {
-		--kit-modal-top: var(--kit-modal-space, 1rem);
-		--kit-modal-bottom: auto;
-		--kit-modal-translate-y: 0;
-	}
-	.kit-modal__content[data-position='center'],
-	.kit-modal__content[data-position='center-left'],
-	.kit-modal__content[data-position='center-right'] {
-		--kit-modal-top: 50%;
-		--kit-modal-bottom: auto;
-		--kit-modal-translate-y: -50%;
-	}
-
-	.kit-modal__content[data-position='bottom'],
-	.kit-modal__content[data-position='bottom-left'],
-	.kit-modal__content[data-position='bottom-right'] {
-		--kit-modal-top: auto;
-		--kit-modal-bottom: var(--kit-modal-space, 1rem);
-		--kit-modal-translate-y: 0;
-	}
-	.kit-modal__content[data-position='top-left'],
-	.kit-modal__content[data-position='center-left'],
-	.kit-modal__content[data-position='bottom-left'] {
-		--kit-modal-left: var(--kit-modal-space, 1rem);
-		--kit-modal-translate-x: 0;
-	}
-	.kit-modal__content[data-position='top-right'],
-	.kit-modal__content[data-position='center-right'],
-	.kit-modal__content[data-position='bottom-right'] {
-		--kit-modal-right: var(--kit-modal-space, 1rem);
-	}
+<style lang="scss">
+	@use './modal';
 </style>

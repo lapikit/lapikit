@@ -5,30 +5,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Insiders
 
+### Added
+
+- New component `kit:field`, the base of the form fields: it wraps any control with the style of a textfield
+- New variants `tonal` and `surface` on the components with variants, `plain` on `kit:btn`, `kit:chip` and `kit:list`
+- New utility `floating` to place `kit:tooltip`, `kit:popover` and `kit:dropdown` (flip and shift in the viewport)
+- New props `interactive` on `kit:chip`, with 3 possibilities `false`, `undefined` and `true` (also on `kit:list-item`)
+
 ### Updated
 
-- component `kit:btn` use new structural lapikit component.
-- component `kit:btn` has new variants `tonal`, `plain`, `surface`
-- component `kit:btn` props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
-- component `kit:btn` props `color` accepts `{ base, active }`
-- component `kit:btn` props `rounded` accepts `full`
-- component `kit:btn` props `background` is removed, use `color`
-- component `kit:btn` font size follows the `size` props
-- props `color` accepts `false`, for `color={isActive && 'accent'}`
-- `--kit-font-*` use `rem`, they follow the font size of the browser
-- component `kit:btn` sizes use `rem` and the `--kit-font-*` variables
-- component `kit:btn` has a larger gap between icon and text
-- variables of `kit:app`, `kit:btn` and `kit:card` use `:where()`, a simple selector overrides them
+- All components use the new structural lapikit component (`useComponentAttrs`, Sass mixins)
+- props `color` gives the main color: background with a contrasted text, or text and border depending on the variant
+- props `color` accepts `{ base, active }` and `false`, for `color={isActive && 'accent'}`
+- props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
+- props `class` and `s-class` accept a string, an array or an object (clsx) on all components
+- sizes and `--kit-font-*` use `rem`, they follow the font size of the browser
+- variables use `:where()`, a simple selector overrides them
+- `kit:btn` font size follows the `size` props, larger gap between icon and text
+- `kit:alert` props `tone` gives the default color, role is `status` except for `warning` and `error`
+- `kit:list` and `kit:accordion` props `color` gives the color of all their items
+- `kit:textfield` is built on `kit:field` and sends the attributes of an input to the `<input>`
+- `kit:tooltip`, `kit:popover` and `kit:dropdown` use the Popover API (top layer), follow their activator on scroll and close with `Escape`
+
+### Removed
+
+- props `background` on all components, use `color`
+- `density="none"`, use `dense`
+- `--kit-textfield-*` variables, renamed `--kit-field-*`
+- class `kit-tooltip__content`, the tooltip content has the class `kit-tooltip`
 
 ### Fixed
 
-- `aria-busy` on `kit:btn` follows `loading` instead of `disabled`
-- Ripple works again on `kit:btn` with `input`
-- `kit:btn` with `is="input"` renders the input in a wrapper
-- `kit:btn` as a disabled link is removed from the keyboard navigation
-- `kit:btn` with `input` uses the `load` snippet
-- props `color` no longer crashes with a value that is not a string (`false`, a number...)
-- `kit:btn` with only `prepend` or `append` centers its icon
+- `kit:btn` and `kit:chip`: `aria-busy`, `is="input"`, ripple with `input`, `load` snippet, icon size and centering
+- `kit:chip` with `labelStyle` is bold
+- `kit:alert` minimal height and props `multiline`
+- `kit:avatar` label font size
+- `kit:list` hover of the `filled` variant, `kit:list-item` button no longer submits a form
+- `kit:aspect-ratio` stretches only its direct child media
+- `kit:modal` no longer crashes outside a secure context
+- `kit:textfield` focus ring, clear button without icon font, unique id linked to its message
+- `kit:tooltip`, `kit:popover` and `kit:dropdown` position in a modal, during the animation and on the scroll of their parents
+- props `color` no longer crashes with a value that is not a string
+- focus ring on the close button of `kit:alert` and the disabled links leave the keyboard navigation
 
 ## [0.7.3] - 2026-10-22
 

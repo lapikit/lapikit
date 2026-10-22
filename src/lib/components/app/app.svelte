@@ -1,39 +1,23 @@
 <script lang="ts">
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useComponentAttrs } from '$lib/utils';
 	import type { AppProps } from './app.types';
 
 	let {
 		ref = $bindable(),
 		children,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		...rest
 	}: AppProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(makeComponentProps(rest));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-application',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
+	let attrs = $derived(
+		useComponentAttrs('kit-application', { className, sClass, styleAttr, sStyle }, rest)
 	);
 </script>
 
-<div id="kit-app" bind:this={ref} class={componentClass} style={componentStyle} {...restProps}>
+<div id="kit-app" bind:this={ref} class={attrs.class} style={attrs.style} {...attrs.rest}>
 	{@render children?.()}
 </div>
 

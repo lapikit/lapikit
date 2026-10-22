@@ -1,4 +1,5 @@
-import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
+import type { ClassValue } from 'svelte/elements';
+import type { ColorProps, Component, ElevationProps, RoundedType } from '$lib/@types';
 
 type DialogSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type DialogPosition =
@@ -18,11 +19,10 @@ export interface DialogProps extends Component {
 	persistent?: boolean;
 	size?: DialogSize;
 	position?: DialogPosition;
-	density?: DensityType;
-	rounded?: RoundedType;
-	classContent?: string | string[] | undefined;
-	color?: string;
-	background?: string;
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	rounded?: RoundedType | 'full';
+	classContent?: ClassValue;
+	color?: ColorProps;
 	elevation?: ElevationProps;
 	space?: string;
 }

@@ -106,9 +106,7 @@ export function useClassName({
 	if (typeof sClass === 'string') {
 		addClasses(classes, sClass);
 	} else if (Array.isArray(sClass)) {
-		for (const value of sClass) {
-			if (typeof value === 'string') addClasses(classes, value);
-		}
+		addClassValue(classes, sClass);
 	} else if (sClass && typeof sClass === 'object') {
 		for (const key in sClass) {
 			const value = sClass[key];

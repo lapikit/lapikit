@@ -1,0 +1,32 @@
+$sizes: (
+	xs: (
+		2rem,
+		0.5rem,
+		0.375rem,
+		var(--kit-font-xs)
+	),
+	sm: (
+		2.5rem,
+		0.625rem,
+		0.5rem,
+		var(--kit-font-sm)
+	),
+	md: (
+		3rem,
+		0.75rem,
+		0.625rem,
+		var(--kit-font-md)
+	),
+	lg: (
+		3.5rem,
+		1rem,
+		0.75rem,
+		var(--kit-font-lg)
+	),
+	xl: (
+		4rem,
+		1.25rem,
+		0.875rem,
+		var(--kit-font-xl)
+	)
+);

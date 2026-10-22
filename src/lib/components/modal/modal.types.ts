@@ -1,4 +1,5 @@
-import type { Component, DensityType, ElevationProps, RoundedType } from '$lib/@types';
+import type { ClassValue } from 'svelte/elements';
+import type { ColorProps, Component, ElevationProps, RoundedType } from '$lib/@types';
 
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 type ModalPosition =
@@ -19,11 +20,10 @@ export interface ModalProps extends Component {
 	size?: ModalSize;
 	persistent?: boolean;
 	position?: ModalPosition;
-	rounded?: RoundedType;
-	density?: DensityType;
-	classContent?: string | string[] | undefined;
-	color?: string;
-	background?: string;
+	rounded?: RoundedType | 'full';
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	classContent?: ClassValue;
+	color?: ColorProps;
 	closeWithEsc?: boolean;
 	space?: string;
 	elevation?: ElevationProps;

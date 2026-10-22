@@ -7,6 +7,6 @@ export interface SeparatorProps extends Base {
 	is?: 'div' | 'hr';
 	inset?: boolean;
 	thickness?: string | number;
-	color?: string;
+	color?: string | false;
 	orientation?: Orientation;
 }

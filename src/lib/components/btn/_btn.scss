@@ -138,7 +138,7 @@ button.kit-btn {
 		--kit-btn-gap: #{list.nth($values, 3)};
 		--kit-btn-font: #{list.nth($values, 4)};
 
-		:global(.kit-icon:not([data-size])) {
+		:global(.kit-icon[data-size='default']) {
 			--kit-icon-current-size: var(--kit-icon-size-#{$size});
 		}
 	}

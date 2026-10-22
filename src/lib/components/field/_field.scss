@@ -1,0 +1,209 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+@use './variables' as *;
+
+:where(.kit-field) {
+	@include color(kit-field, var(--kit-color-surface-2), var(--kit-color-text));
+
+	--kit-field-padding: calc(var(--kit-field-p) + var(--kit-field-density-offset) / 2);
+}
+
+.kit-field {
+	display: grid;
+	grid-template-areas: 'prepend box append';
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: start;
+	column-gap: var(--kit-field-gap);
+	width: 100%;
+	font-size: var(--kit-field-font);
+
+	&[data-with-message='true'] {
+		grid-template-areas:
+			'prepend box append'
+			'. message .';
+	}
+
+	&[data-disabled='true'] {
+		opacity: var(--kit-disabled-opacity, 0.55);
+		pointer-events: none;
+	}
+
+	&__prepend,
+	&__append {
+		display: flex;
+		align-items: center;
+		height: 100%;
+	}
+
+	&__prepend {
+		grid-area: prepend;
+	}
+
+	&__append {
+		grid-area: append;
+	}
+
+	&__box {
+		position: relative;
+		grid-area: box;
+		display: flex;
+		align-items: center;
+		gap: var(--kit-field-gap);
+		box-sizing: border-box;
+		min-width: 0;
+		min-height: calc(var(--kit-field-h) + var(--kit-field-density-offset) / 2);
+		padding-inline: var(--kit-field-padding);
+		border-radius: var(--kit-field-radius);
+		background-color: var(--kit-field-bg);
+		color: var(--kit-field-fg);
+		@include color-transition((background-color, color, box-shadow));
+	}
+
+	&[data-focused='true'] .kit-field__box {
+		outline: 2px solid var(--kit-color-focus);
+		outline-offset: 2px;
+	}
+
+	&__prepend-inner,
+	&__append-inner,
+	&__clear {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+	}
+
+	&__control {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex: 1 1 auto;
+		align-items: center;
+		gap: 0.375rem;
+		min-width: 0;
+	}
+
+	&__prefix,
+	&__suffix {
+		display: inline-flex;
+		align-items: center;
+		white-space: nowrap;
+		color: color-mix(in oklab, currentColor, transparent 20%);
+	}
+
+	&__clear {
+		appearance: none;
+		justify-content: center;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		cursor: pointer;
+		opacity: 0;
+		pointer-events: none;
+
+		&[data-visible='true'] {
+			opacity: 1;
+			pointer-events: auto;
+		}
+
+		svg {
+			display: block;
+			width: var(--kit-field-icon);
+			height: var(--kit-field-icon);
+		}
+	}
+
+	&__line {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: var(--kit-outline-weight);
+		background-color: var(--kit-field-border);
+		pointer-events: none;
+	}
+
+	&[data-error='true'] {
+		--kit-field-border: var(--kit-color-error);
+	}
+
+	&__message {
+		grid-area: message;
+		display: grid;
+		grid-template-columns: max-content minmax(0, 1fr) max-content;
+		gap: var(--kit-field-gap);
+		align-items: start;
+		min-height: 0.875rem;
+		padding-inline: var(--kit-field-padding);
+		font-size: 0.75rem;
+		line-height: 1.2;
+		opacity: 0;
+
+		&[data-visible='true'] {
+			opacity: 1;
+		}
+	}
+
+	&[data-error='true'] .kit-field__message {
+		color: var(--kit-color-error);
+	}
+
+	&__message-text {
+		word-break: break-word;
+	}
+
+	&__message-suffix {
+		text-align: end;
+	}
+}
+
+:where(.kit-field .outline) {
+	--outline-color: var(--kit-field-border);
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/field#size
+ */
+@each $size, $values in $sizes {
+	:where(.kit-field[data-size='#{$size}']) {
+		--kit-field-h: #{list.nth($values, 1)};
+		--kit-field-p: #{list.nth($values, 2)};
+		--kit-field-gap: #{list.nth($values, 3)};
+		--kit-field-font: #{list.nth($values, 4)};
+		--kit-field-icon: #{list.nth($values, 5)};
+
+		:global(.kit-icon[data-size='default']) {
+			--kit-icon-current-size: var(--kit-field-icon);
+		}
+	}
+}
+
+/**
+ * variant
+ * @link https://lapikit.dev/docs/components/field#variants
+ */
+@each $variant in (tonal, outline, surface, text) {
+	:where(.kit-field[data-variant='#{$variant}']) {
+		@include color-variant(kit-field, $variant);
+	}
+}
+
+// the line of the text variant is visible, the border of the other variants follows the color
+:where(.kit-field[data-variant='text']) {
+	--kit-field-border: var(--kit-field-color, var(--kit-color-border));
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-field, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/field#density
+ */
+@include density(kit-field);

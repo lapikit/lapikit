@@ -2,6 +2,7 @@ import type { Component, SizeType } from '$lib/@types';
 
 export interface IconProps extends Component {
 	ref?: HTMLElement | null;
+	is?: 'i' | 'span';
 	name?: string;
 	src?: string;
 	icon?: string;
@@ -11,7 +12,7 @@ export interface IconProps extends Component {
 	decorative?: boolean;
 	loading?: 'eager' | 'lazy';
 	decoding?: 'sync' | 'async' | 'auto';
-	color?: string;
+	color?: string | false;
 	colorMode?: 'auto' | 'none' | 'mask' | 'filter';
 	imgFilter?: string;
 }

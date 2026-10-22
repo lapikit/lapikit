@@ -1,4 +1,4 @@
-import type { Component, DensityType, PropValue, RoundedType } from '$lib/@types';
+import type { ColorProps, Component, RoundedType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface TooltipProps extends Component {
@@ -8,19 +8,11 @@ export interface TooltipProps extends Component {
 	rounded?: RoundedType | 'full';
 	label?: string;
 	location?: 'top' | 'bottom' | 'left' | 'right';
-	color?: string;
-	background?: string;
+	color?: ColorProps;
 	delayDuration?: number;
 	variant?: 'arrow';
-	density?: DensityType;
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	disabled?: boolean;
 	avoidCollisions?: boolean;
 	tooltip?: Snippet;
-	[key: string]: PropValue | Record<string, PropValue> | unknown;
 }
-
-export type PositionElement = {
-	x: number;
-	y: number;
-	location: 'top' | 'bottom' | 'left' | 'right' | null;
-};

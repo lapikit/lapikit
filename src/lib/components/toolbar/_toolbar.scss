@@ -1,0 +1,87 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+@use './variables' as *;
+
+:where(.kit-toolbar) {
+	@include color(kit-toolbar, var(--kit-color-surface-1), var(--kit-color-text));
+}
+
+.kit-toolbar {
+	position: relative;
+	display: inline-flex;
+	box-sizing: border-box;
+	max-width: 100%;
+	border: 0;
+	border-radius: var(--kit-toolbar-radius);
+	background-color: var(--kit-toolbar-bg);
+	color: var(--kit-toolbar-fg);
+	font-size: var(--kit-toolbar-font);
+	@include color-transition((background-color, color, border-color, box-shadow));
+
+	&__wrapper {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: var(--kit-toolbar-gap);
+		box-sizing: border-box;
+		width: 100%;
+		min-height: calc(var(--kit-toolbar-h) + var(--kit-toolbar-density-offset) / 2);
+		padding: calc(var(--kit-toolbar-p) + var(--kit-toolbar-density-offset) / 2);
+		border-radius: inherit;
+	}
+
+	&[data-orientation='horizontal'] {
+		width: 100%;
+	}
+
+	&[data-orientation='vertical'] {
+		width: fit-content;
+		min-height: fit-content;
+
+		.kit-toolbar__wrapper {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/toolbar#size
+ */
+@each $size, $values in $sizes {
+	:where(.kit-toolbar[data-size='#{$size}']) {
+		--kit-toolbar-h: #{list.nth($values, 1)};
+		--kit-toolbar-p: #{list.nth($values, 2)};
+		--kit-toolbar-gap: #{list.nth($values, 3)};
+		--kit-toolbar-font: #{list.nth($values, 4)};
+	}
+}
+
+/**
+ * variant
+ * @link https://lapikit.dev/docs/components/toolbar#variants
+ */
+@each $variant in (tonal, outline, surface, text) {
+	:where(.kit-toolbar[data-variant='#{$variant}']) {
+		@include color-variant(kit-toolbar, $variant);
+	}
+}
+
+:where(.kit-toolbar .outline) {
+	--outline-color: var(--kit-toolbar-border);
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-toolbar, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/toolbar#density
+ */
+@include density(kit-toolbar);

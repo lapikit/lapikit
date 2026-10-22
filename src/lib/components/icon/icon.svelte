@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
+	import { useComponentAttrs } from '$lib/utils';
 	import type { IconProps } from './icon.types.ts';
 
 	let {
 		ref = $bindable(),
 		is = 'i',
 		children = undefined,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		name = undefined,
@@ -26,46 +25,15 @@
 		...rest
 	}: IconProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
-	);
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-icon',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-icon-color:${color && `var(--kit-color-${color})`}` : '',
-			color ? `color:${color && `var(--kit-color-${color})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
+	let attrs = $derived(
+		useComponentAttrs('kit-icon', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
 
 	let resolvedSrc = $derived(src ?? (icon?.includes('/') ? icon : undefined));
 	let resolvedName = $derived(name ?? (!icon?.includes('/') ? icon : undefined));
 	let hasChildren = $derived(!!children);
 	let hasContent = $derived(hasChildren || !!resolvedSrc || !!resolvedName);
-	let classWithIconName = $derived(
-		!hasChildren && !resolvedSrc && resolvedName
-			? `${componentClass} ${resolvedName}`.trim()
-			: componentClass
-	);
+	let iconClass = $derived(!hasChildren && !resolvedSrc ? resolvedName : undefined);
 
 	let iconRole = $derived(!decorative && (label || alt) ? 'img' : undefined);
 	let iconAriaLabel = $derived(!decorative ? label || alt || undefined : undefined);
@@ -84,13 +52,13 @@
 	<svelte:element
 		this={is}
 		bind:this={ref}
-		class={classWithIconName}
-		style={resolvedStyle}
+		class={[attrs.class, iconClass]}
+		style={attrs.style}
 		data-size={size}
 		role={iconRole}
 		aria-label={iconAriaLabel}
 		aria-hidden={iconAriaHidden}
-		{...restProps}
+		{...attrs.rest}
 	>
 		{#if hasChildren}
 			{@render children?.()}
@@ -114,62 +82,6 @@
 	</svelte:element>
 {/if}
 
-<style>
-	.kit-icon {
-		--kit-icon-size-xs: 12px;
-		--kit-icon-size-sm: 14px;
-		--kit-icon-size-md: 16px;
-		--kit-icon-size-lg: 18px;
-		--kit-icon-size-xl: 20px;
-
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		text-indent: 0;
-		line-height: 1;
-		font-size: var(--kit-icon-current-size, var(--kit-icon-size-md));
-		vertical-align: middle;
-	}
-
-	.kit-icon :global(svg),
-	.kit-icon img,
-	.kit-icon .kit-icon__mask {
-		width: var(--kit-icon-current-size, var(--kit-icon-size-md));
-		height: var(--kit-icon-current-size, var(--kit-icon-size-md));
-		flex-shrink: 0;
-		display: block;
-	}
-
-	.kit-icon .kit-icon__mask {
-		display: inline-block;
-		background-color: var(--kit-icon-color, currentColor);
-		mask-image: var(--kit-icon-mask-image);
-		mask-repeat: no-repeat;
-		mask-size: contain;
-		mask-position: center;
-		-webkit-mask-image: var(--kit-icon-mask-image);
-		-webkit-mask-repeat: no-repeat;
-		-webkit-mask-size: contain;
-		-webkit-mask-position: center;
-	}
-
-	/** 
-	 * size
-	 * @link https://lapikit.dev/docs/components/icon#size 
-	 */
-	.kit-icon[data-size='xs'] {
-		--kit-icon-current-size: var(--kit-icon-size-xs);
-	}
-	.kit-icon[data-size='sm'] {
-		--kit-icon-current-size: var(--kit-icon-size-sm);
-	}
-	.kit-icon[data-size='md'] {
-		--kit-icon-current-size: var(--kit-icon-size-md);
-	}
-	.kit-icon[data-size='lg'] {
-		--kit-icon-current-size: var(--kit-icon-size-lg);
-	}
-	.kit-icon[data-size='xl'] {
-		--kit-icon-current-size: var(--kit-icon-size-xl);
-	}
+<style lang="scss">
+	@use './icon';
 </style>

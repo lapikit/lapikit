@@ -19,6 +19,7 @@ export { default as KitAvatar } from './avatar/avatar.svelte';
 export { default as KitDropdown } from './dropdown/dropdown.svelte';
 export { default as KitPopover } from './popover/popover.svelte';
 export { default as KitTooltip } from './tooltip/tooltip.svelte';
+export { default as KitField } from './field/field.svelte';
 export { default as KitTextfield } from './textfield/textfield.svelte';
 export { default as KitToolbar } from './toolbar/toolbar.svelte';
 export { default as KitList } from './list/list.svelte';
