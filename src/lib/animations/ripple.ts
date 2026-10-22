@@ -7,6 +7,10 @@ const nestedControls =
 	'a[href], button, input, select, textarea, summary, [role="button"], [role="link"]';
 const hosts = new WeakMap<Element, () => boolean>();
 
+function isHostControl(node: EventTarget | null) {
+	return node instanceof Element && node.hasAttribute('data-ripple-host');
+}
+
 function resolveDuration(options: RippleProps) {
 	return options.duration && options.duration > 0 ? options.duration : undefined;
 }
@@ -25,7 +29,8 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		let node = target instanceof Element ? target : null;
 
 		while (node && node !== el) {
-			if (hosts.get(node)?.() || node.matches(nestedControls)) return true;
+			if (hosts.get(node)?.()) return true;
+			if (node.matches(nestedControls) && !isHostControl(node)) return true;
 			node = node.parentElement;
 		}
 		return false;
@@ -91,7 +96,9 @@ export function ripple(el: HTMLElement, options: RippleProps = {}) {
 		const isKeyboard = e instanceof KeyboardEvent;
 
 		if (isKeyboard) {
-			if (!activationKeys.includes(e.key) || e.repeat || e.target !== el) {
+			const isOwnTarget = e.target === el || isHostControl(e.target);
+
+			if (!activationKeys.includes(e.key) || e.repeat || !isOwnTarget) {
 				return;
 			}
 		} else if (e.button !== 0 || isFromNestedControl(e.target)) {

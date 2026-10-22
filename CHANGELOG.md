@@ -3,6 +3,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Insiders
+
+### Updated
+
+- component `kit:btn` use new structural lapikit component.
+- component `kit:btn` has new variants `tonal`, `plain`, `surface`
+- component `kit:btn` props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
+- component `kit:btn` props `color` accepts `{ base, active }`
+- component `kit:btn` props `rounded` accepts `full`
+- component `kit:btn` props `background` is removed, use `color`
+- component `kit:btn` font size follows the `size` props
+
+### Fixed
+
+- `aria-busy` on `kit:btn` follows `loading` instead of `disabled`
+- Ripple works again on `kit:btn` with `input`
+- `kit:btn` with `is="input"` renders the input in a wrapper
+- `kit:btn` as a disabled link is removed from the keyboard navigation
+- `kit:btn` with `input` uses the `load` snippet
+
 ## [0.7.3] - 2026-10-22
 
 ### Added
