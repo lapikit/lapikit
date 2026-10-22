@@ -12,10 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 
-- `--kit-density-*` integrate new graduiation props `dense`, `compact`, `default`, `comfortable`, `spacious`
+- `--kit-density-*` integrate new graduation props `dense`, `compact`, `default`, `comfortable`, `spacious`
 - component `kit:card` use new structural lapikit component.
-- props `interactive` use 3 possibility `false`, `undefined` and `true`
-- props `density` use 5 possibily `dense`, `compact`, `default`, `comfortable` and `spacious`
+- props `interactive` use 3 possibilities `false`, `undefined` and `true`
+- props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
 - component `kit:card` has new css variable `--kit-card-padding`
 - component `kit:card-media` radius follows the card radius and density
 
