@@ -80,8 +80,9 @@
 	.kit-card {
 		@include color(kit-card, var(--kit-color-surface-1), var(--kit-color-text));
 
-		// read by the modules (title, actions, container): 0px dense to 8px spacious
+		// modules vars
 		--kit-card-gap: calc(var(--kit-space-default) + var(--kit-card-density-offset) / 2);
+		--kit-card-padding: calc(10px + var(--kit-card-density-offset) / 2);
 
 		display: flex;
 		position: relative;
@@ -92,7 +93,7 @@
 		border-radius: var(--kit-card-radius);
 		border: 0;
 		box-sizing: border-box;
-		padding: calc(10px + var(--kit-card-density-offset) / 2);
+		padding: var(--kit-card-padding);
 		@include color-transition((background-color, color, border-color, box-shadow));
 	}
 

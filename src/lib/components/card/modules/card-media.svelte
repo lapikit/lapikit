@@ -25,6 +25,10 @@
 <style lang="scss">
 	.kit-card-media {
 		overflow: hidden;
-		border-radius: calc(var(--kit-card-radius) - 2px);
+		// concentric with the card (radius - padding), never sharper than xs nor rounder than the card
+		border-radius: min(
+			var(--kit-card-radius),
+			max(calc(var(--kit-card-radius) - var(--kit-card-padding)), var(--kit-shape-xs))
+		);
 	}
 </style>
