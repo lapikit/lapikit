@@ -19,13 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - props `color` accepts `{ base, active }` and `false`, for `color={isActive && 'accent'}`
 - props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
 - props `class` and `s-class` accept a string, an array or an object (clsx) on all components
-- sizes and `--kit-font-*` use `rem`, they follow the font size of the browser
+- sizes, `--kit-font-*`, `--kit-space-*` and `--kit-density-*` use `rem`, they follow the font size of the browser
 - variables use `:where()`, a simple selector overrides them
 - `kit:btn` font size follows the `size` props, larger gap between icon and text
 - `kit:alert` props `tone` gives the default color, role is `status` except for `warning` and `error`
 - `kit:list` and `kit:accordion` props `color` gives the color of all their items
 - `kit:textfield` is built on `kit:field` and sends the attributes of an input to the `<input>`
 - `kit:tooltip`, `kit:popover` and `kit:dropdown` use the Popover API (top layer), follow their activator on scroll and close with `Escape`
+- peer dependency `svelte` is `^5.20.0`: ids use `$props.id()`, the same on the server and the client
+- `kit:accordion-item` links its trigger and its content (`aria-controls`, `aria-labelledby`)
+- `aria-*` attributes of `kit:dialog` and `kit:modal` go on the dialog, the other attributes on the content
 
 ### Removed
 

@@ -1,10 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { computeSStyles } from '$lib/html-mapped';
+import type { PropValue, SStyleProp } from '$lib/@types';
+import { useStyles } from '$lib/utils/components';
 
-describe('computeSStyles', () => {
+// s-style (object) and s-style_xxx (directives) of a component, as useComponentAttrs merges them
+const styles = (sStyle: SStyleProp, styleProps: Record<string, PropValue>) =>
+	useStyles({ sStyle, styleProps });
+
+describe('s-style and s-style_xxx directives', () => {
 	describe('sStyle as object', () => {
 		it('should convert object to CSS style string', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'red',
 					'font-size': '16px'
@@ -15,7 +20,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should filter out falsy values', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'red',
 					display: false,
@@ -27,7 +32,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should skip boolean true values (not a CSS value)', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'blue',
 					visible: true
@@ -38,17 +43,17 @@ describe('computeSStyles', () => {
 		});
 
 		it('should return empty string for empty object', () => {
-			const result = computeSStyles({}, {});
+			const result = styles({}, {});
 			expect(result).toBe('');
 		});
 
 		it('should handle undefined sStyle', () => {
-			const result = computeSStyles(undefined, {});
+			const result = styles(undefined, {});
 			expect(result).toBe('');
 		});
 
 		it('should handle CSS properties with units', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					width: '100px',
 					height: '50%',
@@ -62,7 +67,7 @@ describe('computeSStyles', () => {
 
 	describe('styleDirectiveProps (s-style_xxx)', () => {
 		it('should add styles from directives', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{},
 				{
 					's-style_color': 'red',
@@ -73,7 +78,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should filter out falsy directive values', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{},
 				{
 					's-style_color': 'red',
@@ -85,7 +90,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle boolean true values in directives', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{},
 				{
 					's-style_visible': true,
@@ -97,7 +102,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle hyphenated CSS properties', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{},
 				{
 					's-style_font-size': '14px',
@@ -110,7 +115,7 @@ describe('computeSStyles', () => {
 
 	describe('combined scenarios', () => {
 		it('should combine sStyle object and styleDirectiveProps', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'red',
 					'font-size': '16px'
@@ -124,7 +129,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should filter falsy values from both sources', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'red',
 					display: false
@@ -138,12 +143,12 @@ describe('computeSStyles', () => {
 		});
 
 		it('should return empty string when everything is empty', () => {
-			const result = computeSStyles({}, {});
+			const result = styles({}, {});
 			expect(result).toBe('');
 		});
 
 		it('should handle mixed boolean and string values', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'blue',
 					visible: true
@@ -160,7 +165,7 @@ describe('computeSStyles', () => {
 
 	describe('edge cases', () => {
 		it('should preserve order of styles', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					'z-index': '999',
 					'a-property': 'value'
@@ -173,7 +178,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle CSS custom properties (variables)', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					'--primary-color': '#ff0000',
 					'--spacing': '1rem'
@@ -184,7 +189,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle calc and other CSS functions', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					width: 'calc(100% - 20px)',
 					transform: 'rotate(45deg)'
@@ -195,7 +200,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle numeric values', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					opacity: '0.5',
 					'z-index': '10'
@@ -206,7 +211,7 @@ describe('computeSStyles', () => {
 		});
 
 		it('should handle color formats', () => {
-			const result = computeSStyles(
+			const result = styles(
 				{
 					color: 'rgb(255, 0, 0)',
 					background: '#ff0000',
