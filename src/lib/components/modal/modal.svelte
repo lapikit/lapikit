@@ -1,15 +1,11 @@
-<script module lang="ts">
-	let uid = 0;
-</script>
-
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { splitAriaAttrs, useComponentAttrs, useElevation } from '$lib/utils';
 	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from './modal.ts';
 	import type { ModalProps } from './modal.types.ts';
 
-	const modalId = `kit-modal-${++uid}`;
+	const modalId = $props.id();
 	let wasPushed = $state(false);
 
 	let {
@@ -48,6 +44,7 @@
 		)
 	);
 	let elevationState = $derived(useElevation(elevation));
+	let split = $derived(splitAriaAttrs(attrs.rest));
 
 	$effect(() => {
 		if (open && !wasPushed) {
@@ -106,6 +103,7 @@
 		style={attrs.style}
 		role="dialog"
 		aria-modal={!contain}
+		{...split.aria}
 		data-contain={contain}
 		data-density={density}
 		data-rounded={rounded}
@@ -115,7 +113,7 @@
 		{/if}
 
 		<div
-			{...attrs.rest}
+			{...split.others}
 			class={['kit-modal__content', classContent]}
 			data-size={size}
 			data-position={position}

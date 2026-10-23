@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { disabledScroll, useComponentAttrs, useElevation } from '$lib/utils';
+	import { disabledScroll, splitAriaAttrs, useComponentAttrs, useElevation } from '$lib/utils';
 	import type { DialogProps } from './dialog.types.ts';
 
 	let {
@@ -36,6 +36,7 @@
 		)
 	);
 	let elevationState = $derived(useElevation(elevation));
+	let split = $derived(splitAriaAttrs(attrs.rest));
 
 	$effect(() => {
 		if (!ref) return;
@@ -90,12 +91,13 @@
 	data-persistent={persistent}
 	data-density={density}
 	data-rounded={rounded}
+	{...split.aria}
 	onclose={handleClose}
 	oncancel={handleCancel}
 	onclick={handleBackdropClick}
 >
 	<div
-		{...attrs.rest}
+		{...split.others}
 		class={['kit-dialog__content', classContent]}
 		data-elevation={elevationState.base}
 		data-elevation-hover={elevationState.hover}

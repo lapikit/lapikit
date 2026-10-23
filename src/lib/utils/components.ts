@@ -6,7 +6,6 @@ import type {
 	ElevationState,
 	PropValue,
 	SStyleProp,
-	useClassNameProps,
 	useStylesProps
 } from '$lib/@types';
 import type { ClassValue } from 'svelte/elements';
@@ -15,8 +14,6 @@ import { colorStyle } from './color.js';
 
 const endsWithSeparator = /[^a-zA-Z0-9]$/;
 const startsWithSeparator = /^[^a-zA-Z0-9]/;
-const whitespace = /\s/;
-const whitespaces = /\s+/;
 const propertyCache = new Map<string, string>();
 
 function hasKeys(value: unknown): boolean {
@@ -25,35 +22,6 @@ function hasKeys(value: unknown): boolean {
 		if (Object.hasOwn(value, key)) return true;
 	}
 	return false;
-}
-
-/**
- * Adds the classes of a value (one or several, separated by spaces) to the set.
- * The set keeps the first position of each class and drops the duplicates.
- */
-function addClasses(classes: Set<string>, value: string) {
-	if (!whitespace.test(value)) {
-		if (value) classes.add(value);
-		return;
-	}
-	for (const name of value.split(whitespaces)) {
-		if (name) classes.add(name);
-	}
-}
-
-/**
- * Adds a class value with the rules of clsx (class on an element): a string, an array (nested too),
- * or an object whose keys are added when their value is truthy. Joining an array would give "a,b"
- */
-function addClassValue(classes: Set<string>, value: unknown) {
-	if (typeof value === 'string') addClasses(classes, value);
-	else if (Array.isArray(value)) {
-		for (const item of value) addClassValue(classes, item);
-	} else if (value && typeof value === 'object') {
-		for (const key in value) {
-			if ((value as Record<string, unknown>)[key]) addClasses(classes, key);
-		}
-	}
 }
 
 /**
@@ -81,47 +49,6 @@ export function directiveClasses(classProps: Record<string, PropValue> | undefin
 		}
 	}
 	return classes;
-}
-
-/**
- * useClassName - Utility to compute class names for a component.
- * @param baseClass - The base class name for the component.
- * @param className - Additional class names: a string or an array of strings.
- * @param sClass - The s-class property which can be a string, array, or object.
- * @param classProps - An object containing s-class_xxx directives.
- * @returns A computed class string: no extra spaces, no duplicates, in the order of the inputs.
- */
-export function useClassName({
-	baseClass = '',
-	className,
-	sClass,
-	classProps
-}: useClassNameProps = {}): string {
-	if (!sClass && !className && !hasKeys(classProps)) return baseClass;
-
-	const classes = new Set<string>();
-
-	if (baseClass) addClasses(classes, baseClass);
-
-	if (typeof sClass === 'string') {
-		addClasses(classes, sClass);
-	} else if (Array.isArray(sClass)) {
-		addClassValue(classes, sClass);
-	} else if (sClass && typeof sClass === 'object') {
-		for (const key in sClass) {
-			const value = sClass[key];
-			if (value === true) addClasses(classes, key);
-			else if (typeof value === 'string') addClasses(classes, value);
-		}
-	}
-
-	if (classProps) {
-		for (const name of directiveClasses(classProps)) addClasses(classes, name);
-	}
-
-	if (className) addClassValue(classes, className);
-
-	return [...classes].join(' ');
 }
 
 /**
@@ -288,4 +215,20 @@ export function useComponentAttrs(
 			.join('; '),
 		rest: restProps
 	};
+}
+
+/**
+ * splitAriaAttrs - Separates the aria-* attributes from the other attributes, for a component whose
+ * role is on another element than its content (dialog, modal).
+ * @param rest - The rest of the props of the component.
+ */
+export function splitAriaAttrs(rest: Record<string, unknown>) {
+	const aria: Record<string, unknown> = {};
+	const others: Record<string, unknown> = {};
+
+	for (const key in rest) {
+		if (key.startsWith('aria-')) aria[key] = rest[key];
+		else others[key] = rest[key];
+	}
+	return { aria, others };
 }

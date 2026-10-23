@@ -1,7 +1,3 @@
-<script module lang="ts">
-	let uid = 0;
-</script>
-
 <script lang="ts">
 	import { useComponentAttrs, useElevation } from '$lib/utils';
 	import type { FieldControlProps, FieldProps } from './field.types.ts';
@@ -42,7 +38,7 @@
 		...rest
 	}: FieldProps = $props();
 
-	const generatedId = `kit-field-${++uid}`;
+	const generatedId = $props.id();
 
 	let attrs = $derived(
 		useComponentAttrs('kit-field', { className, sClass, styleAttr, sStyle, color }, rest)

@@ -1,7 +1,3 @@
-<script module lang="ts">
-	let uid = 0;
-</script>
-
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { floating, useComponentAttrs } from '$lib/utils';
@@ -29,7 +25,7 @@
 		...rest
 	}: TooltipProps = $props();
 
-	const tooltipId = `kit-tooltip-${++uid}`;
+	const tooltipId = $props.id();
 
 	let attrs = $derived(
 		useComponentAttrs('kit-tooltip', { className, sClass, styleAttr, sStyle, color }, rest)

@@ -5,18 +5,10 @@ import type {
 	KitClassNameType,
 	KitStylePropertiesType,
 	PropValue,
-	SClassProp,
 	SStyleProp,
 	StylePropertiesType
 } from '$lib/@types';
 import type { ClassValue } from 'svelte/elements';
-
-export interface useClassNameProps {
-	baseClass?: string;
-	className?: string;
-	sClass?: SClassProp;
-	classProps?: Record<string, PropValue>;
-}
 
 export interface useStylesProps {
 	styleAttr?: string;
