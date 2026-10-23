@@ -1,0 +1,40 @@
+:where(.kit-separator) {
+	--kit-separator-color: var(--kit-color-border);
+	--kit-separator-vertical-min-size: 1.5rem;
+}
+
+.kit-separator {
+	display: block;
+	flex: 1 1 100%;
+	box-sizing: border-box;
+	height: 0;
+	max-height: 0;
+	border: 0 solid var(--kit-separator-color);
+
+	&:not([data-orientation='vertical']) {
+		width: 100%;
+		border-top-width: var(--kit-separator-thickness);
+	}
+
+	&[data-orientation='vertical'] {
+		display: inline-flex;
+		align-self: stretch;
+		width: 0;
+		max-width: 0;
+		height: auto;
+		min-height: var(--kit-separator-vertical-min-size);
+		max-height: none;
+		vertical-align: text-bottom;
+		border-right-width: var(--kit-separator-thickness);
+	}
+
+	&[data-inset]:not([data-orientation='vertical']) {
+		max-width: calc(100% - 4.5rem);
+		margin-inline-start: 4.5rem;
+	}
+
+	&[data-inset][data-orientation='vertical'] {
+		max-height: calc(100% - 1rem);
+		margin-block: 0.5rem;
+	}
+}

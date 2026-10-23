@@ -56,6 +56,9 @@ describe('colorStyle', () => {
 		expect(colorStyle('kit-sheet', undefined)).toBe('');
 		expect(colorStyle('kit-sheet', '')).toBe('');
 		expect(colorStyle('kit-sheet', 'red;')).toBe('');
+		expect(colorStyle('kit-sheet', false)).toBe('');
+		expect(colorStyle('kit-sheet', 0 as never)).toBe('');
+		expect(colorStyle('kit-sheet', { base: false }, true)).toBe('');
 	});
 
 	it('should return an empty string when there is no name', () => {

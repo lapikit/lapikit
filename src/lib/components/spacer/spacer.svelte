@@ -1,41 +1,22 @@
 <script lang="ts">
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useStyles } from '$lib/utils';
+	import { useComponentAttrs } from '$lib/utils';
 	import type { SpacerProps } from './spacer.types.ts';
 
 	let {
 		is = 'div',
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		...rest
 	}: SpacerProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
-	);
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-spacer',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
+	let attrs = $derived(
+		useComponentAttrs('kit-spacer', { className, sClass, styleAttr, sStyle }, rest)
 	);
 </script>
 
-<svelte:element this={is} class={componentClass} style={componentStyle} {...restProps}>
-</svelte:element>
+<svelte:element this={is} class={attrs.class} style={attrs.style} {...attrs.rest}></svelte:element>
 
 <style>
 	.kit-spacer {

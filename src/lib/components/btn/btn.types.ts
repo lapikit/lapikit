@@ -1,4 +1,4 @@
-import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface ButtonProps extends Component {
@@ -6,14 +6,14 @@ export interface ButtonProps extends Component {
 	is?: 'button' | 'a' | 'input';
 	input?: boolean;
 	href?: string;
-	variant?: 'outline' | 'text' | 'filled' | 'link';
-	density?: DensityType;
+	variant?: 'filled' | 'tonal' | 'outline' | 'text' | 'plain' | 'surface' | 'link';
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	active?: boolean;
 	loading?: boolean;
 	disabled?: boolean;
 	checked?: boolean;
 	size?: SizeType;
-	rounded?: RoundedType;
+	rounded?: RoundedType | 'full';
 	type?: 'button' | 'submit' | 'reset' | 'checkbox' | 'radio';
 	value?: string | number | boolean;
 	label?: string;
@@ -25,6 +25,5 @@ export interface ButtonProps extends Component {
 	append?: Snippet;
 	prepend?: Snippet;
 	elevation?: ElevationProps;
-	color?: string;
-	background?: string;
+	color?: ColorProps;
 }

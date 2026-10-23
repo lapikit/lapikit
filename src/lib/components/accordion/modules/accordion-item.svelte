@@ -1,21 +1,19 @@
 <script lang="ts">
-	import { useClassName, useElevation, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
+	import { useComponentAttrs, useElevation } from '$lib/utils';
 	import type { AccordionItemModelProps, AccordionItemProps } from '../accordion.types.ts';
 
 	let {
 		ref = $bindable(),
 		is = 'div',
 		children,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		activator,
 		indicator,
 		text,
 		color,
-		background,
 		index,
 		open,
 		toggle,
@@ -25,26 +23,13 @@
 		...rest
 	}: AccordionItemProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs('kit-accordion-item', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
 
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-accordion-item',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
+	const uid = $props.id();
+	const triggerId = `${uid}-trigger`;
+	const contentId = `${uid}-content`;
 
 	let safeOpen = $derived(!!open);
 	let model: AccordionItemModelProps = {
@@ -59,38 +44,30 @@
 		if (readOnly || disabled || !toggle) return;
 		toggle(index);
 	}
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-accordion-item-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-accordion-item-bg:${background && `var(--kit-color-${background})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
 </script>
 
 <svelte:element
 	this={is}
 	bind:this={ref}
-	class={componentClass}
-	style={resolvedStyle}
+	class={attrs.class}
+	style={attrs.style}
 	data-disabled={disabled}
 	data-read-only={readOnly}
 	data-active={safeOpen}
 	data-elevation={elevationState.base}
 	data-elevation-hover={elevationState.hover}
 	data-elevation-active={elevationState.active}
-	{...restProps}
+	{...attrs.rest}
 >
 	<span class="outline"></span>
 
 	<button
+		id={triggerId}
 		class="kit-accordion-item__trigger"
 		type="button"
 		onclick={handleToggle}
 		aria-expanded={safeOpen}
+		aria-controls={contentId}
 		aria-disabled={disabled || readOnly || undefined}
 		{disabled}
 	>
@@ -119,53 +96,75 @@
 
 	<span class="kit-accordion-item__separator"></span>
 
-	<div class="kit-accordion-item__content" hidden={!safeOpen}>
+	<div
+		id={contentId}
+		class="kit-accordion-item__content"
+		role="region"
+		aria-labelledby={triggerId}
+		hidden={!safeOpen}
+	>
 		<div class="kit-accordion-item__content-inner">
 			{@render children?.()}
 		</div>
 	</div>
 </svelte:element>
 
-<style>
-	.kit-accordion-item {
-		flex: 1 0 100%;
-		max-width: 100%;
-		position: relative;
-		border: 0;
-		box-sizing: border-box;
-		background: var(--kit-accordion-item-bg);
-		color: var(--kit-accordion-item-fg);
-		gap: var(--kit-accordion-item-gap);
-		text-decoration: none;
-		font-size: var(--kit-accordion-item-font);
-		overflow: clip;
+<style lang="scss">
+	@use '$lib/styles' as *;
+
+	:where(.kit-accordion-item) {
+		@include color(kit-accordion-item, var(--kit-color-surface-1), var(--kit-color-text));
+
+		// the color of the accordion, when the item has none
+		--kit-accordion-item-color: var(--kit-accordion-color);
+		--kit-accordion-item-on-color: var(--kit-accordion-on-color);
 	}
 
-	.kit-accordion-item > button {
-		appearance: none;
+	.kit-accordion-item {
+		position: relative;
+		flex: 1 0 100%;
+		box-sizing: border-box;
+		max-width: 100%;
+		overflow: clip;
 		border: 0;
-		font: inherit;
-		text-align: inherit;
+		background-color: var(--kit-accordion-item-bg);
+		color: var(--kit-accordion-item-fg);
+		font-size: var(--kit-accordion-item-font);
+		text-decoration: none;
+		@include color-transition((background-color, color));
 	}
 
 	.kit-accordion-item__trigger {
-		width: 100%;
+		appearance: none;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: var(--kit-accordion-item-gap);
+		box-sizing: border-box;
+		width: 100%;
 		min-height: calc(var(--kit-accordion-item-h) + var(--kit-accordion-density-offset) / 2);
 		padding: calc(var(--kit-accordion-item-p) + var(--kit-accordion-density-offset) / 2);
+		border: 0;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		text-align: start;
 		cursor: pointer;
-		text-align: left;
-		background: var(--kit-accordion-item-bg);
-		color: var(--kit-accordion-item-fg);
+		@include color-transition((background-color));
+
+		&:disabled {
+			cursor: not-allowed;
+			opacity: var(--kit-disabled-opacity, 0.55);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--kit-color-focus);
+			outline-offset: 2px;
+		}
 	}
 
-	.kit-accordion-item__trigger:disabled,
-	.kit-accordion-item[data-disabled='true'] .kit-accordion-item__trigger {
-		cursor: not-allowed;
-		opacity: 0.6;
+	.kit-accordion-item[data-read-only='true'] .kit-accordion-item__trigger {
+		cursor: default;
 	}
 
 	.kit-accordion-item__title {
@@ -175,19 +174,15 @@
 
 	.kit-accordion-item__indicator {
 		display: inline-flex;
+		flex: none;
 		align-items: center;
 		justify-content: center;
-		flex: 0 0 auto;
-	}
 
-	.kit-accordion-item__indicator svg {
-		width: 1.125rem;
-		height: 1.125rem;
-		display: block;
-	}
-
-	.kit-accordion-item__content {
-		display: block;
+		svg {
+			display: block;
+			width: 1.125rem;
+			height: 1.125rem;
+		}
 	}
 
 	.kit-accordion-item__content[hidden] {
@@ -199,33 +194,13 @@
 	}
 
 	.kit-accordion-item__separator {
-		width: 100%;
-		height: 1px;
 		display: block;
-		position: relative;
-		background: var(--kit-accordion-item-fg);
-		margin: 0 auto;
+		width: 100%;
+		height: var(--kit-outline-weight);
+		background-color: color-mix(in oklab, var(--kit-accordion-item-fg) 20%, transparent);
 	}
 
-	/* .kit-accordion-item[data-read-only='false'][data-disabled='false']:not([data-variant='text'])
-		> button:hover {
-		background: var(--kit-accordion-item-hover-bg);
-	} */
-
-	/**I think is a good idea for not use this*/
-	/* .kit-accordion-item[data-active='true'][data-disabled='false'][data-read-only='false'] > button {
-		background: var(--kit-accordion-item-active-bg);
-	}
-	.kit-accordion-item[data-disabled='false'][data-read-only='false'] > button:active {
-		background: var(--kit-accordion-item-active-bg);
-	} */
-
-	.kit-accordion-item[data-disabled='false'][data-read-only='false'] > button:focus-visible {
-		outline: 2px solid var(--kit-color-focus);
-		outline-offset: 2px;
-	}
-
-	.kit-accordion-item .outline {
-		--outline-color: var(--kit-accordion-item-bd);
+	:where(.kit-accordion-item .outline) {
+		--outline-color: var(--kit-accordion-item-border);
 	}
 </style>

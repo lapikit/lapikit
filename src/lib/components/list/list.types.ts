@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { Component, DensityType, RoundedType, SizeType } from '$lib/@types';
+import type { ColorProps, Component, RoundedType, SizeType } from '$lib/@types';
 
-export type ListVariant = 'filled' | 'outline' | 'text';
+export type ListVariant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text' | 'plain';
 export type ListElement = 'div' | 'nav' | 'ul';
 export type ListItemElement = 'div' | 'a' | 'button' | 'li';
 
@@ -10,11 +10,10 @@ export interface ListProps extends Component {
 	is?: ListElement;
 	size?: SizeType;
 	variant?: ListVariant;
-	density?: DensityType;
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	rounded?: RoundedType | 'full';
 	nav?: boolean;
-	color?: string;
-	background?: string;
+	color?: string | false;
 }
 
 export interface ListItemProps extends Component {
@@ -23,8 +22,7 @@ export interface ListItemProps extends Component {
 	href?: string;
 	append?: Snippet;
 	prepend?: Snippet;
-	color?: string;
-	background?: string;
+	color?: ColorProps;
 	interactive?: boolean;
 	active?: boolean;
 	disabled?: boolean;

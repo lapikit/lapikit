@@ -1,0 +1,28 @@
+.kit-aspect-ratio {
+	position: relative;
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
+	aspect-ratio: var(--kit-aspect-ratio, 1.7777777778);
+
+	&[data-inline='true'] {
+		display: inline-block;
+		width: auto;
+	}
+
+	&__inner {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+
+		> :global(:is(img, video, iframe, canvas, svg, picture)),
+		> :global(picture > img) {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: var(--kit-aspect-fit, cover);
+		}
+	}
+}

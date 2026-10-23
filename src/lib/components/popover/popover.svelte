@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { useClassName, useStyles, clickOutside, useElevation } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { getPositions } from './popover.svelte.ts';
+	import { clickOutside, floating, useComponentAttrs, useElevation } from '$lib/utils';
 	import type { ModelPopoverProps, PopoverProps } from './popover.types.ts';
 
 	let {
@@ -12,9 +10,8 @@
 		rounded = 'md',
 		position = 'bottom',
 		color,
-		background,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		elevation = '2',
@@ -22,84 +19,36 @@
 		...rest
 	}: PopoverProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs('kit-popover-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-
 	let elevationState = $derived(useElevation(elevation));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-popover-content',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	const positioner = getPositions();
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let activatorRef = $state<HTMLElement | null>(null);
-	let axis = $state(positioner.values);
 
-	const handleToggle = (element: HTMLElement | null) => {
-		if (element === null) return;
-		activatorRef = element;
-		open = !open;
-	};
-
-	let model: ModelPopoverProps = {
-		toggle: (element) => handleToggle(element)
-	};
-
-	const updatePosition = () => {
-		if (!contentRef || !activatorRef) return;
-		positioner.update(activatorRef, contentRef, position, false, true);
-		axis = positioner.values;
-	};
-
-	$effect(() => {
-		if (open && contentRef && activatorRef) {
-			updatePosition();
+	const model: ModelPopoverProps = {
+		toggle: (element) => {
+			if (element === null) return;
+			activatorRef = element;
+			open = !open;
 		}
-	});
-
-	$effect(() => {
-		if (!open) return;
-
-		const close = () => (open = false);
-
-		window.addEventListener('scroll', close, { passive: true });
-		window.addEventListener('resize', updatePosition);
-
-		return () => {
-			window.removeEventListener('scroll', close);
-			window.removeEventListener('resize', updatePosition);
-		};
-	});
+	};
 
 	$effect(() => {
 		ref = contentRef;
 	});
 
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-popover-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-popover-bg:${background && `var(--kit-color-${background})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	$effect(() => {
+		if (!open) return;
+
+		const onKeydown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') open = false;
+		};
+
+		document.addEventListener('keydown', onKeydown);
+		return () => document.removeEventListener('keydown', onKeydown);
+	});
 </script>
 
 {@render activator?.(model)}
@@ -107,75 +56,23 @@
 {#if open}
 	<div
 		bind:this={contentRef}
-		class={componentClass}
-		style={`left:${axis.x}px; top:${axis.y}px; ${resolvedStyle}`}
+		popover="manual"
+		class={attrs.class}
+		style={attrs.style}
 		role="dialog"
 		data-rounded={rounded}
-		data-position={axis.location ?? position}
 		data-density={density}
 		data-elevation={elevationState.base}
 		data-elevation-hover={elevationState.hover}
 		data-elevation-active={elevationState.active}
+		use:floating={{ anchor: activatorRef, side: position, offset: 6 }}
 		use:clickOutside={{ exclude: [contentRef, activatorRef], onClose: () => (open = false) }}
-		{...restProps}
+		{...attrs.rest}
 	>
 		{@render children?.()}
 	</div>
 {/if}
 
-<style>
-	.kit-popover-content {
-		--kit-popover-bg: var(--kit-color-surface-3);
-		--kit-popover-fg: var(--kit-color-text);
-
-		position: fixed;
-		z-index: 1900;
-		display: inline-block;
-		width: auto;
-		max-width: min(28rem, calc(100vw - 1rem));
-		padding: calc(var(--kit-space-default) + var(--kit-popover-density-offset) / 2);
-		border: 0;
-		border-radius: var(--kit-popover-radius);
-		background: var(--kit-popover-bg);
-		color: var(--kit-popover-fg);
-		opacity: 1;
-		transition: opacity 140ms ease;
-	}
-
-	/** 
-	 * rounded
-	 * @link ...
-	 */
-	.kit-popover-content[data-rounded='0'] {
-		--kit-popover-radius: var(--kit-shape-none);
-	}
-	.kit-popover-content[data-rounded='xs'] {
-		--kit-popover-radius: var(--kit-shape-xs);
-	}
-	.kit-popover-content[data-rounded='sm'] {
-		--kit-popover-radius: var(--kit-shape-sm);
-	}
-	.kit-popover-content[data-rounded='md'] {
-		--kit-popover-radius: var(--kit-shape-md);
-	}
-	.kit-popover-content[data-rounded='lg'] {
-		--kit-popover-radius: var(--kit-shape-lg);
-	}
-	.kit-popover-content[data-rounded='xl'] {
-		--kit-popover-radius: var(--kit-shape-xl);
-	}
-
-	/** 
-	 * density
-	 * @link no url
-	 */
-	.kit-popover-content[data-density='compact'] {
-		--kit-popover-density-offset: var(--kit-space-compact);
-	}
-	.kit-popover-content[data-density='default'] {
-		--kit-popover-density-offset: var(--kit-space-default);
-	}
-	.kit-popover-content[data-density='comfortable'] {
-		--kit-popover-density-offset: var(--kit-space-comfortable);
-	}
+<style lang="scss">
+	@use './popover';
 </style>

@@ -147,6 +147,20 @@ describe('ripple', () => {
 		expect(container(card)).toBeNull();
 	});
 
+	it('ripples the host from its own control (the input of a btn)', () => {
+		const label = document.createElement('label');
+		document.body.appendChild(label);
+		ripple(label);
+		const input = document.createElement('input');
+		input.type = 'checkbox';
+		input.setAttribute('data-ripple-host', '');
+		label.appendChild(input);
+
+		input.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		input.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', code: 'Space', bubbles: true }));
+		expect(label.querySelectorAll('.kit-ripple').length).toBe(2);
+	});
+
 	it('still ripples when the nested ripple is disabled', () => {
 		const card = document.createElement('div');
 		document.body.appendChild(card);

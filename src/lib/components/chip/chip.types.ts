@@ -1,4 +1,4 @@
-import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 export interface ChipProps extends Component {
@@ -6,9 +6,10 @@ export interface ChipProps extends Component {
 	is?: 'div' | 'a' | 'input' | 'button';
 	input?: boolean;
 	href?: string;
-	variant?: 'outline' | 'text' | 'filled';
-	density?: DensityType;
+	variant?: 'filled' | 'tonal' | 'outline' | 'text' | 'plain' | 'surface';
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	rounded?: RoundedType | 'full';
+	interactive?: boolean;
 	active?: boolean;
 	loading?: boolean;
 	disabled?: boolean;
@@ -24,6 +25,5 @@ export interface ChipProps extends Component {
 	append?: Snippet;
 	prepend?: Snippet;
 	elevation?: ElevationProps;
-	background?: string;
-	color?: string;
+	color?: ColorProps;
 }

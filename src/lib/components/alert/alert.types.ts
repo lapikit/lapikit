@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
-import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
 
-type AlertVariant = 'filled' | 'outline' | 'text';
+type AlertVariant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text';
 type AlertTone = 'default' | 'info' | 'success' | 'warning' | 'error';
 
 export interface AlertProps extends Component {
@@ -9,13 +9,13 @@ export interface AlertProps extends Component {
 	is?: 'div' | 'section' | 'aside' | 'article';
 	open?: boolean;
 	closable?: boolean;
+	multiline?: boolean;
 	variant?: AlertVariant;
 	size?: SizeType;
-	density?: DensityType;
+	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
 	rounded?: RoundedType | 'full';
 	tone?: AlertTone;
-	color?: string;
-	background?: string;
+	color?: ColorProps;
 	prepend?: Snippet;
 	append?: Snippet;
 	close?: Snippet;

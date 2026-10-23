@@ -18,7 +18,7 @@
 			$token: none;
 		}
 
-		.#{$component}[data-rounded='#{$shape}'] {
+		:where(.#{$component}[data-rounded='#{$shape}']) {
 			--#{$component}-radius: var(--kit-shape-#{$token});
 		}
 	}
@@ -27,7 +27,7 @@
 // The offset of each density, read by the component: calc(base + var(--name-density-offset) / 2)
 @mixin density($component, $densities: (dense, compact, default, comfortable, spacious)) {
 	@each $density in $densities {
-		.#{$component}[data-density='#{$density}'] {
+		:where(.#{$component}[data-density='#{$density}']) {
 			--#{$component}-density-offset: var(--kit-density-#{$density});
 		}
 	}

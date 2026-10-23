@@ -1,41 +1,29 @@
-import type { Component, DensityType, ElevationProps, RoundedType, SizeType } from '$lib/@types';
-import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes } from 'svelte/elements';
+import type {
+	ClassNameType,
+	KitClassNameType,
+	KitStylePropertiesType,
+	StylePropertiesType
+} from '$lib/@types';
+import type { FieldBaseProps } from '../field/field.types';
 
-export interface TextfieldProps extends Component {
+type FieldOwnedAttributes = keyof FieldBaseProps | 'size' | 'type' | 'value' | 'min' | 'max';
+
+export interface TextfieldProps
+	extends
+		FieldBaseProps,
+		Omit<HTMLInputAttributes, FieldOwnedAttributes | 'class' | 'style' | 'children'> {
 	ref?: HTMLElement | null;
+	class?: ClassNameType;
+	style?: StylePropertiesType;
+	's-class'?: KitClassNameType;
+	's-style'?: KitStylePropertiesType;
 	value?: string | number;
-	type?: 'text' | 'email' | 'password' | 'number';
-	placeholder?: string;
-	counter?: boolean;
+	type?: 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
+	/** minimal length of the value */
 	min?: number;
+	/** maximal length of the value, also used by the counter */
 	max?: number;
-	variant?: 'outline' | 'text' | 'filled';
-	density?: DensityType;
-	error?: boolean;
-	errorMessage?: string;
-	disabled?: boolean;
-	color?: string;
-	background?: string;
-	size?: SizeType;
-	rounded?: RoundedType;
-	readonly?: boolean;
+	counter?: boolean;
 	hideSpinButtons?: boolean;
-	persistentMessage?: boolean;
-	persistentClear?: boolean;
-	clearable?: boolean;
-	message?: string;
-	messagePrefix?: string;
-	messageSuffix?: string;
-	append?: Snippet;
-	prepend?: Snippet;
-	prependInner?: Snippet;
-	appendInner?: Snippet;
-	prefix?: string;
-	suffix?: string;
-	name?: string;
-	id?: string;
-	autocomplete?: HTMLInputAttributes['autocomplete'];
-	inputmode?: HTMLInputAttributes['inputmode'];
-	elevation?: ElevationProps;
 }

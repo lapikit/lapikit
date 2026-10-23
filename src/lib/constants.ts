@@ -10,6 +10,7 @@ export const lapikitComponentPaths: Readonly<Record<string, string>> = {
 	dropdown: 'dropdown/dropdown.svelte',
 	popover: 'popover/popover.svelte',
 	tooltip: 'tooltip/tooltip.svelte',
+	field: 'field/field.svelte',
 	textfield: 'textfield/textfield.svelte',
 	toolbar: 'toolbar/toolbar.svelte',
 	list: 'list/list.svelte',

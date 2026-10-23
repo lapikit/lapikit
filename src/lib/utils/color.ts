@@ -4,8 +4,9 @@ import type { ColorProps } from '$lib/@types';
 const paletteName = /^[a-zA-Z][\w-]*$/;
 const unsafe = /[;{}]/;
 
-function clean(color: string | null | undefined): string | undefined {
-	const value = color?.trim();
+function clean(color: unknown): string | undefined {
+	// color={isActive && 'accent'} gives false: only a string is a color
+	const value = typeof color === 'string' ? color.trim() : undefined;
 	if (!value) return undefined;
 	if (unsafe.test(value)) {
 		if (DEV) console.warn(`[lapikit] color "${value}" is ignored: it cannot hold ; { or }`);
@@ -14,13 +15,13 @@ function clean(color: string | null | undefined): string | undefined {
 	return value;
 }
 
-export function resolveColor(color: string | null | undefined): string | undefined {
+export function resolveColor(color: string | false | null | undefined): string | undefined {
 	const value = clean(color);
 	if (!value) return undefined;
 	return paletteName.test(value) ? `var(--kit-color-${value}, ${value})` : value;
 }
 
-export function resolveOnColor(color: string | null | undefined): string | undefined {
+export function resolveOnColor(color: string | false | null | undefined): string | undefined {
 	const value = clean(color);
 	if (!value || !paletteName.test(value)) return undefined;
 	return `var(--kit-color-on-${value})`;

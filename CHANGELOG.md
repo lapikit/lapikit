@@ -3,6 +3,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.4] - 2026-10-23
+
+### Added
+
+- New component `kit:field`, the base of the form fields: it wraps any control with the style of a textfield
+- New variants `tonal` and `surface` on the components with variants, `plain` on `kit:btn`, `kit:chip` and `kit:list`
+- New utility `floating` to place `kit:tooltip`, `kit:popover` and `kit:dropdown` (flip and shift in the viewport)
+- New props `interactive` on `kit:chip`, with 3 possibilities `false`, `undefined` and `true` (also on `kit:list-item`)
+
+### Updated
+
+- All components use the new structural lapikit component (`useComponentAttrs`, Sass mixins)
+- props `color` gives the main color: background with a contrasted text, or text and border depending on the variant
+- props `color` accepts `{ base, active }` and `false`, for `color={isActive && 'accent'}`
+- props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
+- props `class` and `s-class` accept a string, an array or an object (clsx) on all components
+- sizes, `--kit-font-*`, `--kit-space-*` and `--kit-density-*` use `rem`, they follow the font size of the browser
+- variables use `:where()`, a simple selector overrides them
+- `kit:btn` font size follows the `size` props, larger gap between icon and text
+- `kit:alert` props `tone` gives the default color, role is `status` except for `warning` and `error`
+- `kit:list` and `kit:accordion` props `color` gives the color of all their items
+- `kit:textfield` is built on `kit:field` and sends the attributes of an input to the `<input>`
+- `kit:tooltip`, `kit:popover` and `kit:dropdown` use the Popover API (top layer), follow their activator on scroll and close with `Escape`
+- peer dependency `svelte` is `^5.20.0`: ids use `$props.id()`, the same on the server and the client
+- `kit:accordion-item` links its trigger and its content (`aria-controls`, `aria-labelledby`)
+- `aria-*` attributes of `kit:dialog` and `kit:modal` go on the dialog, the other attributes on the content
+
+### Removed
+
+- props `background` on all components, use `color`
+- `density="none"`, use `dense` (or the size variables set to `0`)
+- `--kit-textfield-*` variables, renamed `--kit-field-*`
+- class `kit-tooltip__content`, the tooltip content has the class `kit-tooltip`
+
+### Fixed
+
+- `kit:btn` and `kit:chip`: `aria-busy`, `is="input"`, ripple with `input`, `load` snippet, icon size and centering
+- `kit:chip` with `labelStyle` is bold
+- `kit:alert` minimal height and props `multiline`
+- `kit:avatar` label font size
+- `kit:list` hover of the `filled` variant, `kit:list-item` button no longer submits a form
+- `kit:aspect-ratio` stretches only its direct child media
+- `kit:modal` no longer crashes outside a secure context
+- `kit:textfield` focus ring, clear button without icon font, unique id linked to its message
+- `kit:tooltip`, `kit:popover` and `kit:dropdown` position in a modal, during the animation and on the scroll of their parents
+- props `color` no longer crashes with a value that is not a string
+- focus ring on the close button of `kit:alert` and the disabled links leave the keyboard navigation
+
 ## [0.7.3] - 2026-10-22
 
 ### Added
@@ -12,10 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Updated
 
-- `--kit-density-*` integrate new graduiation props `dense`, `compact`, `default`, `comfortable`, `spacious`
+- `--kit-density-*` integrate new graduation props `dense`, `compact`, `default`, `comfortable`, `spacious`
 - component `kit:card` use new structural lapikit component.
-- props `interactive` use 3 possibility `false`, `undefined` and `true`
-- props `density` use 5 possibily `dense`, `compact`, `default`, `comfortable` and `spacious`
+- props `interactive` use 3 possibilities `false`, `undefined` and `true`
+- props `density` use 5 possibilities `dense`, `compact`, `default`, `comfortable` and `spacious`
 - component `kit:card` has new css variable `--kit-card-padding`
 - component `kit:card-media` radius follows the card radius and density
 

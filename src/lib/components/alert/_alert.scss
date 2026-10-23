@@ -1,0 +1,109 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+@use './variables' as *;
+
+:where(.kit-alert) {
+	@include color(kit-alert, var(--kit-color-surface-2), var(--kit-color-text));
+}
+
+.kit-alert {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: var(--kit-alert-gap);
+	box-sizing: border-box;
+	min-height: calc(var(--kit-alert-h) + var(--kit-alert-density-offset) / 2);
+	padding: calc(var(--kit-alert-p) + var(--kit-alert-density-offset) / 2);
+	border: 0;
+	border-radius: var(--kit-alert-radius);
+	background-color: var(--kit-alert-bg);
+	color: var(--kit-alert-fg);
+	font-size: var(--kit-alert-font);
+	@include color-transition((background-color, color, border-color, box-shadow));
+
+	&[data-multiline='true'] {
+		align-items: flex-start;
+	}
+
+	&__prepend,
+	&__append,
+	&__close {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		line-height: 1;
+	}
+
+	&__content {
+		flex: 1;
+		min-width: 0;
+		line-height: 1.4;
+	}
+
+	&__close {
+		appearance: none;
+		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0;
+		border: 0;
+		border-radius: var(--kit-shape-full);
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+
+		&:hover {
+			background-color: color-mix(in oklab, currentColor 10%, transparent);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--kit-color-focus);
+			outline-offset: 2px;
+		}
+
+		svg {
+			display: block;
+			width: 1.125rem;
+			height: 1.125rem;
+		}
+	}
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/alert#size
+ */
+@each $size, $values in $sizes {
+	:where(.kit-alert[data-size='#{$size}']) {
+		--kit-alert-h: #{list.nth($values, 1)};
+		--kit-alert-p: #{list.nth($values, 2)};
+		--kit-alert-gap: #{list.nth($values, 3)};
+		--kit-alert-font: #{list.nth($values, 4)};
+	}
+}
+
+/**
+ * variant
+ * @link https://lapikit.dev/docs/components/alert#variants
+ */
+@each $variant in (tonal, outline, surface, text) {
+	:where(.kit-alert[data-variant='#{$variant}']) {
+		@include color-variant(kit-alert, $variant);
+	}
+}
+
+:where(.kit-alert .outline) {
+	--outline-color: var(--kit-alert-border);
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-alert, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/alert#density
+ */
+@include density(kit-alert);

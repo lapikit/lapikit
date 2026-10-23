@@ -1,141 +1,97 @@
 <script lang="ts">
 	import { ripple } from '$lib/animations';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { useClassName, useIsInteractive, useStyles } from '$lib/utils';
+	import { useComponentAttrs, useIsInteractive } from '$lib/utils';
 	import type { ListItemProps } from '../list.types.ts';
 
 	let {
 		ref = $bindable(),
 		is = 'div',
 		children = undefined,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		append = undefined,
 		prepend = undefined,
 		href = undefined,
 		color = undefined,
-		background = undefined,
-		interactive = false,
+		interactive,
 		active = false,
 		disabled = false,
 		noRipple = false,
 		...rest
 	}: ListItemProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
+	let attrs = $derived(
+		useComponentAttrs(
+			'kit-list-item',
+			{ className, sClass, styleAttr, sStyle, color, active },
+			rest
+		)
 	);
-
-	let tag = $derived(href ? 'a' : is === 'div' && restProps.onclick ? 'button' : is);
-	// let isInteractive = $derived(tag !== 'div' && tag !== 'li' && !disabled);
-	let isInteractive = $derived(useIsInteractive(rest, tag, ['a', 'button'], interactive));
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-list-item',
-			className: `${className ?? ''}`.trim(),
-			sClass,
-			classProps
-		})
+	let tag = $derived(
+		href ? 'a' : is === 'div' && typeof attrs.rest.onclick === 'function' ? 'button' : is
 	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-list-item-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-list-item-bg:${background && `var(--kit-color-${background})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
+	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
 </script>
 
 <svelte:element
 	this={tag}
 	bind:this={ref}
-	class={componentClass}
-	style={resolvedStyle}
+	class={attrs.class}
+	style={attrs.style}
 	href={href && !disabled ? href : undefined}
-	data-active={active}
-	data-disabled={disabled}
-	aria-disabled={disabled || undefined}
+	type={tag === 'button' ? 'button' : undefined}
 	disabled={tag === 'button' ? disabled : undefined}
 	tabindex={href && disabled ? -1 : undefined}
 	role={tag === 'div' ? 'listitem' : undefined}
-	data-append={append && true}
-	data-prepend={prepend && true}
+	data-active={active}
+	data-disabled={disabled}
 	data-interactive={isInteractive}
+	aria-disabled={disabled || undefined}
 	use:ripple={{
 		component: 'list-item',
-		disabled: noRipple || !isInteractive
+		disabled: noRipple || disabled || !isInteractive
 	}}
-	{...restProps}
+	{...attrs.rest}
 >
 	{#if prepend}
-		<span class="kit-list-item__prepend">
-			{@render prepend?.()}
-		</span>
+		<span class="kit-list-item__prepend">{@render prepend()}</span>
 	{/if}
 
-	<span class="kit-list-item__content">
-		{@render children?.()}
-	</span>
+	<span class="kit-list-item__content">{@render children?.()}</span>
 
 	{#if append}
-		<span class="kit-list-item__append">
-			{@render append?.()}
-		</span>
+		<span class="kit-list-item__append">{@render append()}</span>
 	{/if}
 </svelte:element>
 
-<style>
+<style lang="scss">
+	@use '$lib/styles' as *;
+
+	:where(.kit-list-item) {
+		@include color(kit-list-item, var(--kit-color-surface-2), var(--kit-color-text));
+
+		// the color of the list, when the item has none
+		--kit-list-item-color: var(--kit-list-color);
+		--kit-list-item-on-color: var(--kit-list-on-color);
+	}
+
 	.kit-list-item {
-		width: 100%;
-		min-height: calc(var(--kit-list-item-h) + var(--kit-list-density-offset) / 2);
 		position: relative;
-		display: grid;
-		grid-template-columns: 1fr;
+		display: flex;
 		align-items: center;
 		gap: var(--kit-list-item-gap);
-		/* border-radius: var(--kit-list-item-radius); */
+		box-sizing: border-box;
+		width: 100%;
+		min-height: calc(var(--kit-list-item-h) + var(--kit-list-density-offset) / 2);
+		padding-inline: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
 		border: 0;
-		background: var(--kit-list-item-bg);
+		background-color: var(--kit-list-item-bg);
 		color: var(--kit-list-item-fg);
-		text-decoration: none;
 		font-size: var(--kit-list-item-font);
-	}
-
-	.kit-list-item .kit-list-item__prepend,
-	.kit-list-item:not([data-prepend='true']) .kit-list-item__content {
-		margin-left: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
-	}
-	.kit-list-item .kit-list-item__append,
-	.kit-list-item:not([data-append='true']) .kit-list-item__content {
-		margin-right: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
-	}
-	.kit-list-item:not([data-prepend='true']):not([data-append='true']) .kit-list-item__content {
-		margin-left: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
-		margin-right: calc(var(--kit-list-item-p) + var(--kit-list-density-offset) / 2);
-	}
-
-	.kit-list-item[data-prepend='true']:not([data-append='true']) {
-		grid-template-columns: auto minmax(0, 1fr);
-	}
-	.kit-list-item[data-append='true']:not([data-prepend='true']) {
-		grid-template-columns: minmax(0, 1fr) auto;
-	}
-	.kit-list-item[data-append='true'][data-prepend='true'] {
-		grid-template-columns: auto minmax(0, 1fr) auto;
+		text-decoration: none;
+		@include color-transition((background-color, color));
 	}
 
 	a.kit-list-item {
@@ -144,48 +100,30 @@
 
 	button.kit-list-item {
 		appearance: none;
-		border: 0;
 		font: inherit;
 		text-align: inherit;
-	}
-
-	.kit-list-item[data-interactive='true'][data-disabled='false'] {
-		cursor: pointer;
-	}
-
-	.kit-list-item[data-interactive='true'][data-disabled='false']:hover {
-		background: var(--kit-list-item-hover-bg);
-	}
-	.kit-list-item[data-active='true'][data-disabled='false'] {
-		translate: 0 0;
-		background: var(--kit-list-item-active-bg);
-	}
-	.kit-list-item[data-interactive='true'][data-disabled='false']:active {
-		translate: 0 0;
-		background: var(--kit-list-item-active-bg);
-	}
-
-	.kit-list-item[data-interactive='true'][data-disabled='false']:focus-visible {
-		outline: 2px solid var(--kit-color-focus);
-		outline-offset: 2px;
-	}
-
-	.kit-list-item[data-disabled='true'] {
-		opacity: var(--kit-disabled-opacity, 0.55);
-		pointer-events: none;
 	}
 
 	.kit-list-item__prepend,
 	.kit-list-item__append,
 	.kit-list-item__content {
 		display: inline-flex;
+		flex: none;
 		align-items: center;
 		min-width: 0;
 	}
 
 	.kit-list-item__content {
+		flex: 1;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
+
+	// (0,2,0): wins over the variant of the list
+	.kit-list-item[data-active='true'] {
+		@include color-active(kit-list-item);
+	}
+
+	@include interactive(kit-list-item);
 </style>

@@ -19,13 +19,13 @@ export interface CardProps extends Component {
 export interface CardTitleProps extends Component {
 	ref?: HTMLElement | null;
 	is?: 'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-	color?: string;
+	color?: string | false;
 }
 
 export interface CardContentProps extends Component {
 	ref?: HTMLElement | null;
 	is?: 'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-	color?: string;
+	color?: string | false;
 }
 
 export interface CardMediaProps extends Component {

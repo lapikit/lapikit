@@ -1,0 +1,46 @@
+@use '$lib/styles' as *;
+
+:where(.kit-dropdown-content) {
+	@include color(kit-dropdown-content, var(--kit-color-surface-3), var(--kit-color-text));
+}
+
+.kit-dropdown-content {
+	position: fixed;
+	inset: auto;
+	z-index: 1800;
+	box-sizing: border-box;
+	min-width: 12rem;
+	max-width: min(22rem, calc(100vw - 1rem));
+	margin: 0;
+	padding: calc(var(--kit-space-default) + var(--kit-dropdown-content-density-offset) / 2);
+	overflow: visible;
+	border: 0;
+	border-radius: var(--kit-dropdown-content-radius);
+	background-color: var(--kit-dropdown-content-bg);
+	color: var(--kit-dropdown-content-fg);
+	transform-origin: top left;
+	animation: kit-dropdown-enter 140ms ease;
+
+	&[data-side='top'] {
+		transform-origin: bottom left;
+	}
+}
+
+@keyframes kit-dropdown-enter {
+	from {
+		opacity: 0;
+		scale: 0.98;
+	}
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-dropdown-content, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/dropdown#density
+ */
+@include density(kit-dropdown-content);

@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { useClassName, useStyles } from '$lib/utils';
-	import { makeComponentProps } from '$lib/html-mapped';
-	import { getPositionsTooltip } from './tooltip.svelte.ts';
+	import { floating, useComponentAttrs } from '$lib/utils';
 	import type { TooltipProps } from './tooltip.types.ts';
 
 	let {
@@ -14,85 +12,36 @@
 		label,
 		rounded = 'xs',
 		color,
-		background,
 		location = 'bottom',
 		delayDuration = 850,
 		density = 'default',
 		variant,
 		disabled = false,
 		avoidCollisions = true,
-		class: className = '',
-		style: styleAttr = '',
+		class: className,
+		style: styleAttr,
 		's-class': sClass,
 		's-style': sStyle,
 		...rest
 	}: TooltipProps = $props();
 
-	let { classProps, styleProps, restProps } = $derived(
-		makeComponentProps(rest as Record<string, unknown>)
-	);
+	const tooltipId = $props.id();
 
-	let triggerClass = $derived(
-		useClassName({
-			baseClass: 'kit-tooltip-trigger',
-			className: '',
-			sClass,
-			classProps
-		})
+	let attrs = $derived(
+		useComponentAttrs('kit-tooltip', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-
-	let componentClass = $derived(
-		useClassName({
-			baseClass: 'kit-tooltip__content',
-			className: `${className ?? ''}`.trim()
-		})
-	);
-
-	let componentStyle = $derived(
-		useStyles({
-			styleAttr,
-			sStyle,
-			styleProps
-		})
-	);
-
-	let resolvedStyle = $derived(
-		[
-			componentStyle,
-			color ? `--kit-tooltip-fg:${color && `var(--kit-color-${color})`}` : '',
-			background ? `--kit-tooltip-bg:${background && `var(--kit-color-${background})`}` : ''
-		]
-			.filter(Boolean)
-			.join('; ')
-	);
-
-	const positioner = getPositionsTooltip();
 
 	let triggerRef = $state<HTMLElement | null>(null);
-	let tooltipRef = $state<HTMLElement | null>(null);
-	let axis = $state(positioner.values);
-	let timer = $state<ReturnType<typeof setTimeout> | null>(null);
-	const tooltipId = `kit-tooltip-${Math.random().toString(36).slice(2, 10)}`;
+	let timer: ReturnType<typeof setTimeout> | null = null;
+	let mounted = $derived(open || forceMount || !!tooltip);
 
 	const clearTimer = () => {
-		if (timer) {
-			clearTimeout(timer);
-			timer = null;
-		}
-	};
-
-	const updatePosition = () => {
-		if (!triggerRef || !tooltipRef) return;
-		positioner.update(triggerRef, tooltipRef, location, true, avoidCollisions);
-		axis = positioner.values;
+		if (timer) clearTimeout(timer);
+		timer = null;
 	};
 
 	const handleHoverOpen = () => {
-		if (disabled) {
-			open = false;
-			return;
-		}
-
+		if (disabled) return;
 		clearTimer();
 		timer = setTimeout(() => {
 			open = true;
@@ -101,11 +50,7 @@
 	};
 
 	const handleFocusOpen = () => {
-		if (disabled) {
-			open = false;
-			return;
-		}
-
+		if (disabled) return;
 		clearTimer();
 		open = true;
 	};
@@ -115,232 +60,60 @@
 		open = false;
 	};
 
-	const handleKeydown = (event: KeyboardEvent) => {
-		if (event.key === 'Escape') handleClose();
-	};
-
-	$effect(() => {
-		if (tooltip) forceMount = true;
-	});
-
 	$effect(() => {
 		if (disabled) open = false;
-	});
-
-	$effect(() => {
-		if (open && triggerRef && tooltipRef) {
-			updatePosition();
-		}
-	});
-
-	$effect(() => {
-		if (!open) return;
-
-		window.addEventListener('scroll', updatePosition, { passive: true });
-		window.addEventListener('resize', updatePosition);
-
-		return () => {
-			window.removeEventListener('scroll', updatePosition);
-			window.removeEventListener('resize', updatePosition);
-		};
 	});
 
 	$effect(() => {
 		ref = triggerRef;
 	});
 
-	onDestroy(() => {
-		clearTimer();
-	});
+	onDestroy(clearTimer);
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <span
 	bind:this={triggerRef}
-	class={triggerClass}
-	style="display:inline-flex"
+	class="kit-tooltip-trigger"
 	aria-describedby={open ? tooltipId : undefined}
 	onmouseenter={handleHoverOpen}
 	onmouseleave={handleClose}
 	onfocusin={handleFocusOpen}
 	onfocusout={handleClose}
-	onkeydown={handleKeydown}
+	onkeydown={(event) => event.key === 'Escape' && handleClose()}
 >
 	{@render children?.()}
 </span>
 
-{#if open || forceMount}
+{#if mounted}
 	<div
-		bind:this={tooltipRef}
-		class="kit-tooltip"
 		id={tooltipId}
+		popover="manual"
 		role="tooltip"
 		aria-label={label}
-		style={`transform: translate(${axis.x}px, ${axis.y}px); display:${open ? 'block' : 'none'}`}
+		class={attrs.class}
+		style={attrs.style}
+		data-density={density}
+		data-variant={variant}
+		data-rounded={rounded}
+		use:floating={{
+			anchor: triggerRef,
+			open,
+			side: location,
+			align: 'center',
+			offset: 6,
+			flip: avoidCollisions
+		}}
+		{...attrs.rest}
 	>
-		<div
-			class={componentClass}
-			style={resolvedStyle}
-			data-density={density}
-			data-location={axis.location ?? location}
-			data-variant={variant}
-			data-rounded={rounded}
-			{...restProps}
-		>
-			{#if tooltip}
-				{@render tooltip?.()}
-			{:else}
-				{label}
-			{/if}
-		</div>
+		{#if tooltip}
+			{@render tooltip()}
+		{:else}
+			{label}
+		{/if}
 	</div>
 {/if}
 
-<style>
-	.kit-tooltip-trigger {
-		display: inline-flex;
-		width: fit-content;
-		max-width: max-content;
-		justify-self: start;
-		align-self: start;
-	}
-
-	.kit-tooltip-trigger:focus-visible {
-		outline: 2px solid var(--kit-color-focus);
-		outline-offset: 2px;
-	}
-
-	.kit-tooltip {
-		position: fixed;
-		inset: 0 auto auto 0;
-		z-index: 2000;
-		margin: 0;
-		pointer-events: none;
-	}
-
-	.kit-tooltip__content {
-		--kit-tooltip-bg: var(--kit-color-surface-2);
-		--kit-tooltip-fg: var(--kit-color-text);
-
-		position: relative;
-		display: inline-block;
-		width: max-content;
-		max-width: min(20rem, calc(100vw - 1rem));
-		padding: calc(var(--kit-space-default) + var(--kit-tooltip-density-offset) / 2);
-		border: 0;
-		border-radius: var(--kit-tooltip-radius);
-		background: var(--kit-tooltip-bg);
-		color: var(--kit-tooltip-fg);
-		font-size: 0.875rem;
-		overflow-wrap: break-word;
-		box-shadow: 0 16px 29px -10px color-mix(in oklab, var(--kit-color-shadow) 18%, transparent);
-		animation: kit-tooltip-enter 150ms ease;
-	}
-
-	/** 
-	 * density
-	 * @link no links
-	 */
-	.kit-tooltip__content[data-density='compact'] {
-		--kit-tooltip-density-offset: var(--kit-density-compact);
-	}
-	.kit-tooltip__content[data-density='default'] {
-		--kit-tooltip-density-offset: var(--kit-density-default);
-	}
-	.kit-tooltip__content[data-density='comfortable'] {
-		--kit-tooltip-density-offset: var(--kit-density-comfortable);
-	}
-
-	/** 
-	 * rounded
-	 * @link ...
-	 */
-	.kit-tooltip__content[data-rounded='0'] {
-		--kit-tooltip-radius: var(--kit-shape-none);
-	}
-	.kit-tooltip__content[data-rounded='xs'] {
-		--kit-tooltip-radius: var(--kit-shape-xs);
-	}
-	.kit-tooltip__content[data-rounded='sm'] {
-		--kit-tooltip-radius: var(--kit-shape-sm);
-	}
-	.kit-tooltip__content[data-rounded='md'] {
-		--kit-tooltip-radius: var(--kit-shape-md);
-	}
-	.kit-tooltip__content[data-rounded='lg'] {
-		--kit-tooltip-radius: var(--kit-shape-lg);
-	}
-	.kit-tooltip__content[data-rounded='xl'] {
-		--kit-tooltip-radius: var(--kit-shape-xl);
-	}
-	.kit-tooltip__content[data-rounded='full'] {
-		--kit-tooltip-radius: var(--kit-shape-full);
-	}
-
-	.kit-tooltip__content[data-variant='arrow']::after {
-		content: '';
-		position: absolute;
-		border-style: solid;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='bottom']::after,
-	.kit-tooltip__content[data-variant='arrow'][data-location='top']::after {
-		left: 50%;
-		margin-left: -0.35rem;
-		border-width: 0.35rem;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='bottom']::after {
-		bottom: 100%;
-		border-color: transparent transparent var(--kit-tooltip-bg) transparent;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='top']::after {
-		top: 100%;
-		border-color: var(--kit-tooltip-bg) transparent transparent transparent;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='left']::after,
-	.kit-tooltip__content[data-variant='arrow'][data-location='right']::after {
-		top: 50%;
-		margin-top: -0.35rem;
-		border-width: 0.35rem;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='right']::after {
-		right: 100%;
-		border-color: transparent var(--kit-tooltip-bg) transparent transparent;
-	}
-
-	.kit-tooltip__content[data-variant='arrow'][data-location='left']::after {
-		left: 100%;
-		border-color: transparent transparent transparent var(--kit-tooltip-bg);
-	}
-
-	.kit-tooltip__content[data-location='top'] {
-		--kit-tooltip-enter-x: 0;
-		--kit-tooltip-enter-y: 0.5rem;
-	}
-
-	.kit-tooltip__content[data-location='bottom'] {
-		--kit-tooltip-enter-x: 0;
-		--kit-tooltip-enter-y: -0.5rem;
-	}
-
-	.kit-tooltip__content[data-location='right'] {
-		--kit-tooltip-enter-x: -0.5rem;
-		--kit-tooltip-enter-y: 0;
-	}
-
-	.kit-tooltip__content[data-location='left'] {
-		--kit-tooltip-enter-x: 0.5rem;
-		--kit-tooltip-enter-y: 0;
-	}
-
-	@keyframes kit-tooltip-enter {
-		from {
-			opacity: 0;
-			transform: translate(var(--kit-tooltip-enter-x, 0), var(--kit-tooltip-enter-y, 0)) scale(0.95);
-		}
-	}
+<style lang="scss">
+	@use './tooltip';
 </style>

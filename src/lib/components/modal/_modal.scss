@@ -1,0 +1,182 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+
+$sizes: (
+	xs: (
+		20rem,
+		0.875rem
+	),
+	sm: (
+		24rem,
+		1rem
+	),
+	md: (
+		32rem,
+		1.125rem
+	),
+	lg: (
+		42rem,
+		1.375rem
+	),
+	xl: (
+		56rem,
+		1.625rem
+	)
+);
+
+:where(.kit-modal) {
+	@include color(kit-modal, var(--kit-color-surface-1), var(--kit-color-text));
+
+	--kit-modal-max: 32rem;
+	--kit-modal-p: 1.125rem;
+	--kit-modal-space: 1rem;
+}
+
+:where(.kit-modal__content) {
+	--kit-modal-top: auto;
+	--kit-modal-right: auto;
+	--kit-modal-bottom: auto;
+	--kit-modal-left: auto;
+	--kit-modal-translate-x: 0;
+	--kit-modal-translate-y: 0;
+}
+
+.kit-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 9100;
+	pointer-events: none;
+
+	&[data-contain='true'] {
+		position: absolute;
+
+		.kit-modal__content {
+			position: absolute;
+		}
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: color-mix(in oklab, var(--kit-color-shadow), transparent 70%);
+		backdrop-filter: blur(2px);
+		pointer-events: auto;
+	}
+
+	&__content {
+		position: fixed;
+		top: var(--kit-modal-top);
+		right: var(--kit-modal-right);
+		bottom: var(--kit-modal-bottom);
+		left: var(--kit-modal-left);
+		box-sizing: border-box;
+		width: min(calc(100vw - 2rem), var(--kit-modal-max));
+		max-height: calc(100dvh - 2rem);
+		padding: calc(var(--kit-modal-p) + var(--kit-modal-density-offset) / 2);
+		overflow: auto;
+		border: 0;
+		border-radius: var(--kit-modal-radius);
+		background-color: var(--kit-modal-bg);
+		color: var(--kit-modal-fg);
+		pointer-events: auto;
+		translate: var(--kit-modal-translate-x) var(--kit-modal-translate-y);
+
+		&[data-size='full'] {
+			top: auto;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			max-width: 100%;
+			height: min(100dvh, 100%);
+			max-height: 100dvh;
+			border-end-start-radius: 0;
+			border-end-end-radius: 0;
+			translate: 0 0;
+		}
+	}
+}
+
+/**
+ * size
+ * @link https://lapikit.dev/docs/components/modal#size
+ */
+@each $size, $values in $sizes {
+	:where(.kit-modal__content[data-size='#{$size}']) {
+		--kit-modal-max: #{list.nth($values, 1)};
+		--kit-modal-p: #{list.nth($values, 2)};
+	}
+}
+
+/**
+ * position
+ * @link https://lapikit.dev/docs/components/modal#position
+ */
+:where(
+	.kit-modal__content:is([data-position='top'], [data-position='center'], [data-position='bottom'])
+) {
+	--kit-modal-left: 50%;
+	--kit-modal-translate-x: -50%;
+}
+
+:where(
+	.kit-modal__content:is(
+		[data-position='top'],
+		[data-position='top-left'],
+		[data-position='top-right']
+	)
+) {
+	--kit-modal-top: var(--kit-modal-space);
+}
+
+:where(
+	.kit-modal__content:is(
+		[data-position='center'],
+		[data-position='center-left'],
+		[data-position='center-right']
+	)
+) {
+	--kit-modal-top: 50%;
+	--kit-modal-translate-y: -50%;
+}
+
+:where(
+	.kit-modal__content:is(
+		[data-position='bottom'],
+		[data-position='bottom-left'],
+		[data-position='bottom-right']
+	)
+) {
+	--kit-modal-bottom: var(--kit-modal-space);
+}
+
+:where(
+	.kit-modal__content:is(
+		[data-position='top-left'],
+		[data-position='center-left'],
+		[data-position='bottom-left']
+	)
+) {
+	--kit-modal-left: var(--kit-modal-space);
+}
+
+:where(
+	.kit-modal__content:is(
+		[data-position='top-right'],
+		[data-position='center-right'],
+		[data-position='bottom-right']
+	)
+) {
+	--kit-modal-right: var(--kit-modal-space);
+}
+
+/**
+ * rounded
+ * @link https://lapikit.dev/docs/customize
+ */
+@include rounded(kit-modal, (0, xs, sm, md, lg, xl, full));
+
+/**
+ * density
+ * @link https://lapikit.dev/docs/components/modal#density
+ */
+@include density(kit-modal);
