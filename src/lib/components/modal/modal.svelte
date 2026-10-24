@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { get } from 'svelte/store';
-	import { splitAriaAttrs, useComponentAttrs, useElevation } from '$lib/utils';
-	import { modalOpen, modalStack, popModal, pushModal, setOpenModal } from './modal.ts';
+	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { modalStack, popModal, pushModal } from './modal.ts';
 	import type { ModalProps } from './modal.types.ts';
 
 	const modalId = $props.id();
@@ -44,7 +44,6 @@
 		)
 	);
 	let elevationState = $derived(useElevation(elevation));
-	let split = $derived(splitAriaAttrs(attrs.rest));
 
 	$effect(() => {
 		if (open && !wasPushed) {
@@ -53,18 +52,6 @@
 		} else if (!open && wasPushed) {
 			popModal(modalId);
 			wasPushed = false;
-		}
-	});
-
-	$effect(() => {
-		if (open !== undefined && !contain) {
-			setOpenModal(open ? (persistent ? 'persistent' : true) : false);
-		}
-	});
-
-	$effect(() => {
-		if ($modalOpen === false && !contain) {
-			open = false;
 		}
 	});
 
@@ -94,16 +81,21 @@
 	function handleClose() {
 		if (!persistent) open = false;
 	}
+
+	function show(node: HTMLDialogElement) {
+		node.show();
+		return {
+			destroy() {
+				node.close();
+			}
+		};
+	}
 </script>
 
 {#if open}
 	<div
-		bind:this={ref}
 		class={attrs.class}
 		style={attrs.style}
-		role="dialog"
-		aria-modal={!contain}
-		{...split.aria}
 		data-contain={contain}
 		data-density={density}
 		data-rounded={rounded}
@@ -112,18 +104,19 @@
 			<div class="kit-modal__overlay" role="presentation" onclick={handleClose}></div>
 		{/if}
 
-		<div
-			{...split.others}
+		<dialog
+			bind:this={ref}
+			use:show
+			{...attrs.rest}
 			class={['kit-modal__content', classContent]}
 			data-size={size}
 			data-position={position}
 			data-elevation={elevationState.base}
 			data-elevation-hover={elevationState.hover}
 			data-elevation-active={elevationState.active}
-			onclick={(event: MouseEvent) => event.stopPropagation()}
 		>
 			{@render children?.()}
-		</div>
+		</dialog>
 	</div>
 {/if}
 

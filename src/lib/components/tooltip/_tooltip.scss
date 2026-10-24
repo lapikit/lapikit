@@ -35,7 +35,6 @@
 	color: var(--kit-tooltip-fg);
 	font-size: 0.875rem;
 	overflow-wrap: break-word;
-	pointer-events: none;
 	box-shadow: 0 16px 29px -10px color-mix(in oklab, var(--kit-color-shadow) 18%, transparent);
 	animation: kit-tooltip-enter 150ms ease;
 

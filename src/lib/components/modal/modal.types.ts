@@ -14,7 +14,7 @@ type ModalPosition =
 	| 'bottom-right';
 
 export interface ModalProps extends Component {
-	ref?: HTMLDivElement | null;
+	ref?: HTMLDialogElement | null;
 	open?: boolean;
 	contain?: boolean;
 	size?: ModalSize;
