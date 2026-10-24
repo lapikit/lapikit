@@ -102,7 +102,7 @@
 			type={type || 'button'}
 			{checked}
 			{value}
-			aria-label={String(label || value)}
+			aria-label={label || (value != null ? String(value) : undefined)}
 			disabled={isDisabled}
 		/>
 	{:else}

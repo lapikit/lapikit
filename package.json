@@ -80,6 +80,9 @@
 			"default": "./dist/hooks/actions.js"
 		}
 	},
+	"dependencies": {
+		"esm-env": "^1.2.2"
+	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"
 	},
