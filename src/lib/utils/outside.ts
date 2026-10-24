@@ -43,8 +43,19 @@ export function clickOutside(node: HTMLElement, options: ClickOutsideOptions) {
 	};
 }
 
-export function disabledScroll(state: boolean) {
-	if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-		document.body.style.overflow = state ? 'hidden' : '';
+let scrollLocks = 0;
+let previousOverflow = '';
+
+/** Blocks the scroll of the page; each call needs its own unlockScroll() */
+export function lockScroll() {
+	if (typeof document === 'undefined') return;
+	if (scrollLocks++ === 0) {
+		previousOverflow = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
 	}
+}
+
+export function unlockScroll() {
+	if (typeof document === 'undefined' || scrollLocks === 0) return;
+	if (--scrollLocks === 0) document.body.style.overflow = previousOverflow;
 }

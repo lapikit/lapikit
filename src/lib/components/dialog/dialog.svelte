@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { disabledScroll, splitAriaAttrs, useComponentAttrs, useElevation } from '$lib/utils';
+	import {
+		lockScroll,
+		splitAriaAttrs,
+		unlockScroll,
+		useComponentAttrs,
+		useElevation
+	} from '$lib/utils';
 	import type { DialogProps } from './dialog.types.ts';
 
 	let {
@@ -48,12 +54,12 @@
 		if (!open && ref.open) {
 			ref.close();
 		}
+	});
 
-		disabledScroll(open);
-
-		return () => {
-			disabledScroll(false);
-		};
+	$effect(() => {
+		if (!open) return;
+		lockScroll();
+		return unlockScroll;
 	});
 
 	function handleClose() {
