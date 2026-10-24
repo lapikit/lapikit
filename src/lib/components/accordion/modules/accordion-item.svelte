@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { useComponentAttrs, useElevation } from '$lib/utils';
-	import type { AccordionItemModelProps, AccordionItemProps } from '../accordion.types.ts';
+	import type { AccordionItemProps, ModelAccordionItemProps } from '../accordion.types.ts';
 
 	let {
 		ref = $bindable(),
@@ -32,7 +32,7 @@
 	const contentId = `${uid}-content`;
 
 	let safeOpen = $derived(!!open);
-	let model: AccordionItemModelProps = {
+	let model: ModelAccordionItemProps = {
 		get open() {
 			return safeOpen;
 		}
