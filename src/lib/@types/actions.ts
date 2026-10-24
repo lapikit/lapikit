@@ -6,9 +6,6 @@ export type AccordionOptions = {
 	readOnly?: boolean;
 };
 
-/**Modal */
-export type ModalState = boolean | 'persistent';
-
 /**Theme */
 export type ThemeOptions = {
 	name?: string;

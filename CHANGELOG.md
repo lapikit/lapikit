@@ -3,6 +3,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.6] - 2026-10-24
+
+### Updated
+
+- `kit:modal` is a non-blocking window built on a native `<dialog>`: it no longer locks the scroll and drops `aria-modal`.
+- `kit:modal`: `ref` is now the `<dialog>` element.
+- `kit:tooltip` can be hovered: the pointer can move onto it without closing it (WCAG 1.4.13).
+- `kit:tooltip`: Escape closes it even when it was opened by hover.
+
+### Fixed
+
+- `kit:modal`: closing a modal no longer closes the other ones.
+- `kit:modal`: the `onclick` of the user is no longer ignored.
+
 ## [0.7.5] - 2026-10-24
 
 ### Fixed

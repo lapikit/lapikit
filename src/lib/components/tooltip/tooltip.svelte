@@ -33,6 +33,7 @@
 
 	let triggerRef = $state<HTMLElement | null>(null);
 	let timer: ReturnType<typeof setTimeout> | null = null;
+	let focused = false;
 	let mounted = $derived(open || forceMount || !!tooltip);
 
 	const clearTimer = () => {
@@ -43,6 +44,7 @@
 	const handleHoverOpen = () => {
 		if (disabled) return;
 		clearTimer();
+		if (open) return;
 		timer = setTimeout(() => {
 			open = true;
 			timer = null;
@@ -51,6 +53,7 @@
 
 	const handleFocusOpen = () => {
 		if (disabled) return;
+		focused = true;
 		clearTimer();
 		open = true;
 	};
@@ -60,12 +63,32 @@
 		open = false;
 	};
 
+	const handleHoverClose = () => {
+		clearTimer();
+		if (focused) return;
+		timer = setTimeout(handleClose, 100);
+	};
+
+	const handleFocusClose = () => {
+		focused = false;
+		handleClose();
+	};
+
 	$effect(() => {
 		if (disabled) open = false;
 	});
 
 	$effect(() => {
 		ref = triggerRef;
+	});
+
+	$effect(() => {
+		if (!open) return;
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') handleClose();
+		};
+		document.addEventListener('keydown', onKeyDown);
+		return () => document.removeEventListener('keydown', onKeyDown);
 	});
 
 	onDestroy(clearTimer);
@@ -77,10 +100,9 @@
 	class="kit-tooltip-trigger"
 	aria-describedby={open ? tooltipId : undefined}
 	onmouseenter={handleHoverOpen}
-	onmouseleave={handleClose}
+	onmouseleave={handleHoverClose}
 	onfocusin={handleFocusOpen}
-	onfocusout={handleClose}
-	onkeydown={(event) => event.key === 'Escape' && handleClose()}
+	onfocusout={handleFocusClose}
 >
 	{@render children?.()}
 </span>
@@ -105,6 +127,8 @@
 			flip: avoidCollisions
 		}}
 		{...attrs.rest}
+		onmouseenter={clearTimer}
+		onmouseleave={handleHoverClose}
 	>
 		{#if tooltip}
 			{@render tooltip()}

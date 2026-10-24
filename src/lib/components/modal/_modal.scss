@@ -65,6 +65,7 @@ $sizes: (
 
 	&__content {
 		position: fixed;
+		margin: 0;
 		top: var(--kit-modal-top);
 		right: var(--kit-modal-right);
 		bottom: var(--kit-modal-bottom);
