@@ -6,6 +6,7 @@
       "name": "lapikit",
       "dependencies": {
         "esm-env": "^1.2.2",
+        "magic-string": "^0.30.21",
       },
       "devDependencies": {
         "@eslint/compat": "^1.2.5",

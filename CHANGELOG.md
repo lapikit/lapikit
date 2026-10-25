@@ -10,10 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `lapikit/components` exports the props types of every component (`ButtonProps`, `CardProps`, `TextfieldProps`...) and the shared types (`ColorProps`, `ElevationProps`, `RoundedType`...).
 - `lapikit/labs/components` exports `SheetProps`.
 - `lapikit/actions` has its types condition.
+- `themeScript()` applies the stored theme before the first paint (no flash with SSR).
+- The preprocessor returns a source map: errors and devtools point to the right lines.
+- `engines` field and `.nvmrc` (Node 20.19 or later).
+
+### Removed
+
+- The legacy `theme` store of `lapikit/actions`: use `createGlobalTheme().active`.
 
 ### Fixed
 
 - `DensityType` lists the five densities.
+- The theme no longer throws when `localStorage` is blocked (private browsing).
 
 ## [0.7.6] - 2026-10-24
 

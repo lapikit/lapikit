@@ -1,3 +1,4 @@
+import MagicString from 'magic-string';
 import type { ComponentInfo, KitComponentScan } from './@types/index.js';
 import { rewriteDirectives } from './directives.js';
 
@@ -6,21 +7,14 @@ export const decodeSourceMap = (
 	componentInfo: Map<string, ComponentInfo>
 ): KitComponentScan => {
 	const importedComponents = new Map<string, string>();
-	const parts: string[] = [];
+	const magic = new MagicString(content);
 	let changed = false;
 	let index = 0;
 	const length = content.length;
 
 	while (index < length) {
 		const nextLt = content.indexOf('<', index);
-		if (nextLt === -1) {
-			parts.push(content.slice(index));
-			break;
-		}
-
-		if (nextLt > index) {
-			parts.push(content.slice(index, nextLt));
-		}
+		if (nextLt === -1) break;
 
 		const ch = content[nextLt + 1];
 		const isClosing = ch === '/';
@@ -30,27 +24,18 @@ export const decodeSourceMap = (
 			const nameEnd = nextLt + tagName.length + 1;
 			const afterName = content[nameEnd];
 			if (afterName && !/[\s>/]/.test(afterName)) {
-				parts.push('<');
 				index = nextLt + 1;
 				continue;
 			}
 
 			const openEnd = findTagEnd(content, nameEnd);
-			if (openEnd === -1) {
-				parts.push(content.slice(nextLt));
-				break;
-			}
+			if (openEnd === -1) break;
 
 			const closeTag = `</${tagName}>`;
 			const closeStart = content.indexOf(closeTag, openEnd + 1);
-			if (closeStart === -1) {
-				parts.push(content.slice(nextLt));
-				break;
-			}
+			if (closeStart === -1) break;
 
-			const closeEnd = closeStart + closeTag.length;
-			parts.push(content.slice(nextLt, closeEnd));
-			index = closeEnd;
+			index = closeStart + closeTag.length;
 			continue;
 		}
 
@@ -59,7 +44,6 @@ export const decodeSourceMap = (
 			(isClosing && content.startsWith('</kit:', nextLt));
 
 		if (!isKitTag) {
-			parts.push('<');
 			index = nextLt + 1;
 			continue;
 		}
@@ -77,7 +61,6 @@ export const decodeSourceMap = (
 
 		const shortName = content.slice(nameStart, nameEnd);
 		if (!shortName) {
-			parts.push('<');
 			index = nextLt + 1;
 			continue;
 		}
@@ -86,17 +69,12 @@ export const decodeSourceMap = (
 		const isKnown = info !== undefined;
 		if (isClosing) {
 			const tagEnd = content.indexOf('>', nameEnd);
-			if (tagEnd === -1) {
-				parts.push(content.slice(nextLt));
-				break;
-			}
+			if (tagEnd === -1) break;
 
 			if (isKnown) {
 				importedComponents.set(info!.name, info!.ref);
-				parts.push(`</${info!.name}>`);
+				magic.overwrite(nextLt, tagEnd + 1, `</${info!.name}>`);
 				changed = true;
-			} else {
-				parts.push(content.slice(nextLt, tagEnd + 1));
 			}
 
 			index = tagEnd + 1;
@@ -104,26 +82,25 @@ export const decodeSourceMap = (
 		}
 
 		const tagEnd = findTagEnd(content, nameEnd);
-		if (tagEnd === -1) {
-			parts.push(content.slice(nextLt));
-			break;
-		}
+		if (tagEnd === -1) break;
 
 		if (isKnown) {
 			importedComponents.set(info!.name, info!.ref);
+			magic.overwrite(nextLt, nameEnd, `<${info!.name}`);
 			// class: / style: are refused by Svelte on a component: they become s-class_ / s-style_ props
-			parts.push(`<${info!.name}${rewriteDirectives(content.slice(nameEnd, tagEnd + 1))}`);
+			const attributes = content.slice(nameEnd, tagEnd + 1);
+			const rewritten = rewriteDirectives(attributes);
+			if (rewritten !== attributes) magic.overwrite(nameEnd, tagEnd + 1, rewritten);
 			changed = true;
-		} else {
-			parts.push(content.slice(nextLt, tagEnd + 1));
 		}
 
 		index = tagEnd + 1;
 	}
 
 	return {
-		code: changed ? parts.join('') : content,
+		code: changed ? magic.toString() : content,
 		changed,
+		magic,
 		importedComponents
 	};
 };
