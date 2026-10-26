@@ -1,3 +1,4 @@
+import type MagicString from 'magic-string';
 import type { Snippet } from 'svelte';
 import type {
 	ClassNameType,
@@ -33,6 +34,7 @@ export interface Component extends Base {
 export type KitComponentScan = {
 	code: string;
 	changed: boolean;
+	magic: MagicString;
 	importedComponents: Map<string, string>;
 };
 

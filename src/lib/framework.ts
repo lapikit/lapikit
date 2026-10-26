@@ -53,7 +53,7 @@ export function collectDeclaredIdentifiers(content: string): Set<string> {
 
 export function liliCore(options?: LapikitPreprocessOptions) {
 	return {
-		markup({ content }: { content: string; filename?: string }) {
+		markup({ content, filename }: { content: string; filename?: string }) {
 			if (!content.includes('<kit:')) return;
 
 			const componentInfo = new Map<string, ComponentInfo>();
@@ -90,7 +90,7 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 
 			if (!scanResult.changed) return;
 
-			let processedContent = scanResult.code;
+			const { magic } = scanResult;
 			const importedComponents = scanResult.importedComponents;
 
 			// components already declared by the user (manual import, alias...) are not imported again
@@ -126,30 +126,26 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 						.join('');
 
 				const scriptRegex = /<script(?![^>]*\bmodule\b)([^>]*)>/;
-				const scriptMatch = processedContent.match(scriptRegex);
+				const scriptMatch = content.match(scriptRegex);
 
 				if (scriptMatch && scriptMatch.index !== undefined) {
-					const insertPos = scriptMatch.index + scriptMatch[0].length;
-					processedContent =
-						processedContent.slice(0, insertPos) + importLines + processedContent.slice(insertPos);
+					magic.appendLeft(scriptMatch.index + scriptMatch[0].length, importLines);
 				} else {
-					const moduleScriptMatch = processedContent.match(/<script[^>]*\bmodule\b[^>]*>/);
+					const moduleScriptMatch = content.match(/<script[^>]*\bmodule\b[^>]*>/);
 
 					if (moduleScriptMatch && moduleScriptMatch.index !== undefined) {
 						const moduleScriptEnd =
-							processedContent.indexOf('</script>', moduleScriptMatch.index) + '</script>'.length;
-						processedContent =
-							processedContent.slice(0, moduleScriptEnd) +
-							`\n\n<script>${importLines}\n</script>` +
-							processedContent.slice(moduleScriptEnd);
+							content.indexOf('</script>', moduleScriptMatch.index) + '</script>'.length;
+						magic.appendLeft(moduleScriptEnd, `\n\n<script>${importLines}\n</script>`);
 					} else {
-						processedContent = `<script>${importLines}\n</script>\n\n` + processedContent;
+						magic.prepend(`<script>${importLines}\n</script>\n\n`);
 					}
 				}
 			}
 
 			return {
-				code: processedContent
+				code: magic.toString(),
+				map: magic.generateMap({ hires: true, source: filename, includeContent: true })
 			};
 		}
 	};

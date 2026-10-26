@@ -8,6 +8,25 @@ const isBrowser = typeof window !== 'undefined';
 const default_theme = 'light';
 const default_storage_key = '@lapikit/theme';
 
+// localStorage can throw (private browsing, blocked storage): the theme still applies, without being kept
+function readStorage(key: string): string | null {
+	if (!isBrowser) return null;
+	try {
+		return localStorage.getItem(key);
+	} catch {
+		return null;
+	}
+}
+
+function writeStorage(key: string, name: string) {
+	if (!isBrowser) return;
+	try {
+		localStorage.setItem(key, name);
+	} catch {
+		// ignored: see readStorage
+	}
+}
+
 function generateGlobalTheme() {
 	let active = $state(default_theme);
 	let key = default_storage_key;
@@ -22,9 +41,7 @@ function generateGlobalTheme() {
 
 	function set(name: string) {
 		applyToHtml(name);
-		if (isBrowser) {
-			localStorage.setItem(key, name);
-		}
+		writeStorage(key, name);
 	}
 
 	function init(params: ThemeOptions = {}) {
@@ -32,7 +49,7 @@ function generateGlobalTheme() {
 		initialized = true;
 
 		key = params.key ?? default_storage_key;
-		const stored = isBrowser ? localStorage.getItem(key) : null;
+		const stored = readStorage(key);
 		applyToHtml(stored ?? params.name ?? default_theme);
 	}
 
@@ -75,9 +92,7 @@ export function createTheme(): ThemeAction {
 
 	function set(name: string) {
 		applyTheme(name);
-		if (isBrowser && key) {
-			localStorage.setItem(key, name);
-		}
+		if (key) writeStorage(key, name);
 	}
 
 	// skip the effect's first automatic pass so the mount's own initial value (from
@@ -101,7 +116,7 @@ export function createTheme(): ThemeAction {
 		key = params.key;
 		overridden = params.overridden ?? false;
 
-		const stored = isBrowser && key ? localStorage.getItem(key) : null;
+		const stored = key ? readStorage(key) : null;
 		applyTheme(stored ?? params.name ?? (overridden ? default_theme : refGlobalTheme.active));
 
 		return {
@@ -124,32 +139,13 @@ export function createTheme(): ThemeAction {
 	};
 }
 
-/** LEGACY CODE
- * NEED UPDATE documentation with new theme system before removing this legacy code. The new theme system is designed to be more flexible and easier to use, allowing for better integration with Svelte's reactivity and component structure. It also provides a more consistent API for managing themes across different components and contexts.
- * TODO: Remove this legacy code once the new theme system is fully implemented and tested. This code is kept for backward compatibility with existing components that rely on the old theme system.
+/**
+ * themeScript - An inline script that applies the stored theme before the page is painted (no flash with SSR).
+ * Put it in the <head>: {@html themeScript()} inside <svelte:head>.
  */
-
-import { writable, type Writable } from 'svelte/store';
-
-// presets
-const themeRef: string = 'light';
-
-export const theme: Writable<string> = writable(themeRef);
-
-// export function useTheme(name: string, key: string = '@lapikit/theme') {
-// 	theme.update(() => {
-// 		if (isBrowser) {
-// 			const html = document.documentElement;
-
-// 			html.classList.forEach((cls) => {
-// 				if (cls.startsWith('kit-theme--')) {
-// 					html.classList.remove(cls);
-// 				}
-// 			});
-
-// 			html.classList.add(`kit-theme--${name}`);
-// 			localStorage.setItem(key, name);
-// 		}
-// 		return name;
-// 	});
-// }
+export function themeScript(params: Pick<ThemeOptions, 'name' | 'key'> = {}): string {
+	const key = JSON.stringify(params.key ?? default_storage_key);
+	const name = JSON.stringify(params.name ?? null);
+	const code = `(function(){var t=null;try{t=localStorage.getItem(${key})}catch(e){}t=t||${name};if(t)document.documentElement.setAttribute('data-kit-theme',t)})()`;
+	return `<script>${code.replace(/</g, '\\u003c')}</script>`;
+}

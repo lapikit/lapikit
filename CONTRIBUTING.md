@@ -86,9 +86,27 @@ We encourage contributions via pull requests (PRs)! Here's the process:
 
 To get started with development:
 
-1.  **Clone the Repository:** `git clone https://github.com/lapikit/lapikit.git`
-2.  **Install Dependencies:** `bun install`
-3.  **Run the Development Server:** `bun dev` (this will start the docs development server, as well as watch/build the library when changes are made)
+1.  **Use Node 20.19 or later:** the repository has an `.nvmrc`, run `nvm use` to switch to the right version.
+2.  **Clone the Repository:** `git clone https://github.com/lapikit/lapikit.git`
+3.  **Install Dependencies:** `bun install`
+4.  **Create a Playground:** `src/routes` is ignored by git, so each contributor keeps their own. Create `src/routes/+page.svelte` and import the components from `$lib/components`:
+
+    ```svelte
+    <script>
+    	import { KitApp, KitBtn } from '$lib/components';
+    </script>
+
+    <KitApp>
+    	<KitBtn>Hello</KitBtn>
+    </KitApp>
+    ```
+
+    The `<kit:btn>` syntax needs the Lili preprocessor, which is not set up in this repository: use the `Kit*` components here.
+
+5.  **Run the Development Server:** `bun dev`, then open the playground.
+6.  **Check Your Changes:** `bun run check`, `bun run lint` and `bun run test` must pass. `bun run build` builds the package in `dist` and runs `publint`.
+
+The documentation lives in a separate repository: [lapikit/lapikit.dev](https://github.com/lapikit/lapikit.dev).
 
 ## 7. Coding Style
 

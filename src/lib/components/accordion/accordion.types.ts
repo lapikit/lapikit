@@ -20,10 +20,6 @@ export interface AccordionProps extends Component {
 	hideIcon?: boolean;
 }
 
-export type AccordionItemModelProps = {
-	open: boolean;
-};
-
 export interface AccordionItemProps extends Component {
 	ref?: HTMLElement | null;
 	is?: 'div';
@@ -34,7 +30,7 @@ export interface AccordionItemProps extends Component {
 	open?: boolean;
 	disabled?: boolean;
 	toggle?: (index: number | string) => void;
-	indicator?: Snippet<[AccordionItemModelProps]>;
+	indicator?: Snippet<[ModelAccordionItemProps]>;
 	activator?: Snippet;
 	elevation?: ElevationProps;
 }

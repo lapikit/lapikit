@@ -1,6 +1,6 @@
 {
 	"name": "lapikit",
-	"version": "0.7.6",
+	"version": "0.7.7",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
@@ -77,11 +77,16 @@
 			"default": "./dist/labs/*"
 		},
 		"./actions": {
+			"types": "./dist/hooks/actions.d.ts",
 			"default": "./dist/hooks/actions.js"
 		}
 	},
+	"engines": {
+		"node": "^20.19.0 || >=22.12.0"
+	},
 	"dependencies": {
-		"esm-env": "^1.2.2"
+		"esm-env": "^1.2.2",
+		"magic-string": "^0.30.21"
 	},
 	"peerDependencies": {
 		"svelte": "^5.20.0"
