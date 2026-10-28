@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { useComponentAttrs, useElevation } from '$lib/utils';
 	import { ripple } from '$lib/animations';
+	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ChipProps } from './chip.types.ts';
 
 	let {
@@ -26,6 +27,7 @@
 		checked,
 		value,
 		label,
+		tooltip,
 		noRipple,
 		load,
 		append,
@@ -46,6 +48,7 @@
 	let isDisabled = $derived(!!disabled);
 	let isReadonly = $derived(!!readonly);
 	let isLocked = $derived(isDisabled || isReadonly);
+	let focusableDisabled = $derived(isLocked && !!tooltip);
 	let hasPressHandler = $derived(
 		['onclick', 'onkeydown', 'onkeyup'].some((key) => typeof attrs.rest[key] === 'function')
 	);
@@ -64,8 +67,17 @@
 	let isInteractive = $derived((interactive ?? (tag !== 'div' || hasPressHandler)) && !isLocked);
 	let resolvedHref = $derived(tag === 'a' && !isLocked ? href : undefined);
 	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isLocked : undefined);
-	let resolvedTabIndex = $derived(tag === 'a' && isLocked ? -1 : undefined);
+	let resolvedDisabled = $derived(tag === 'button' ? isLocked && !focusableDisabled : undefined);
+	let resolvedTabIndex = $derived(
+		tag === 'a' && isLocked ? (focusableDisabled ? 0 : -1) : undefined
+	);
+
+	// disabled with a tooltip: focusable, the click does nothing
+	const blockClick = (event: MouseEvent) => {
+		if (!focusableDisabled) return;
+		event.preventDefault();
+		event.stopPropagation();
+	};
 </script>
 
 <svelte:element
@@ -87,11 +99,14 @@
 	data-interactive={isInteractive}
 	data-active={active}
 	data-disabled={isDisabled}
+	data-disabled-focusable={(isDisabled && focusableDisabled) || undefined}
+	onclickcapture={blockClick}
 	data-readonly={isReadonly}
 	data-loading={loading}
 	data-label-style={labelStyle}
 	aria-busy={loading || undefined}
 	aria-disabled={isLocked || undefined}
+	use:tooltipAction={tooltip}
 	use:ripple={{
 		component: 'chip',
 		disabled: noRipple || !isInteractive
@@ -111,7 +126,8 @@
 			{checked}
 			{value}
 			aria-label={label || (value != null ? String(value) : undefined)}
-			disabled={isLocked}
+			disabled={isLocked && !focusableDisabled}
+			aria-disabled={focusableDisabled || undefined}
 		/>
 	{:else}
 		<span class="kit-chip__inner">

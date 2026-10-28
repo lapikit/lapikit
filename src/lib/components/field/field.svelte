@@ -16,6 +16,7 @@
 		rounded = 'md',
 		color,
 		elevation,
+		label,
 		disabled = false,
 		readonly = false,
 		error = false,
@@ -76,11 +77,16 @@
 	data-readonly={readonly}
 	data-error={error}
 	data-focused={focused}
+	data-with-label={!!label}
 	data-with-message={hasMessage}
 	onfocusin={() => (focused = true)}
 	onfocusout={() => (focused = false)}
 	{...attrs.rest}
 >
+	{#if label}
+		<label class="kit-field__label" for={controlId}>{label}</label>
+	{/if}
+
 	{#if prepend}
 		<div class="kit-field__prepend">{@render prepend()}</div>
 	{/if}

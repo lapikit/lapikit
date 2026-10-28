@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { useComponentAttrs, useElevation } from '$lib/utils';
 	import { ripple } from '$lib/animations';
+	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ButtonProps } from './btn.types.ts';
 
 	let {
@@ -25,6 +26,7 @@
 		checked,
 		value,
 		label,
+		tooltip,
 		wide,
 		noRipple,
 		load,
@@ -44,6 +46,7 @@
 
 	let isInput = $derived(!!input || is === 'input');
 	let isDisabled = $derived(!!disabled);
+	let focusableDisabled = $derived(isDisabled && !!tooltip);
 	let tag = $derived<'button' | 'a' | 'label' | 'div'>(
 		isInput
 			? type === 'checkbox' || type === 'radio'
@@ -55,8 +58,17 @@
 	);
 	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
 	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isDisabled : undefined);
-	let resolvedTabIndex = $derived(tag === 'a' && isDisabled ? -1 : undefined);
+	let resolvedDisabled = $derived(tag === 'button' ? isDisabled && !focusableDisabled : undefined);
+	let resolvedTabIndex = $derived(
+		tag === 'a' && isDisabled ? (focusableDisabled ? 0 : -1) : undefined
+	);
+
+	// disabled with a tooltip: focusable, the click does nothing
+	const blockClick = (event: MouseEvent) => {
+		if (!focusableDisabled) return;
+		event.preventDefault();
+		event.stopPropagation();
+	};
 </script>
 
 <svelte:element
@@ -78,12 +90,15 @@
 	data-interactive={true}
 	data-active={active}
 	data-disabled={isDisabled}
+	data-disabled-focusable={focusableDisabled || undefined}
+	onclickcapture={blockClick}
 	data-loading={loading}
 	data-block={block}
 	data-wide={wide}
 	data-icon={icon}
 	aria-busy={loading || undefined}
 	aria-disabled={isDisabled || undefined}
+	use:tooltipAction={tooltip}
 	use:ripple={{
 		component: 'btn',
 		disabled: noRipple || isDisabled
@@ -103,7 +118,8 @@
 			{checked}
 			{value}
 			aria-label={label || (value != null ? String(value) : undefined)}
-			disabled={isDisabled}
+			disabled={isDisabled && !focusableDisabled}
+			aria-disabled={focusableDisabled || undefined}
 		/>
 	{:else}
 		<span class="kit-btn__inner">

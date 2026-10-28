@@ -125,7 +125,7 @@
 	}
 
 	// apart from data-interactive: a focusable element always shows where the focus is
-	.#{$name}:not([data-disabled='true']):focus-visible {
+	.#{$name}:is(:not([data-disabled='true']), [data-disabled-focusable='true']):focus-visible {
 		outline: 2px solid var(--kit-color-focus);
 		outline-offset: 2px;
 	}
@@ -134,6 +134,12 @@
 		opacity: var(--kit-disabled-opacity, 0.55);
 		pointer-events: none;
 		user-select: none;
+	}
+
+	// disabled with a tooltip: still hovered and focused to show it
+	.#{$name}[data-disabled-focusable='true'] {
+		pointer-events: auto;
+		cursor: not-allowed;
 	}
 }
 

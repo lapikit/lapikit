@@ -19,6 +19,7 @@ export interface FieldBaseProps {
 	rounded?: RoundedType | 'full';
 	color?: ColorProps;
 	elevation?: ElevationProps;
+	label?: string;
 	disabled?: boolean;
 	readonly?: boolean;
 	error?: boolean;

@@ -6,19 +6,6 @@
 	--kit-tooltip-arrow: 0.35rem;
 }
 
-.kit-tooltip-trigger {
-	display: inline-flex;
-	align-self: start;
-	justify-self: start;
-	width: fit-content;
-	max-width: max-content;
-
-	&:focus-visible {
-		outline: 2px solid var(--kit-color-focus);
-		outline-offset: 2px;
-	}
-}
-
 .kit-tooltip {
 	position: fixed;
 	inset: auto;
@@ -115,5 +102,11 @@
 @media (prefers-reduced-motion: reduce) {
 	.kit-tooltip {
 		animation: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.kit-tooltip {
+		border: 1px solid CanvasText;
 	}
 }

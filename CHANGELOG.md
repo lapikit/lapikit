@@ -3,6 +3,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Insiders
+
+### Added
+
+- `kit:field` and `kit:textfield`: `label` shows a label above the field, linked to the control.
+- `kit:btn`, `kit:chip` and `kit:icon`: `tooltip` shows a tooltip on hover and keyboard focus, as a text or as options (`location`, `variant`, `delayDuration`...). One tooltip is shared by the page and loaded on the first hover or focus. A disabled button or chip with a tooltip stays focusable and hoverable (`aria-disabled`), and its click does nothing.
+
+### Changed
+
+- `kit:tooltip`, `kit:dropdown` and `kit:popover`: the `trigger(props)` snippet replaces `children` (tooltip) and `activator` (dropdown, popover); spread `props` on the trigger element. The tooltip no longer wraps its trigger in a `<span>`.
+- `kit:tooltip`: always in the DOM, linked to the trigger with `aria-describedby` (or `aria-labelledby` with `asLabel`); not shown on touch, hidden on pointer down, opened at once only on keyboard focus; new `closeDelay`; `ref` is the tooltip; `forceMount` is removed.
+- `kit:dropdown`: the trigger gets `aria-haspopup`, `aria-expanded` and `aria-controls`; arrow keys, Home and End move between the items, Escape closes and gives the focus back; `open` is bindable; `openAt(event)` opens a context menu. `ModelDropdownProps` and `ModelDropdownHandleProps` are replaced by `DropdownTriggerProps` and `DropdownTriggerModel`.
+- `kit:popover`: the trigger gets `aria-haspopup`, `aria-expanded` and `aria-controls`; the focus moves into the popover on open and back to the trigger on Escape; the popover closes when the focus leaves it. `ModelPopoverProps` is replaced by `PopoverTriggerProps`.
+- `kit:textfield`: `min` and `max` are replaced by the native `minlength` and `maxlength`; `min` and `max` now go to the input, and a value set by code is no longer cut.
+
 ## [0.7.9] - 2026-10-28
 
 ### Removed

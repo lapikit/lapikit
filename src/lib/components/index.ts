@@ -32,8 +32,8 @@ export type { ChipProps } from './chip/chip.types';
 export type { DialogProps } from './dialog/dialog.types';
 export type {
 	DropdownProps,
-	ModelDropdownProps,
-	ModelDropdownHandleProps
+	DropdownTriggerProps,
+	DropdownTriggerModel
 } from './dropdown/dropdown.types';
 export type {
 	FieldProps,
@@ -50,12 +50,17 @@ export type {
 	ListItemElement
 } from './list/list.types';
 export type { ModalProps } from './modal/modal.types';
-export type { PopoverProps, ModelPopoverProps } from './popover/popover.types';
+export type { PopoverProps, PopoverTriggerProps } from './popover/popover.types';
 export type { SeparatorProps } from './separator/separator.types';
 export type { SpacerProps } from './spacer/spacer.types';
 export type { TextfieldProps } from './textfield/textfield.types';
 export type { ToolbarProps } from './toolbar/toolbar.types';
-export type { TooltipProps } from './tooltip/tooltip.types';
+export type {
+	TooltipProps,
+	TooltipTriggerProps,
+	TooltipOptions,
+	TooltipValue
+} from './tooltip/tooltip.types';
 
 // components
 export { default as KitApp } from './app/app.svelte';
