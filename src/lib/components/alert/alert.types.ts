@@ -9,6 +9,7 @@ export interface AlertProps extends Component {
 	is?: 'div' | 'section' | 'aside' | 'article';
 	open?: boolean;
 	closable?: boolean;
+	closeLabel?: string;
 	multiline?: boolean;
 	variant?: AlertVariant;
 	size?: SizeType;

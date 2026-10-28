@@ -28,6 +28,7 @@ export interface FieldBaseProps {
 	messageSuffix?: string;
 	persistentMessage?: boolean;
 	clearable?: boolean;
+	clearLabel?: string;
 	persistentClear?: boolean;
 	prefix?: string;
 	suffix?: string;

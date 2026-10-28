@@ -39,3 +39,9 @@
  * @link https://lapikit.dev/docs/components/popover#density
  */
 @include density(kit-popover-content);
+
+@media (prefers-reduced-motion: reduce) {
+	.kit-popover-content {
+		animation: none;
+	}
+}

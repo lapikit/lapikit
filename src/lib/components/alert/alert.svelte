@@ -12,6 +12,7 @@
 		's-style': sStyle,
 		open = $bindable(true),
 		closable,
+		closeLabel = 'Close',
 		multiline,
 		size = 'md',
 		variant = 'filled',
@@ -77,7 +78,7 @@
 			<button
 				class="kit-alert__close"
 				type="button"
-				aria-label="Close"
+				aria-label={closeLabel}
 				onclick={() => (open = false)}
 			>
 				{#if close}
