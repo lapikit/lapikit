@@ -1,0 +1,34 @@
+:global(.kit-textarea .kit-field__box) {
+	align-items: flex-start;
+	padding-block: var(--kit-field-padding);
+}
+
+:global(.kit-textarea .kit-field__control) {
+	align-self: stretch;
+}
+
+.kit-textarea__input {
+	appearance: none;
+	flex: 1 1 auto;
+	box-sizing: border-box;
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: none;
+	background: transparent;
+	box-shadow: none;
+	color: inherit;
+	font: inherit;
+	line-height: 1.5;
+	resize: none;
+}
+
+:global(.kit-textarea[data-resize='true']) .kit-textarea__input {
+	resize: vertical;
+}
+
+.kit-textarea__input[readonly] {
+	cursor: default;
+}
