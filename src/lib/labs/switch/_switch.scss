@@ -1,0 +1,64 @@
+@use '../choice' as *;
+
+@include choice(kit-switch, 999px);
+
+:where(.kit-switch) {
+	--kit-switch-gap: 0.1875rem;
+	--kit-switch-thumb: calc(var(--kit-switch-size) - var(--kit-switch-gap) * 2);
+}
+
+.kit-switch__control {
+	width: calc(var(--kit-switch-size) * 1.8);
+}
+
+.kit-switch[data-reverse='true'] .kit-switch__label {
+	flex-direction: row-reverse;
+	justify-content: space-between;
+}
+
+.kit-switch[data-reverse='true'] .kit-switch__message {
+	padding-inline-start: 0;
+}
+
+.kit-switch__thumb {
+	position: absolute;
+	inset-block-start: var(--kit-switch-gap);
+	inset-inline-start: var(--kit-switch-gap);
+	width: var(--kit-switch-thumb);
+	height: var(--kit-switch-thumb);
+	border-radius: 50%;
+	background-color: color-mix(in oklab, currentColor 60%, transparent);
+	pointer-events: none;
+	transition:
+		translate 150ms ease,
+		background-color 150ms ease;
+}
+
+.kit-switch__input:checked + .kit-switch__thumb {
+	background-color: var(--kit-switch-fg);
+	translate: calc(var(--kit-switch-size) * 0.8) 0;
+}
+
+:global(:dir(rtl)) .kit-switch__input:checked + .kit-switch__thumb {
+	translate: calc(var(--kit-switch-size) * -0.8) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kit-switch__thumb {
+		transition: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.kit-switch__thumb {
+		background-color: CanvasText;
+	}
+
+	.kit-switch__input:checked + .kit-switch__thumb {
+		background-color: Canvas;
+	}
+}
+
+.kit-switch:not([data-reverse='true']) .kit-switch__message {
+	padding-inline-start: calc(var(--kit-switch-size) * 1.8 + 0.5rem);
+}

@@ -1,0 +1,16 @@
+@use '../choice' as *;
+
+@include choice(kit-checkbox, 0.25rem);
+
+.kit-checkbox__icon {
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	color: var(--kit-checkbox-fg);
+	opacity: 0;
+	pointer-events: none;
+}
+
+.kit-checkbox__input:is(:checked, :indeterminate) + .kit-checkbox__icon {
+	opacity: 1;
+}

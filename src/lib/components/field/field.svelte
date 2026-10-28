@@ -84,7 +84,7 @@
 	{...attrs.rest}
 >
 	{#if label}
-		<label class="kit-field__label" for={controlId}>{label}</label>
+		<label class="kit-field__label" id="{controlId}-label" for={controlId}>{label}</label>
 	{/if}
 
 	{#if prepend}

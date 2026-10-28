@@ -1,0 +1,85 @@
+// the list of options of the select and the autocomplete (aria-activedescendant)
+@mixin listbox($name) {
+	:where(.#{$name}__menu) {
+		--#{$name}-menu-bg: var(--kit-color-surface-3);
+		--#{$name}-menu-fg: var(--kit-color-text);
+		--#{$name}-option-active: color-mix(in oklab, currentColor 8%, transparent);
+		--#{$name}-option-selected: var(--kit-field-color, var(--kit-color-accent));
+	}
+
+	.#{$name}__menu {
+		position: fixed;
+		inset: auto;
+		z-index: 1800;
+		box-sizing: border-box;
+		max-width: calc(100vw - 1rem);
+		max-height: min(18rem, 50vh);
+		margin: 0;
+		padding: 0.25rem;
+		overflow-y: auto;
+		border: 0;
+		border-radius: var(--kit-field-radius);
+		background-color: var(--#{$name}-menu-bg);
+		color: var(--#{$name}-menu-fg);
+		font-size: var(--kit-field-font);
+		box-shadow: 0 4px 16px color-mix(in oklab, var(--kit-color-shadow) 18%, transparent);
+		overscroll-behavior: contain;
+	}
+
+	.#{$name}__option {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		border-radius: calc(var(--kit-field-radius) - 0.125rem);
+		cursor: pointer;
+		user-select: none;
+
+		&[data-active='true'] {
+			background-color: var(--#{$name}-option-active);
+		}
+
+		&[aria-selected='true'] {
+			color: var(--#{$name}-option-selected);
+			font-weight: 500;
+		}
+
+		&[aria-disabled='true'] {
+			opacity: var(--kit-disabled-opacity, 0.55);
+			cursor: not-allowed;
+		}
+	}
+
+	.#{$name}__check {
+		flex: none;
+		box-sizing: border-box;
+		width: 1rem;
+		height: 1rem;
+		border: 2px solid currentColor;
+		border-radius: 0.25rem;
+
+		&[data-checked='true'] {
+			border-color: var(--#{$name}-option-selected);
+			background:
+				center / 0.75rem no-repeat
+					url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z' fill='white'/%3E%3C/svg%3E"),
+				var(--#{$name}-option-selected);
+		}
+	}
+
+	.#{$name}__empty {
+		padding: 0.5rem 0.75rem;
+		opacity: 0.7;
+	}
+
+	@media (forced-colors: active) {
+		.#{$name}__menu {
+			border: 1px solid CanvasText;
+		}
+
+		.#{$name}__option[data-active='true'] {
+			outline: 2px solid Highlight;
+			outline-offset: -2px;
+		}
+	}
+}

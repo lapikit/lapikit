@@ -1,0 +1,126 @@
+@use 'sass:list';
+@use '$lib/styles' as *;
+
+// shared styles of the checkbox and the radio: a native input drawn as a box (or a circle)
+@mixin choice($name, $radius) {
+	:where(.#{$name}) {
+		@include color(#{$name}, var(--kit-color-accent), var(--kit-color-on-accent));
+
+		--#{$name}-size: 1.125rem;
+		--#{$name}-font: var(--kit-font-md, 1rem);
+	}
+
+	$sizes: (
+		xs: (
+			0.875rem,
+			var(--kit-font-xs)
+		),
+		sm: (
+			1rem,
+			var(--kit-font-sm)
+		),
+		md: (
+			1.125rem,
+			var(--kit-font-md, 1rem)
+		),
+		lg: (
+			1.25rem,
+			var(--kit-font-lg)
+		),
+		xl: (
+			1.5rem,
+			var(--kit-font-xl)
+		)
+	);
+
+	@each $size, $values in $sizes {
+		:where(.#{$name}[data-size='#{$size}']) {
+			--#{$name}-size: #{list.nth($values, 1)};
+			--#{$name}-font: #{list.nth($values, 2)};
+		}
+	}
+
+	.#{$name} {
+		display: inline-flex;
+		flex-direction: column;
+		gap: 0.125rem;
+		font-size: var(--#{$name}-font);
+
+		&[data-disabled='true'] {
+			opacity: var(--kit-disabled-opacity, 0.55);
+		}
+
+		&[data-error='true'] {
+			--#{$name}-bg: var(--kit-color-error);
+		}
+	}
+
+	.#{$name}__label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+	}
+
+	.#{$name}[data-disabled='true'] .#{$name}__label {
+		cursor: not-allowed;
+	}
+
+	.#{$name}__control {
+		position: relative;
+		display: inline-grid;
+		flex: none;
+		place-items: center;
+		width: var(--#{$name}-size);
+		height: var(--#{$name}-size);
+	}
+
+	.#{$name}__input {
+		appearance: none;
+		box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		border: 2px solid color-mix(in oklab, currentColor 60%, transparent);
+		border-radius: $radius;
+		background: transparent;
+		cursor: inherit;
+		@include color-transition((background-color, border-color));
+
+		&:checked,
+		&:indeterminate {
+			border-color: var(--#{$name}-bg);
+			background-color: var(--#{$name}-bg);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--kit-color-focus);
+			outline-offset: 2px;
+		}
+	}
+
+	.#{$name}[data-error='true'] .#{$name}__input {
+		border-color: var(--kit-color-error);
+	}
+
+	.#{$name}__label:hover .#{$name}__input:not(:disabled, :checked, :indeterminate) {
+		border-color: var(--#{$name}-bg);
+	}
+
+	.#{$name}__message {
+		padding-inline-start: calc(var(--#{$name}-size) + 0.5rem);
+		font-size: 0.75rem;
+		line-height: 1.2;
+	}
+
+	.#{$name}[data-error='true'] .#{$name}__message {
+		color: var(--kit-color-error);
+	}
+
+	@media (forced-colors: active) {
+		.#{$name}__input:checked,
+		.#{$name}__input:indeterminate {
+			background-color: Highlight;
+		}
+	}
+}

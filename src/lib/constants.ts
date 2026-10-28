@@ -34,7 +34,14 @@ export const lapikitComponentPaths: Readonly<Record<string, string>> = {
 
 export const lapikitLabsComponentPaths: Readonly<Record<string, string>> = {
 	sheet: 'sheet/sheet.svelte',
-	textarea: 'textarea/textarea.svelte'
+	textarea: 'textarea/textarea.svelte',
+	select: 'select/select.svelte',
+	checkbox: 'checkbox/checkbox.svelte',
+	radio: 'radio/radio.svelte',
+	'radio-group': 'radio/modules/radio-group.svelte',
+	switch: 'switch/switch.svelte',
+	slider: 'slider/slider.svelte',
+	autocomplete: 'autocomplete/autocomplete.svelte'
 };
 
 export const lapikitComponents: readonly string[] = Object.keys(lapikitComponentPaths);

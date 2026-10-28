@@ -1,0 +1,52 @@
+@use '../listbox' as *;
+
+@include listbox(kit-select);
+
+.kit-select__control {
+	display: flex;
+	flex: 1 1 auto;
+	align-items: center;
+	gap: var(--kit-field-gap);
+	align-self: stretch;
+	min-width: 0;
+	outline: none;
+	cursor: pointer;
+}
+
+:global(.kit-select[data-readonly='true']) .kit-select__control {
+	cursor: default;
+}
+
+.kit-select__selection {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	&[data-placeholder='true'] {
+		color: color-mix(in oklab, currentColor, transparent 40%);
+	}
+}
+
+.kit-select__chevron {
+	flex: none;
+	width: var(--kit-field-icon);
+	height: var(--kit-field-icon);
+	transition: rotate 150ms ease;
+}
+
+:global(.kit-select[data-open='true']) .kit-select__chevron {
+	rotate: 180deg;
+}
+
+.kit-select__validation {
+	position: absolute;
+	inset: auto 0 0;
+	width: 100%;
+	height: 1px;
+	padding: 0;
+	border: 0;
+	opacity: 0;
+	pointer-events: none;
+}
