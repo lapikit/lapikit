@@ -44,3 +44,9 @@
  * @link https://lapikit.dev/docs/components/dropdown#density
  */
 @include density(kit-dropdown-content);
+
+@media (prefers-reduced-motion: reduce) {
+	.kit-dropdown-content {
+		animation: none;
+	}
+}

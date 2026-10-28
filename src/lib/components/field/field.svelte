@@ -26,6 +26,7 @@
 		persistentMessage = false,
 		counter,
 		clearable = false,
+		clearLabel = 'Clear',
 		persistentClear = false,
 		dirty = false,
 		onclear,
@@ -117,7 +118,7 @@
 				type="button"
 				class="kit-field__clear"
 				data-visible={showClear}
-				aria-label="Clear"
+				aria-label={clearLabel}
 				tabindex={showClear ? undefined : -1}
 				{disabled}
 				onclick={() => onclear?.()}

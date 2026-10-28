@@ -30,6 +30,7 @@
 		messageSuffix,
 		persistentMessage,
 		clearable,
+		clearLabel,
 		persistentClear,
 		prefix,
 		suffix,
@@ -78,6 +79,7 @@
 	{messageSuffix}
 	{persistentMessage}
 	{clearable}
+	{clearLabel}
 	{persistentClear}
 	{prefix}
 	{suffix}

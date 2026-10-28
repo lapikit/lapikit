@@ -111,3 +111,9 @@
  * @link https://lapikit.dev/docs/components/tooltip#density
  */
 @include density(kit-tooltip);
+
+@media (prefers-reduced-motion: reduce) {
+	.kit-tooltip {
+		animation: none;
+	}
+}

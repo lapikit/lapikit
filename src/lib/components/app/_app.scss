@@ -107,6 +107,13 @@
 		border-radius: var(--system-ripple-radius);
 	}
 
+	@media (prefers-reduced-motion: reduce) {
+		.kit-ripple {
+			animation: none;
+			transition: none;
+		}
+	}
+
 	[data-elevation='0'],
 	[data-elevation-hover='0']:hover,
 	[data-elevation-active='0']:active {
