@@ -27,17 +27,20 @@
 	}
 
 	&:not([data-nav='true']) {
-		:global(.kit-list-item:first-child) {
+		:global(.kit-list-item:first-child:not(.kit-list-item-wrapper > *)),
+		:global(.kit-list-item-wrapper:first-child > .kit-list-item) {
 			border-start-start-radius: var(--kit-list-item-radius);
 			border-start-end-radius: var(--kit-list-item-radius);
 		}
 
-		:global(.kit-list-item:last-child) {
+		:global(.kit-list-item:last-child:not(.kit-list-item-wrapper > *)),
+		:global(.kit-list-item-wrapper:last-child > .kit-list-item) {
 			border-end-start-radius: var(--kit-list-item-radius);
 			border-end-end-radius: var(--kit-list-item-radius);
 		}
 
-		:global(.kit-list-item:not(:first-child, :last-child)) {
+		:global(.kit-list-item:not(:first-child, :last-child)),
+		:global(.kit-list-item-wrapper:not(:first-child, :last-child) > .kit-list-item) {
 			--kit-list-item-radius: 0;
 		}
 	}

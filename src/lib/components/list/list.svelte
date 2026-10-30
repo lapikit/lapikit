@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { useComponentAttrs } from '$lib/utils';
+	import { setListContext } from './list.context.ts';
 	import type { ListProps } from './list.types.ts';
 
 	let {
@@ -22,6 +23,16 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-list', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
+	let role = $derived(nav ? 'navigation' : is === 'ul' ? undefined : 'list');
+	let customRole = $derived(attrs.rest.role as string | undefined);
+
+	setListContext({
+		get item() {
+			if (customRole) return customRole === 'list' ? 'listitem' : undefined;
+			if (is === 'ul') return 'li';
+			return role === 'list' ? 'listitem' : undefined;
+		}
+	});
 </script>
 
 <svelte:element
@@ -34,7 +45,7 @@
 	data-density={density}
 	data-rounded={rounded}
 	data-nav={nav}
-	role={nav ? 'navigation' : is === 'ul' ? undefined : 'list'}
+	{role}
 	{...attrs.rest}
 >
 	{@render children?.()}
