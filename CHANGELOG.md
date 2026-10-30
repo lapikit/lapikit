@@ -3,11 +3,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-10-30
+
+### Added
+
+- `kit:field` and `kit:textfield`: new `label` prop.
+- `kit:btn`, `kit:chip` and `kit:icon`: new `tooltip` prop.
+- `kit:btn` and `kit:chip`: a disabled one with a tooltip stays focusable.
+- `kit:tooltip`: new `asLabel` and `closeDelay` props.
+- `kit:dropdown`: `open` is bindable, `openAt(event)` opens a context menu.
+- `kit:dropdown`: keyboard navigation between the items.
+- `kit:popover`: the focus moves into the popover and back to the trigger.
+
+### Changed
+
+- `kit:tooltip`, `kit:dropdown` and `kit:popover`: the `trigger(props)` snippet replaces `children` and `activator`.
+- `kit:tooltip`: no more `<span>` around the trigger.
+- `kit:tooltip`: `ref` is the tooltip.
+- `kit:dropdown` and `kit:popover`: ARIA attributes on the trigger.
+- `kit:textfield`: `minlength` and `maxlength` replace `min` and `max`.
+- Types: `DropdownTriggerProps`, `DropdownTriggerModel` and `PopoverTriggerProps` replace `ModelDropdownProps`, `ModelDropdownHandleProps` and `ModelPopoverProps`.
+
+### Removed
+
+- `kit:tooltip`: `forceMount`.
+
 ## [0.7.9] - 2026-10-28
 
 ### Removed
 
-- Remove devDependencies packages: `@tablet/icons-svelte`, `mingcute_icon`, `lucide-svelte` and `@mdi/js`
+- Remove devDependencies packages: `@tabler/icons-svelte`, `@sveltejs/adapter-auto`, `mingcute_icon`, `lucide-svelte` and `@mdi/js`
 
 ## [0.7.8] - 2026-10-28
 

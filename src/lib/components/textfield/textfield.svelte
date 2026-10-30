@@ -6,8 +6,7 @@
 		ref = $bindable(),
 		value = $bindable(),
 		type = 'text',
-		min,
-		max,
+		maxlength,
 		counter = false,
 		hideSpinButtons = false,
 		class: className,
@@ -21,6 +20,7 @@
 		rounded,
 		color,
 		elevation,
+		label,
 		disabled = false,
 		readonly = false,
 		error = false,
@@ -44,13 +44,6 @@
 	let inputRef = $state<HTMLInputElement | null>(null);
 	let text = $derived(`${value ?? ''}`);
 
-	$effect(() => {
-		if (typeof max === 'number' && max > 0 && text.length > max) {
-			const truncated = text.slice(0, max);
-			value = typeof value === 'number' ? Number(truncated) || 0 : truncated;
-		}
-	});
-
 	function clear() {
 		value = '';
 		inputRef?.focus();
@@ -70,6 +63,7 @@
 	{rounded}
 	{color}
 	{elevation}
+	{label}
 	{disabled}
 	{readonly}
 	{error}
@@ -88,7 +82,7 @@
 	{prependInner}
 	{appendInner}
 	dirty={text.length > 0}
-	counter={counter ? `${text.length}${max ? `/${max}` : ''}` : undefined}
+	counter={counter ? `${text.length}${maxlength ? `/${maxlength}` : ''}` : undefined}
 	onclear={clear}
 	data-hide-spin-buttons={type === 'number' && hideSpinButtons}
 >
@@ -101,8 +95,7 @@
 			class="kit-textfield__input"
 			{type}
 			size="1"
-			minlength={min}
-			maxlength={max}
+			{maxlength}
 		/>
 	{/snippet}
 </Field>

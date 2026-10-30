@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { useComponentAttrs } from '$lib/utils';
+	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { IconProps } from './icon.types.ts';
 
 	let {
@@ -16,6 +17,7 @@
 		size = 'default',
 		alt = '',
 		label = undefined,
+		tooltip = undefined,
 		decorative = true,
 		loading = 'eager',
 		decoding = 'async',
@@ -35,9 +37,14 @@
 	let hasContent = $derived(hasChildren || !!resolvedSrc || !!resolvedName);
 	let iconClass = $derived(!hasChildren && !resolvedSrc ? resolvedName : undefined);
 
-	let iconRole = $derived(!decorative && (label || alt) ? 'img' : undefined);
-	let iconAriaLabel = $derived(!decorative ? label || alt || undefined : undefined);
-	let iconAriaHidden = $derived(decorative ? true : undefined);
+	// an icon with a tooltip is not decorative: the tooltip names it
+	let tooltipLabel = $derived(typeof tooltip === 'string' ? tooltip : tooltip ? tooltip.label : '');
+	let isDecorative = $derived(decorative && !tooltipLabel);
+	let iconRole = $derived(!isDecorative && (label || alt || tooltipLabel) ? 'img' : undefined);
+	let iconAriaLabel = $derived(
+		!isDecorative ? label || alt || tooltipLabel || undefined : undefined
+	);
+	let iconAriaHidden = $derived(isDecorative ? true : undefined);
 	let imgAlt = $derived(decorative ? '' : alt || label || '');
 	let isSvgSrc = $derived(!!resolvedSrc && /\.svg($|\?)/i.test(resolvedSrc));
 	let useMaskMode = $derived(
@@ -58,6 +65,7 @@
 		role={iconRole}
 		aria-label={iconAriaLabel}
 		aria-hidden={iconAriaHidden}
+		use:tooltipAction={tooltip}
 		{...attrs.rest}
 	>
 		{#if hasChildren}

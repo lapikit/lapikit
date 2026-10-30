@@ -17,8 +17,21 @@
 	width: 100%;
 	font-size: var(--kit-field-font);
 
+	&[data-with-label='true'] {
+		grid-template-areas:
+			'. label .'
+			'prepend box append';
+	}
+
 	&[data-with-message='true'] {
 		grid-template-areas:
+			'prepend box append'
+			'. message .';
+	}
+
+	&[data-with-label='true'][data-with-message='true'] {
+		grid-template-areas:
+			'. label .'
 			'prepend box append'
 			'. message .';
 	}
@@ -26,6 +39,18 @@
 	&[data-disabled='true'] {
 		opacity: var(--kit-disabled-opacity, 0.55);
 		pointer-events: none;
+	}
+
+	&__label {
+		grid-area: label;
+		display: block;
+		padding-block-end: 0.25rem;
+		font-size: 0.875rem;
+		line-height: 1.2;
+	}
+
+	&[data-error='true'] .kit-field__label {
+		color: var(--kit-color-error);
 	}
 
 	&__prepend,
