@@ -44,7 +44,7 @@
 	&__label {
 		grid-area: label;
 		display: block;
-		padding-block-end: 0.25rem;
+		padding-block-end: 0.5rem;
 		font-size: 0.875rem;
 		line-height: 1.2;
 	}
@@ -161,6 +161,7 @@
 		gap: var(--kit-field-gap);
 		align-items: start;
 		min-height: 0.875rem;
+		padding-block-start: 0.5rem;
 		padding-inline: var(--kit-field-padding);
 		font-size: 0.75rem;
 		line-height: 1.2;
