@@ -57,6 +57,31 @@
 		}
 	}
 
+	&__content {
+		text-box: trim-both cap alphabetic;
+	}
+
+	&__prepend,
+	&__append {
+		--kit-chip-parent-height: var(--kit-chip-height);
+		--kit-chip-parent-padding: calc(var(--kit-chip-p) + var(--kit-chip-density-offset) / 2);
+	}
+
+	&__prepend > :global(.kit-chip:first-child),
+	&__append > :global(.kit-chip:last-child) {
+		--kit-chip-nested-offset: calc(
+			(var(--kit-chip-parent-height) - var(--kit-chip-height)) / 2 - var(--kit-chip-parent-padding)
+		);
+	}
+
+	&__prepend > :global(.kit-chip:first-child) {
+		margin-inline-start: var(--kit-chip-nested-offset);
+	}
+
+	&__append > :global(.kit-chip:last-child) {
+		margin-inline-end: var(--kit-chip-nested-offset);
+	}
+
 	&__input {
 		margin: 0;
 		padding: 0;
