@@ -27,6 +27,20 @@ function writeStorage(key: string, name: string) {
 	}
 }
 
+const animationVariable = '--kit-animation-component';
+
+function switchWithoutTransitions(target: HTMLElement, apply: () => void) {
+	const previous = target.style.getPropertyValue(animationVariable);
+	target.style.setProperty(animationVariable, '0s');
+	apply();
+	void getComputedStyle(target).getPropertyValue(animationVariable);
+
+	requestAnimationFrame(() => {
+		if (previous) target.style.setProperty(animationVariable, previous);
+		else target.style.removeProperty(animationVariable);
+	});
+}
+
 function generateGlobalTheme() {
 	let active = $state(default_theme);
 	let key = default_storage_key;
@@ -35,7 +49,8 @@ function generateGlobalTheme() {
 	function applyToHtml(name: string) {
 		if (!isBrowser) return;
 
-		document.documentElement.setAttribute('data-kit-theme', name);
+		const root = document.documentElement;
+		switchWithoutTransitions(root, () => root.setAttribute('data-kit-theme', name));
 		active = name;
 	}
 
@@ -86,7 +101,7 @@ export function createTheme(): ThemeAction {
 		const target = node;
 		if (!target) return;
 
-		target.setAttribute('data-kit-theme', name);
+		switchWithoutTransitions(target, () => target.setAttribute('data-kit-theme', name));
 		active = name;
 	}
 

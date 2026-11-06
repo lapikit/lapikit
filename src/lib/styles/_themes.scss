@@ -18,17 +18,21 @@
 	--kit-color-border: hsl(220 16% 88%);
 	--kit-color-shadow: hsl(240 3% 11%);
 
-	--kit-color-accent: hsl(220 90% 56%);
+	--kit-color-accent: hsl(240 3% 11%);
 	--kit-color-on-accent: hsl(0 0% 100%);
-	--kit-color-success: hsl(145 50% 38%);
-	--kit-color-on-success: hsl(0 0% 100%);
-	--kit-color-warning: hsl(35 80% 45%);
-	--kit-color-on-warning: hsl(222 20% 10%);
-	--kit-color-error: hsl(5 65% 48%);
+	--kit-color-success: hsl(135 59% 49%);
+	--kit-color-on-success: hsl(240 3% 11%);
+	--kit-color-success-text: color-mix(in oklab, var(--kit-color-success), black 30%);
+	--kit-color-warning: hsl(35 100% 50%);
+	--kit-color-on-warning: hsl(240 3% 11%);
+	--kit-color-warning-text: color-mix(in oklab, var(--kit-color-warning), black 30%);
+	--kit-color-error: hsl(3 100% 59%);
 	--kit-color-on-error: hsl(0 0% 100%);
-	--kit-color-info: hsl(205 60% 42%);
+	--kit-color-error-text: color-mix(in oklab, var(--kit-color-error), black 15%);
+	--kit-color-info: hsl(211 100% 50%);
 	--kit-color-on-info: hsl(0 0% 100%);
-	--kit-color-focus: hsl(35 90% 56%);
+	--kit-color-info-text: color-mix(in oklab, var(--kit-color-info), black 10%);
+	--kit-color-focus: hsl(211 100% 50%);
 }
 
 @mixin theme-dark {
@@ -51,15 +55,19 @@
 	--kit-color-border: hsl(240 2% 26%);
 	--kit-color-shadow: hsl(240 3% 11%);
 
-	--kit-color-accent: hsl(220 85% 65%);
+	--kit-color-accent: hsl(0 0% 100%);
 	--kit-color-on-accent: hsl(240 3% 11%);
-	--kit-color-success: hsl(145 50% 50%);
+	--kit-color-success: hsl(135 64% 50%);
 	--kit-color-on-success: hsl(240 3% 11%);
-	--kit-color-warning: hsl(35 85% 58%);
+	--kit-color-success-text: var(--kit-color-success);
+	--kit-color-warning: hsl(36 100% 52%);
 	--kit-color-on-warning: hsl(240 3% 11%);
-	--kit-color-error: hsl(5 70% 60%);
+	--kit-color-warning-text: var(--kit-color-warning);
+	--kit-color-error: hsl(3 100% 61%);
 	--kit-color-on-error: hsl(240 3% 11%);
-	--kit-color-info: hsl(205 65% 58%);
+	--kit-color-error-text: var(--kit-color-error);
+	--kit-color-info: hsl(210 100% 52%);
 	--kit-color-on-info: hsl(240 3% 11%);
-	--kit-color-focus: hsl(35 90% 62%);
+	--kit-color-info-text: var(--kit-color-info);
+	--kit-color-focus: hsl(210 100% 52%);
 }
