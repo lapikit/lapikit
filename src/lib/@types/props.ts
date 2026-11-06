@@ -2,7 +2,7 @@ export type PropValue = string | boolean | number | null | undefined;
 export type SizeType = 'default' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type RoundedType = 0 | '0' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type DensityType = 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
-export type ElevationType = '0' | '1' | '2' | '3' | '4' | '5';
+export type ElevationType = '0' | '1' | '2' | '3' | '4' | '5' | 0 | 1 | 2 | 3 | 4 | 5;
 
 export interface ElevationState {
 	base?: ElevationType;

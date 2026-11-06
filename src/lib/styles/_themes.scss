@@ -26,10 +26,10 @@
 	--kit-color-warning: hsl(35 100% 50%);
 	--kit-color-on-warning: hsl(240 3% 11%);
 	--kit-color-warning-text: color-mix(in oklab, var(--kit-color-warning), black 30%);
-	--kit-color-error: hsl(3 100% 59%);
+	--kit-color-error: hsl(3 100% 46%);
 	--kit-color-on-error: hsl(0 0% 100%);
 	--kit-color-error-text: color-mix(in oklab, var(--kit-color-error), black 15%);
-	--kit-color-info: hsl(211 100% 50%);
+	--kit-color-info: hsl(211 100% 46%);
 	--kit-color-on-info: hsl(0 0% 100%);
 	--kit-color-info-text: color-mix(in oklab, var(--kit-color-info), black 10%);
 	--kit-color-focus: hsl(211 100% 50%);

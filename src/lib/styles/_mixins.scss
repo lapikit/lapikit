@@ -70,10 +70,14 @@
 
 @mixin color-variant($name, $variant) {
 	@if $variant == tonal {
-		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 16%, transparent);
+		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-color, var(--#{$name}-ink)) 16%, transparent);
 		--#{$name}-fg: var(--#{$name}-ink);
 		--#{$name}-border: transparent;
-		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 28%, transparent);
+		--#{$name}-active: color-mix(
+			in oklab,
+			var(--#{$name}-color, var(--#{$name}-ink)) 28%,
+			transparent
+		);
 		--#{$name}-active-fg: var(--#{$name}-ink);
 	} @else if $variant == outline {
 		--#{$name}-bg: transparent;

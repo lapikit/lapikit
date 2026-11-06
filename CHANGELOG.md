@@ -14,10 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Theme: new default palette. The accent is black in the light theme and white in the dark theme; success, warning, error and info are more vivid.
 - Theme: the focus ring is blue (`--kit-color-focus`).
+- Theme: error and info are darker in the light theme, so the white text on a filled component reaches a 4.5:1 contrast.
+- `tonal` variant: the background uses the color itself instead of its `-text` shade, so warning and success no longer look dull.
 
 ### Fixed
 
 - `useTheme` and `createTheme`: no more color transition flash on the components when the theme changes.
+- `elevation` prop: a number (`elevation={2}`) is accepted, it rendered no shadow before.
 
 ## [0.8.2] - 2026-11-05
 
