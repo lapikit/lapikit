@@ -10,7 +10,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	color: var(--kit-icon-color, currentColor);
+	color: var(--kit-icon-text-color, var(--kit-icon-color, currentColor));
 	font-size: var(--kit-icon-current-size, var(--kit-icon-size-md));
 	line-height: 1;
 	text-indent: 0;
@@ -27,7 +27,7 @@
 
 	.kit-icon__mask {
 		display: inline-block;
-		background-color: var(--kit-icon-color, currentColor);
+		background-color: var(--kit-icon-text-color, var(--kit-icon-color, currentColor));
 		mask-image: var(--kit-icon-mask-image);
 		mask-repeat: no-repeat;
 		mask-size: contain;

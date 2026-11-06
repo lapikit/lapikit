@@ -50,7 +50,7 @@
 	}
 
 	&[data-error='true'] .kit-field__label {
-		color: var(--kit-color-error);
+		color: var(--kit-color-error-text, var(--kit-color-error));
 	}
 
 	&__prepend,
@@ -173,7 +173,7 @@
 	}
 
 	&[data-error='true'] .kit-field__message {
-		color: var(--kit-color-error);
+		color: var(--kit-color-error-text, var(--kit-color-error));
 	}
 
 	&__message-text {

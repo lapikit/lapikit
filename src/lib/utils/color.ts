@@ -27,6 +27,12 @@ export function resolveOnColor(color: string | false | null | undefined): string
 	return `var(--kit-color-on-${value})`;
 }
 
+export function resolveTextColor(color: string | false | null | undefined): string | undefined {
+	const value = clean(color);
+	if (!value || !paletteName.test(value)) return undefined;
+	return `var(--kit-color-${value}-text, var(--kit-color-${value}, ${value}))`;
+}
+
 export function colorStyle(
 	name: string,
 	color: ColorProps | null | undefined,
@@ -41,6 +47,8 @@ export function colorStyle(
 	const styles = [`--${name}-color: ${value}`];
 	const onColor = resolveOnColor(current);
 	if (onColor) styles.push(`--${name}-on-color: ${onColor}`);
+	const textColor = resolveTextColor(current);
+	if (textColor) styles.push(`--${name}-text-color: ${textColor}`);
 	if (exact) styles.push(`--${name}-active-shade: 0%`);
 	return styles.join('; ');
 }

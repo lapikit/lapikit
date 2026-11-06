@@ -3,6 +3,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.3] - 2026-11-06
+
+### Added
+
+- Theme: `--kit-color-success-text`, `--kit-color-warning-text`, `--kit-color-error-text` and `--kit-color-info-text`, a readable shade of the color for text. In the light theme they are computed from the color, so they follow an override.
+- `color` prop: the text, outline, tonal, surface and plain variants, the icons and the field error messages use the `-text` shade of a palette color when it exists.
+
+### Changed
+
+- Theme: new default palette. The accent is black in the light theme and white in the dark theme; success, warning, error and info are more vivid.
+- Theme: the focus ring is blue (`--kit-color-focus`).
+- Theme: error and info are darker in the light theme, so the white text on a filled component reaches a 4.5:1 contrast.
+- `tonal` variant: the background uses the color itself instead of its `-text` shade, so warning and success no longer look dull.
+
+### Fixed
+
+- `useTheme` and `createTheme`: no more color transition flash on the components when the theme changes.
+- `elevation` prop: a number (`elevation={2}`) is accepted, it rendered no shadow before.
+
 ## [0.8.2] - 2026-11-05
 
 ### Fixed

@@ -67,7 +67,7 @@ describe('colorStyle', () => {
 
 	it('should give the color and on-color variables for a palette name', () => {
 		expect(colorStyle('kit-sheet', 'accent')).toBe(
-			'--kit-sheet-color: var(--kit-color-accent, accent); --kit-sheet-on-color: var(--kit-color-on-accent)'
+			'--kit-sheet-color: var(--kit-color-accent, accent); --kit-sheet-on-color: var(--kit-color-on-accent); --kit-sheet-text-color: var(--kit-color-accent-text, var(--kit-color-accent, accent))'
 		);
 	});
 
@@ -93,7 +93,7 @@ describe('colorStyle with { base, active }', () => {
 
 	it('should give the active color as it is while the component is active', () => {
 		expect(colorStyle('kit-sheet', { active: 'warning' }, true)).toBe(
-			'--kit-sheet-color: var(--kit-color-warning, warning); --kit-sheet-on-color: var(--kit-color-on-warning); --kit-sheet-active-shade: 0%'
+			'--kit-sheet-color: var(--kit-color-warning, warning); --kit-sheet-on-color: var(--kit-color-on-warning); --kit-sheet-text-color: var(--kit-color-warning-text, var(--kit-color-warning, warning)); --kit-sheet-active-shade: 0%'
 		);
 		expect(colorStyle('kit-sheet', { base: 'info', active: '#ff8800' }, true)).toBe(
 			'--kit-sheet-color: #ff8800; --kit-sheet-active-shade: 0%'

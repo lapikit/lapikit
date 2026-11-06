@@ -151,7 +151,7 @@ export function useStyles({ styleAttr, sStyle, styleProps }: useStylesProps = {}
 
 /**
  * useElevation - Utility to resolve the `elevation` prop into its base/hover/active states.
- * @param elevation - Either a single elevation value applied as `base`, or an object with
+ * @param elevation - Either a single elevation value (string or number) applied as `base`, or an object with
  * independent `base`, `hover` and `active` values (each key is optional).
  * @returns An object with `base`, `hover` and `active` keys, `undefined` when not provided.
  */
@@ -160,7 +160,7 @@ export function useElevation(elevation?: ElevationProps | null): ElevationState 
 		return { base: undefined, hover: undefined, active: undefined };
 	}
 
-	if (typeof elevation === 'string') {
+	if (typeof elevation !== 'object') {
 		return { base: elevation, hover: undefined, active: undefined };
 	}
 

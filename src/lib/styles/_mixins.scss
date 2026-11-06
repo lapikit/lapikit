@@ -36,6 +36,7 @@
 @mixin color($name, $bg, $fg) {
 	--#{$name}-color: initial;
 	--#{$name}-on-color: initial;
+	--#{$name}-text-color: initial;
 	--#{$name}-active-fg: initial;
 	--#{$name}-active-shade: initial;
 	--#{$name}-hover-fg: initial;
@@ -43,7 +44,7 @@
 
 	--#{$name}-bg: var(--#{$name}-color, #{$bg});
 	--#{$name}-fg: var(--#{$name}-on-color, var(--#{$name}-contrast, #{$fg}));
-	--#{$name}-ink: var(--#{$name}-color, #{$fg});
+	--#{$name}-ink: var(--#{$name}-text-color, var(--#{$name}-color, #{$fg}));
 	--#{$name}-hover: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 8%);
 	--#{$name}-pressed: color-mix(in oklab, var(--#{$name}-bg), var(--#{$name}-fg) 14%);
 	--#{$name}-soft: color-mix(in oklab, var(--#{$name}-bg) 16%, transparent);
@@ -69,10 +70,14 @@
 
 @mixin color-variant($name, $variant) {
 	@if $variant == tonal {
-		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 16%, transparent);
+		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-color, var(--#{$name}-ink)) 16%, transparent);
 		--#{$name}-fg: var(--#{$name}-ink);
 		--#{$name}-border: transparent;
-		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 28%, transparent);
+		--#{$name}-active: color-mix(
+			in oklab,
+			var(--#{$name}-color, var(--#{$name}-ink)) 28%,
+			transparent
+		);
 		--#{$name}-active-fg: var(--#{$name}-ink);
 	} @else if $variant == outline {
 		--#{$name}-bg: transparent;
@@ -96,7 +101,10 @@
 		--#{$name}-hover-fg: color-mix(in oklab, var(--#{$name}-fg) 72%, transparent);
 		--#{$name}-pressed-fg: color-mix(in oklab, var(--#{$name}-fg) 56%, transparent);
 		--#{$name}-active: transparent;
-		--#{$name}-active-fg: var(--#{$name}-color, var(--kit-color-accent));
+		--#{$name}-active-fg: var(
+			--#{$name}-text-color,
+			var(--#{$name}-color, var(--kit-color-accent-text, var(--kit-color-accent)))
+		);
 	} @else if $variant == surface {
 		--#{$name}-bg: color-mix(in oklab, var(--#{$name}-ink) 8%, transparent);
 		--#{$name}-fg: var(--#{$name}-ink);
