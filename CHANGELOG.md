@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `kit:chip`: a chip in the `prepend` or `append` snippet of another chip has the same space on its side as above and below.
-- `kit:chip`: the text is centered on its capital letters, it no longer looks higher than the icons and the nested chips.
+- `kit:chip`: the text, the icons and the nested chips are centered to the pixel, the text no longer sits half a pixel too high.
 
 ## [0.8.3] - 2026-11-06
 

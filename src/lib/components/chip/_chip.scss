@@ -42,7 +42,7 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		line-height: 1;
+		line-height: 0;
 
 		:global(.kit-icon) {
 			display: inline-flex;
@@ -55,10 +55,6 @@
 		:global(img) {
 			display: block;
 		}
-	}
-
-	&__content {
-		text-box: trim-both cap alphabetic;
 	}
 
 	&__prepend,
