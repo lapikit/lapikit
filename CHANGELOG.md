@@ -3,12 +3,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Insiders]
+## [0.8.4] - 2026-11-10
+
+### Updated
+
+- `kit:modal` convert component modal stored to use runes
 
 ### Fixed
 
 - `kit:chip`: a chip in the `prepend` or `append` snippet of another chip has the same space on its side as above and below.
 - `kit:chip`: the text, the icons and the nested chips are centered to the pixel, the text no longer sits half a pixel too high.
+- `useAccordion`: default value 10 has removed.
 
 ## [0.8.3] - 2026-11-06
 
