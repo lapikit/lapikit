@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { DEV } from 'esm-env';
-	import { floating, useComponentAttrs } from '$lib/utils';
+	import { findTrigger, floating, onEscape, useComponentAttrs } from '$lib/utils';
 	import type { TooltipProps, TooltipTriggerProps } from './tooltip.types.ts';
 
 	let {
@@ -44,7 +44,9 @@
 	let anchor = $state<HTMLElement | null>(null);
 	let timer: ReturnType<typeof setTimeout> | null = null;
 	let focused = false;
-	let ariaAttribute = $derived(asLabel ? 'aria-labelledby' : 'aria-describedby');
+	let ariaAttribute = $derived<'aria-labelledby' | 'aria-describedby'>(
+		asLabel ? 'aria-labelledby' : 'aria-describedby'
+	);
 
 	const clearTimer = () => {
 		if (timer) clearTimeout(timer);
@@ -74,10 +76,6 @@
 			return true;
 		}
 	};
-
-	// the trigger, when open is set without a pointer or a focus event
-	const findAnchor = () =>
-		document.querySelector<HTMLElement>(`[${ariaAttribute}~="${CSS.escape(tooltipId)}"]`);
 
 	let triggerProps: TooltipTriggerProps = $derived({
 		[ariaAttribute]: tooltipId,
@@ -112,17 +110,10 @@
 	});
 
 	$effect(() => {
-		if (open && !anchor?.isConnected) anchor = findAnchor();
+		if (open && !anchor?.isConnected) anchor = findTrigger(tooltipId, ariaAttribute);
 	});
 
-	$effect(() => {
-		if (!open) return;
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') hide();
-		};
-		document.addEventListener('keydown', onKeyDown);
-		return () => document.removeEventListener('keydown', onKeyDown);
-	});
+	onEscape(() => open, hide);
 
 	onDestroy(clearTimer);
 </script>

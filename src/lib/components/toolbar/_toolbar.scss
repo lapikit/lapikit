@@ -1,6 +1,4 @@
-@use 'sass:list';
 @use '$lib/styles' as *;
-@use './variables' as *;
 
 :where(.kit-toolbar) {
 	@include color(kit-toolbar, var(--kit-color-surface-1), var(--kit-color-text));
@@ -51,24 +49,13 @@
  * size
  * @link https://lapikit.dev/docs/components/toolbar#size
  */
-@each $size, $values in $sizes {
-	:where(.kit-toolbar[data-size='#{$size}']) {
-		--kit-toolbar-h: #{list.nth($values, 1)};
-		--kit-toolbar-p: #{list.nth($values, 2)};
-		--kit-toolbar-gap: #{list.nth($values, 3)};
-		--kit-toolbar-font: #{list.nth($values, 4)};
-	}
-}
+@include sizes(kit-toolbar);
 
 /**
  * variant
  * @link https://lapikit.dev/docs/components/toolbar#variants
  */
-@each $variant in (tonal, outline, surface, text) {
-	:where(.kit-toolbar[data-variant='#{$variant}']) {
-		@include color-variant(kit-toolbar, $variant);
-	}
-}
+@include variants(kit-toolbar, (tonal, outline, surface, text));
 
 :where(.kit-toolbar .outline) {
 	--outline-color: var(--kit-toolbar-border);

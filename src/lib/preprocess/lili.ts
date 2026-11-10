@@ -1,5 +1,5 @@
-import type { ComponentInfo, LapikitPreprocessOptions } from './@types/index.js';
-import { decodeSourceMap } from './escaping.js';
+import type { ComponentInfo, LapikitPreprocessOptions } from '../@types/index.js';
+import { scanKitTags } from './scan.js';
 import {
 	lapikitImportsRef,
 	lapikitImportsLabsRef,
@@ -86,7 +86,7 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 				});
 			}
 
-			const scanResult = decodeSourceMap(content, componentInfo);
+			const scanResult = scanKitTags(content, componentInfo);
 
 			if (!scanResult.changed) return;
 

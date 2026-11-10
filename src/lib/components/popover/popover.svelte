@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { DEV } from 'esm-env';
-	import { clickOutside, floating, useComponentAttrs, useElevation } from '$lib/utils';
+	import {
+		clickOutside,
+		findTrigger,
+		floating,
+		onEscape,
+		useComponentAttrs,
+		elevationAttrs
+	} from '$lib/utils';
 	import type { PopoverProps, PopoverTriggerProps } from './popover.types.ts';
 
 	let {
@@ -31,7 +38,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-popover-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -67,9 +74,7 @@
 
 	$effect(() => {
 		if (open && !triggerRef?.isConnected) {
-			triggerRef = document.querySelector<HTMLElement>(
-				`[aria-controls="${CSS.escape(popoverId)}"]`
-			);
+			triggerRef = findTrigger(popoverId);
 		}
 	});
 
@@ -83,16 +88,10 @@
 		return () => cancelAnimationFrame(frame);
 	});
 
-	$effect(() => {
-		if (!open) return;
-
-		const onKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') close(true);
-		};
-
-		document.addEventListener('keydown', onKeydown);
-		return () => document.removeEventListener('keydown', onKeydown);
-	});
+	onEscape(
+		() => open,
+		() => close(true)
+	);
 </script>
 
 {@render trigger?.(triggerProps)}
@@ -108,9 +107,7 @@
 		tabindex="-1"
 		data-rounded={rounded}
 		data-density={density}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		onfocusout={onFocusOut}
 		use:floating={{ anchor: triggerRef, side: position, offset: 6 }}
 		use:clickOutside={{ exclude: [contentRef, triggerRef], onClose: () => close() }}

@@ -1,16 +1,22 @@
 import type { ClassValue } from 'svelte/elements';
-import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type {
+	ColorProps,
+	DensityType,
+	ElevationProps,
+	KitProps,
+	RoundedType,
+	SizeType,
+	VariantType
+} from '$lib/@types';
 
-type Variant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text';
-
-export interface AppbarProps extends Component {
+export type AppbarProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'div' | 'header' | 'nav';
-	variant?: Variant;
+	variant?: VariantType;
 	rounded?: RoundedType | 'full';
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	size?: SizeType;
 	color?: ColorProps;
 	classContent?: ClassValue;
 	elevation?: ElevationProps;
-}
+}>;

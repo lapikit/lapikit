@@ -1,5 +1,6 @@
-import type { Base } from '$lib/@types';
+import type { KitProps } from '$lib/@types';
 
-export interface SpacerProps extends Base {
+export type SpacerProps = KitProps<{
 	is?: 'div';
-}
+	children?: never;
+}>;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import type { AccordionItemProps, ModelAccordionItemProps } from '../accordion.types.ts';
 
 	let {
@@ -38,7 +38,7 @@
 		}
 	};
 
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	function handleToggle() {
 		if (readOnly || disabled || !toggle) return;
@@ -54,9 +54,7 @@
 	data-disabled={disabled}
 	data-read-only={readOnly}
 	data-active={safeOpen}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	{...attrs.rest}
 >
 	<span class="outline"></span>

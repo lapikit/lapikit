@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-	import { get } from 'svelte/store';
-	import { useComponentAttrs, useElevation } from '$lib/utils';
-	import { modalStack, popModal, pushModal } from './modal.ts';
+	import { untrack } from 'svelte';
+	import { onEscape, useComponentAttrs, elevationAttrs } from '$lib/utils';
+	import { isTopModal, popModal, pushModal } from './modal.svelte.ts';
 	import type { ModalProps } from './modal.types.ts';
 
 	const modalId = $props.id();
-	let wasPushed = $state(false);
 
 	let {
 		ref = $bindable(),
@@ -43,40 +41,22 @@
 			rest
 		)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	$effect(() => {
-		if (open && !wasPushed) {
-			pushModal(modalId);
-			wasPushed = true;
-		} else if (!open && wasPushed) {
-			popModal(modalId);
-			wasPushed = false;
+		if (!open) return;
+		untrack(() => pushModal(modalId));
+		return () => popModal(modalId);
+	});
+
+	onEscape(
+		() => open && closeWithEsc && !persistent,
+		(event) => {
+			if (!isTopModal(modalId)) return;
+			event.preventDefault();
+			open = false;
 		}
-	});
-
-	$effect(() => {
-		if (!open || !closeWithEsc || persistent) return;
-
-		const onKeyDown = (event: KeyboardEvent) => {
-			const stack = get(modalStack);
-			const isTop = stack[stack.length - 1] === modalId;
-
-			if (event.key === 'Escape' && isTop) {
-				event.preventDefault();
-				open = false;
-			}
-		};
-
-		document.addEventListener('keydown', onKeyDown);
-		return () => {
-			document.removeEventListener('keydown', onKeyDown);
-		};
-	});
-
-	onDestroy(() => {
-		if (wasPushed) popModal(modalId);
-	});
+	);
 
 	function handleClose() {
 		if (!persistent) open = false;
@@ -111,9 +91,7 @@
 			class={['kit-modal__content', classContent]}
 			data-size={size}
 			data-position={position}
-			data-elevation={elevationState.base}
-			data-elevation-hover={elevationState.hover}
-			data-elevation-active={elevationState.active}
+			{...elevationAttributes}
 		>
 			{@render children?.()}
 		</dialog>

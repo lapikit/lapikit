@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ButtonProps } from './btn.types.ts';
@@ -41,7 +41,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-btn', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 
 	let isInput = $derived(!!input || is === 'input');
@@ -56,11 +56,8 @@
 				? 'a'
 				: 'button'
 	);
-	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
-	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isDisabled && !focusableDisabled : undefined);
-	let resolvedTabIndex = $derived(
-		tag === 'a' && isDisabled ? (focusableDisabled ? 0 : -1) : undefined
+	let pressable = $derived(
+		pressableAttrs({ tag, href, type, disabled: isDisabled, focusableDisabled })
 	);
 
 	// disabled with a tooltip: focusable, the click does nothing
@@ -76,17 +73,12 @@
 	bind:this={ref}
 	class={attrs.class}
 	style={attrs.style}
-	href={resolvedHref}
-	type={resolvedType}
-	disabled={resolvedDisabled}
-	tabindex={resolvedTabIndex}
+	{...pressable}
 	data-variant={variant}
 	data-size={size}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	data-interactive={true}
 	data-active={active}
 	data-disabled={isDisabled}
@@ -97,7 +89,6 @@
 	data-wide={wide}
 	data-icon={icon}
 	aria-busy={loading || undefined}
-	aria-disabled={isDisabled || undefined}
 	use:tooltipAction={tooltip}
 	use:ripple={{
 		component: 'btn',

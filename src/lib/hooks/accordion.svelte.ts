@@ -2,7 +2,7 @@ import type { AccordionOptions } from '$lib/@types';
 
 export function useAccordion({ multiple = false, readOnly = false }: AccordionOptions = {}) {
 	// state
-	let openIndex: (string | number)[] = $state([10]);
+	let openIndex: (string | number)[] = $state([]);
 
 	return {
 		get values() {

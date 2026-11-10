@@ -1,8 +1,8 @@
 import MagicString from 'magic-string';
-import type { ComponentInfo, KitComponentScan } from './@types/index.js';
+import type { ComponentInfo, KitComponentScan } from '../@types/index.js';
 import { rewriteDirectives } from './directives.js';
 
-export const decodeSourceMap = (
+export const scanKitTags = (
 	content: string,
 	componentInfo: Map<string, ComponentInfo>
 ): KitComponentScan => {

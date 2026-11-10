@@ -1,11 +1,18 @@
-import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type {
+	ColorProps,
+	DensityType,
+	ElevationProps,
+	KitProps,
+	RoundedType,
+	SizeType
+} from '$lib/@types';
 
-export interface AvatarProps extends Component {
+export type AvatarProps = KitProps<{
 	ref?: HTMLElement | null;
 	label?: string;
 	size?: SizeType;
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	rounded?: RoundedType | 'full';
 	elevation?: ElevationProps;
 	color?: ColorProps;
-}
+}>;

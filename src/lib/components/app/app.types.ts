@@ -1,5 +1,5 @@
-import type { Component } from '$lib/@types';
+import type { KitProps } from '$lib/@types';
 
-export interface AppProps extends Component {
+export type AppProps = KitProps<{
 	ref?: HTMLElement | null;
-}
+}>;

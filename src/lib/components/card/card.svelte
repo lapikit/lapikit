@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation, useIsInteractive } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, elevationAttrs, useIsInteractive } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import type { CardProps } from './card.types.ts';
 
@@ -28,15 +28,12 @@
 	let tag = $derived((href && 'a') || is);
 	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
 	let isDisabled = $derived(!!disabled);
-	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
-	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isDisabled : undefined);
-	let resolvedTabIndex = $derived(tag === 'a' && isDisabled ? -1 : undefined);
+	let pressable = $derived(pressableAttrs({ tag, href, type, disabled: isDisabled }));
 
 	let attrs = $derived(
 		useComponentAttrs('kit-card', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 </script>
 
@@ -45,20 +42,14 @@
 	bind:this={ref}
 	class={attrs.class}
 	style={attrs.style}
-	href={resolvedHref}
-	type={resolvedType}
-	disabled={resolvedDisabled}
-	tabindex={resolvedTabIndex}
+	{...pressable}
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	data-interactive={isInteractive}
 	data-active={active}
 	data-disabled={isDisabled}
-	aria-disabled={isDisabled || undefined}
 	use:ripple={{
 		component: 'card',
 		disabled: noRipple || isDisabled || !isInteractive

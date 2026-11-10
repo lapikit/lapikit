@@ -1,7 +1,7 @@
-import type { Component, SizeType } from '$lib/@types';
+import type { KitProps, SizeType } from '$lib/@types';
 import type { TooltipValue } from '../tooltip/tooltip.types';
 
-export interface IconProps extends Component {
+export type IconProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'i' | 'span';
 	name?: string;
@@ -18,4 +18,4 @@ export interface IconProps extends Component {
 	color?: string | false;
 	colorMode?: 'auto' | 'none' | 'mask' | 'filter';
 	imgFilter?: string;
-}
+}>;

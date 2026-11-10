@@ -1,4 +1,5 @@
-import type { ColorProps, Component, RoundedType } from '$lib/@types';
+import type { FloatingSide } from '$lib/utils/floating';
+import type { ColorProps, DensityType, KitProps, RoundedType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 /** The attributes to spread on the element that shows the tooltip */
@@ -12,26 +13,26 @@ export interface TooltipTriggerProps {
 	onblur: (event: FocusEvent) => void;
 }
 
-export interface TooltipProps extends Omit<Component, 'children'> {
+export type TooltipProps = KitProps<{
 	ref?: HTMLElement | null;
 	open?: boolean;
 	rounded?: RoundedType | 'full';
 	label?: string;
 	/** the tooltip names the trigger (aria-labelledby) instead of describing it */
 	asLabel?: boolean;
-	location?: 'top' | 'bottom' | 'left' | 'right';
+	location?: FloatingSide;
 	color?: ColorProps;
 	delayDuration?: number;
 	closeDelay?: number;
 	variant?: 'arrow';
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	disabled?: boolean;
 	avoidCollisions?: boolean;
 	trigger?: Snippet<[TooltipTriggerProps]>;
 	tooltip?: Snippet;
 	/** removed in 0.8.0: use the trigger snippet */
 	children?: never;
-}
+}>;
 
 /** The tooltip prop of kit:btn, kit:chip and kit:icon */
 export interface TooltipOptions {

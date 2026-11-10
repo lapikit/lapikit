@@ -1,6 +1,4 @@
-@use 'sass:list';
 @use '$lib/styles' as *;
-@use './variables' as *;
 
 :where(.kit-appbar) {
 	@include color(kit-appbar, var(--kit-color-surface-1), var(--kit-color-text));
@@ -38,24 +36,13 @@
  * size
  * @link https://lapikit.dev/docs/components/appbar#size
  */
-@each $size, $values in $sizes {
-	:where(.kit-appbar[data-size='#{$size}']) {
-		--kit-appbar-h: #{list.nth($values, 1)};
-		--kit-appbar-p: #{list.nth($values, 2)};
-		--kit-appbar-gap: #{list.nth($values, 3)};
-		--kit-appbar-font: #{list.nth($values, 4)};
-	}
-}
+@include sizes(kit-appbar);
 
 /**
  * variant
  * @link https://lapikit.dev/docs/components/appbar#variants
  */
-@each $variant in (tonal, outline, surface, text) {
-	:where(.kit-appbar[data-variant='#{$variant}']) {
-		@include color-variant(kit-appbar, $variant);
-	}
-}
+@include variants(kit-appbar, (tonal, outline, surface, text));
 
 :where(.kit-appbar .outline) {
 	--outline-color: var(--kit-appbar-border);

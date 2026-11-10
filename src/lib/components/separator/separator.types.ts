@@ -1,12 +1,13 @@
-import type { Base } from '$lib/@types';
+import type { KitProps } from '$lib/@types';
 
 type Orientation = 'horizontal' | 'vertical';
 
-export interface SeparatorProps extends Base {
+export type SeparatorProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'div' | 'hr';
 	inset?: boolean;
 	thickness?: string | number;
 	color?: string | false;
 	orientation?: Orientation;
-}
+	children?: never;
+}>;

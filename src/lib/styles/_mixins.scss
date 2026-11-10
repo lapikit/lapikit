@@ -1,3 +1,38 @@
+@use 'sass:list';
+
+$default-sizes: (
+	xs: (
+		2rem,
+		0.5rem,
+		0.125rem,
+		var(--kit-font-xs)
+	),
+	sm: (
+		2.5rem,
+		0.625rem,
+		0.25rem,
+		var(--kit-font-sm)
+	),
+	md: (
+		3rem,
+		0.75rem,
+		0.25rem,
+		var(--kit-font-md)
+	),
+	lg: (
+		3.5rem,
+		1rem,
+		0.25rem,
+		var(--kit-font-lg)
+	),
+	xl: (
+		4rem,
+		1.25rem,
+		0.375rem,
+		var(--kit-font-xl)
+	)
+);
+
 @mixin elevation($level, $y1, $blur1, $y2, $blur2, $spread2) {
 	[data-elevation='#{$level}'],
 	[data-elevation-hover='#{$level}']:hover,
@@ -111,6 +146,32 @@
 		--#{$name}-border: color-mix(in oklab, var(--#{$name}-ink) 35%, transparent);
 		--#{$name}-active: color-mix(in oklab, var(--#{$name}-ink) 18%, transparent);
 		--#{$name}-active-fg: var(--#{$name}-ink);
+	}
+}
+
+@mixin sizes($component, $sizes: $default-sizes, $keys: (h, p, gap, font), $name: $component) {
+	@each $size, $values in $sizes {
+		:where(.#{$component}[data-size='#{$size}']) {
+			@for $index from 1 through list.length($keys) {
+				--#{$name}-#{list.nth($keys, $index)}: #{list.nth($values, $index)};
+			}
+
+			@content ($size);
+		}
+	}
+}
+
+@mixin variants($component, $variants, $item: null) {
+	@each $variant in $variants {
+		@if $item {
+			:where(.#{$component}[data-variant='#{$variant}']) :global(.#{$item}) {
+				@include color-variant($item, $variant);
+			}
+		} @else {
+			:where(.#{$component}[data-variant='#{$variant}']) {
+				@include color-variant($component, $variant);
+			}
+		}
 	}
 }
 

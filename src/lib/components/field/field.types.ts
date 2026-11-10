@@ -1,7 +1,15 @@
 import type { Snippet } from 'svelte';
-import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type {
+	ColorProps,
+	DensityType,
+	ElevationProps,
+	KitProps,
+	RoundedType,
+	SizeType,
+	VariantType
+} from '$lib/@types';
 
-export type FieldVariant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text';
+export type FieldVariant = VariantType;
 
 /** The attributes to spread on the control (input, textarea, select...) */
 export interface FieldControlProps {
@@ -15,7 +23,7 @@ export interface FieldControlProps {
 export interface FieldBaseProps {
 	variant?: FieldVariant;
 	size?: SizeType;
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	rounded?: RoundedType | 'full';
 	color?: ColorProps;
 	elevation?: ElevationProps;
@@ -39,14 +47,16 @@ export interface FieldBaseProps {
 	appendInner?: Snippet;
 }
 
-export interface FieldProps extends Omit<Component, 'children'>, FieldBaseProps {
-	ref?: HTMLElement | null;
-	/** id of the control, generated when empty */
-	id?: string;
-	/** the field holds a value: shows the clear button */
-	dirty?: boolean;
-	/** text at the end of the message line, the counter of a textfield */
-	counter?: string;
-	onclear?: () => void;
-	children?: Snippet<[FieldControlProps]>;
-}
+export type FieldProps = KitProps<
+	FieldBaseProps & {
+		ref?: HTMLElement | null;
+		/** id of the control, generated when empty */
+		id?: string;
+		/** the field holds a value: shows the clear button */
+		dirty?: boolean;
+		/** text at the end of the message line, the counter of a textfield */
+		counter?: string;
+		onclear?: () => void;
+		children?: Snippet<[FieldControlProps]>;
+	}
+>;

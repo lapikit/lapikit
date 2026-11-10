@@ -1,15 +1,20 @@
 import type MagicString from 'magic-string';
-import type { Snippet } from 'svelte';
 import type {
 	ClassNameType,
-	IdElementType,
 	KitClassNameType,
 	KitStylePropertiesType,
 	PropValue,
 	SStyleProp,
 	StylePropertiesType
 } from '$lib/@types';
-import type { ClassValue } from 'svelte/elements';
+import type {
+	ClassValue,
+	HTMLAnchorAttributes,
+	HTMLAttributes,
+	HTMLButtonAttributes,
+	HTMLDialogAttributes,
+	HTMLInputAttributes
+} from 'svelte/elements';
 
 export interface useStylesProps {
 	styleAttr?: string;
@@ -17,19 +22,25 @@ export interface useStylesProps {
 	styleProps?: Record<string, PropValue>;
 }
 
-export interface Base {
-	id?: IdElementType;
+export interface KitBaseProps {
 	class?: ClassNameType;
 	style?: StylePropertiesType;
 	's-class'?: KitClassNameType;
 	's-style'?: KitStylePropertiesType;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[key: string]: any;
+	[key: `s-class_${string}`]: PropValue;
+	[key: `s-style_${string}`]: PropValue;
 }
 
-export interface Component extends Base {
-	children?: Snippet;
-}
+type ElementAttributes<Attributes> = Omit<Attributes, keyof HTMLAttributes<HTMLElement>>;
+
+export type AnchorAttributes = ElementAttributes<HTMLAnchorAttributes>;
+export type ButtonAttributes = ElementAttributes<HTMLButtonAttributes>;
+export type InputAttributes = ElementAttributes<HTMLInputAttributes>;
+export type DialogAttributes = ElementAttributes<HTMLDialogAttributes>;
+
+export type KitProps<Own, Extra = unknown> = Own &
+	KitBaseProps &
+	Omit<HTMLAttributes<HTMLElement> & Extra, keyof Own | keyof KitBaseProps>;
 
 export type KitComponentScan = {
 	code: string;

@@ -3,9 +3,11 @@
 	import { DEV } from 'esm-env';
 	import {
 		clickOutside,
+		findTrigger,
 		floating,
+		onEscape,
 		useComponentAttrs,
-		useElevation,
+		elevationAttrs,
 		type FloatingAnchor
 	} from '$lib/utils';
 	import type {
@@ -44,7 +46,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-dropdown-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -165,21 +167,15 @@
 
 	$effect(() => {
 		if (open && !anchor) {
-			triggerRef = document.querySelector<HTMLElement>(`[aria-controls="${CSS.escape(menuId)}"]`);
+			triggerRef = findTrigger(menuId);
 			anchor = triggerRef;
 		}
 	});
 
-	$effect(() => {
-		if (!open) return;
-
-		const onKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') close(true);
-		};
-
-		document.addEventListener('keydown', onKeydown);
-		return () => document.removeEventListener('keydown', onKeydown);
-	});
+	onEscape(
+		() => open,
+		() => close(true)
+	);
 
 	onDestroy(clearHoverTimeout);
 </script>
@@ -196,9 +192,7 @@
 		role="menu"
 		data-rounded={rounded}
 		data-density={density}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		onpointerenter={() => openOnHover && clearHoverTimeout()}
 		onpointerleave={scheduleClose}
 		onkeydown={onMenuKeydown}

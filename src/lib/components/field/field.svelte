@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import type { FieldControlProps, FieldProps } from './field.types.ts';
 
 	let {
@@ -45,7 +45,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-field', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 
 	let focused = $state(false);
@@ -91,12 +91,7 @@
 		<div class="kit-field__prepend">{@render prepend()}</div>
 	{/if}
 
-	<div
-		class="kit-field__box"
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
-	>
+	<div class="kit-field__box" {...elevationAttributes}>
 		{#if hasOutline}
 			<span class="outline"></span>
 		{:else if variant === 'text'}
