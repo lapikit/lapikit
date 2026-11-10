@@ -36,10 +36,6 @@ export const lapikitLabsComponentPaths: Readonly<Record<string, string>> = {
 	sheet: 'sheet/sheet.svelte'
 };
 
-export const lapikitComponents: readonly string[] = Object.keys(lapikitComponentPaths);
-
-export const lapikitLabsComponents: readonly string[] = Object.keys(lapikitLabsComponentPaths);
-
 export const lapikitPlugins = {
 	repl: {
 		components: ['repl'],

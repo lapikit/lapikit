@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-	import { get } from 'svelte/store';
+	import { untrack } from 'svelte';
 	import { useComponentAttrs, useElevation } from '$lib/utils';
-	import { modalStack, popModal, pushModal } from './modal.ts';
+	import { isTopModal, popModal, pushModal } from './modal.svelte.ts';
 	import type { ModalProps } from './modal.types.ts';
 
 	const modalId = $props.id();
-	let wasPushed = $state(false);
 
 	let {
 		ref = $bindable(),
@@ -46,23 +44,16 @@
 	let elevationState = $derived(useElevation(elevation));
 
 	$effect(() => {
-		if (open && !wasPushed) {
-			pushModal(modalId);
-			wasPushed = true;
-		} else if (!open && wasPushed) {
-			popModal(modalId);
-			wasPushed = false;
-		}
+		if (!open) return;
+		untrack(() => pushModal(modalId));
+		return () => popModal(modalId);
 	});
 
 	$effect(() => {
 		if (!open || !closeWithEsc || persistent) return;
 
 		const onKeyDown = (event: KeyboardEvent) => {
-			const stack = get(modalStack);
-			const isTop = stack[stack.length - 1] === modalId;
-
-			if (event.key === 'Escape' && isTop) {
+			if (event.key === 'Escape' && isTopModal(modalId)) {
 				event.preventDefault();
 				open = false;
 			}
@@ -72,10 +63,6 @@
 		return () => {
 			document.removeEventListener('keydown', onKeyDown);
 		};
-	});
-
-	onDestroy(() => {
-		if (wasPushed) popModal(modalId);
 	});
 
 	function handleClose() {
