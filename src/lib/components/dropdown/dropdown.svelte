@@ -7,7 +7,7 @@
 		floating,
 		onEscape,
 		useComponentAttrs,
-		useElevation,
+		elevationAttrs,
 		type FloatingAnchor
 	} from '$lib/utils';
 	import type {
@@ -46,7 +46,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-dropdown-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -192,9 +192,7 @@
 		role="menu"
 		data-rounded={rounded}
 		data-density={density}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		onpointerenter={() => openOnHover && clearHoverTimeout()}
 		onpointerleave={scheduleClose}
 		onkeydown={onMenuKeydown}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import type { AvatarProps } from './avatar.types.ts';
 
 	let {
@@ -21,7 +21,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-avatar', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let displayLabel = $derived(label?.trim() ?? '');
 </script>
 
@@ -33,9 +33,7 @@
 	data-size={size}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	{...attrs.rest}
 >
 	{#if displayLabel}

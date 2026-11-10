@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { hasPressHandler, pressableAttrs, useComponentAttrs, useElevation } from '$lib/utils';
+	import { hasPressHandler, pressableAttrs, useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ChipProps } from './chip.types.ts';
@@ -41,7 +41,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-chip', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 
 	let isInput = $derived(!!input || is === 'input');
@@ -85,9 +85,7 @@
 	data-size={size}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	data-interactive={isInteractive}
 	data-active={active}
 	data-disabled={isDisabled}

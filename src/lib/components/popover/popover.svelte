@@ -6,7 +6,7 @@
 		floating,
 		onEscape,
 		useComponentAttrs,
-		useElevation
+		elevationAttrs
 	} from '$lib/utils';
 	import type { PopoverProps, PopoverTriggerProps } from './popover.types.ts';
 
@@ -38,7 +38,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-popover-content', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	let contentRef = $state<HTMLElement | null>(null);
 	let triggerRef = $state<HTMLElement | null>(null);
@@ -107,9 +107,7 @@
 		tabindex="-1"
 		data-rounded={rounded}
 		data-density={density}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		onfocusout={onFocusOut}
 		use:floating={{ anchor: triggerRef, side: position, offset: 6 }}
 		use:clickOutside={{ exclude: [contentRef, triggerRef], onClose: () => close() }}

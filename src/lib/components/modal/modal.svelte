@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { onEscape, useComponentAttrs, useElevation } from '$lib/utils';
+	import { onEscape, useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import { isTopModal, popModal, pushModal } from './modal.svelte.ts';
 	import type { ModalProps } from './modal.types.ts';
 
@@ -41,7 +41,7 @@
 			rest
 		)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 
 	$effect(() => {
 		if (!open) return;
@@ -91,9 +91,7 @@
 			class={['kit-modal__content', classContent]}
 			data-size={size}
 			data-position={position}
-			data-elevation={elevationState.base}
-			data-elevation-hover={elevationState.hover}
-			data-elevation-active={elevationState.active}
+			{...elevationAttributes}
 		>
 			{@render children?.()}
 		</dialog>

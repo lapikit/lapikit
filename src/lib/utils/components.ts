@@ -146,6 +146,16 @@ export function useElevation(elevation?: ElevationProps | null): ElevationState 
 	};
 }
 
+export function elevationAttrs(elevation?: ElevationProps | null) {
+	const { base, hover, active } = useElevation(elevation);
+
+	return {
+		'data-elevation': base,
+		'data-elevation-hover': hover,
+		'data-elevation-active': active
+	};
+}
+
 /**
  * useComponentAttrs - The class, style and other attributes of a labs component, in one call.
  *

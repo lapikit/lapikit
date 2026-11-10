@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import type { AlertProps } from './alert.types.ts';
 
 	let {
@@ -35,7 +35,7 @@
 			rest
 		)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 	let role = $derived(tone === 'warning' || tone === 'error' ? 'alert' : 'status');
 </script>
@@ -53,9 +53,7 @@
 		data-rounded={rounded}
 		data-tone={tone}
 		data-multiline={multiline}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		{...attrs.rest}
 	>
 		{#if hasOutline}

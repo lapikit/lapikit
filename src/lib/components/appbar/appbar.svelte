@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import type { AppbarProps } from './appbar.types.ts';
 
 	let {
@@ -23,7 +23,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-appbar', { className, sClass, styleAttr, sStyle, color }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 </script>
 
@@ -36,9 +36,7 @@
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	{...attrs.rest}
 >
 	{#if hasOutline}

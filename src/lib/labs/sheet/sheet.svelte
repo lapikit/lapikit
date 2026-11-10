@@ -3,7 +3,7 @@
 	 * Sheet component
 	 * @description A simple sheet component for experimentation for developers Lapikit. Please don't use it in production.
 	 */
-	import { pressableAttrs, useComponentAttrs, useElevation, useIsInteractive } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, elevationAttrs, useIsInteractive } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import type { SheetProps } from './sheet.types.ts';
 
@@ -33,7 +33,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-sheet', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let tag = $derived((href && 'a') || is);
 	// undefined: detected (a, button, onclick...), true: forced, false: no visual feedback (still clickable)
 	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
@@ -50,9 +50,7 @@
 	data-rounded={rounded}
 	data-density={density}
 	data-variant={variant}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	data-active={active}
 	data-interactive={isInteractive}
 	data-disabled={isDisabled}

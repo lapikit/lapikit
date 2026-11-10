@@ -4,7 +4,7 @@
 		splitAriaAttrs,
 		unlockScroll,
 		useComponentAttrs,
-		useElevation
+		elevationAttrs
 	} from '$lib/utils';
 	import type { DialogProps } from './dialog.types.ts';
 
@@ -41,7 +41,7 @@
 			rest
 		)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let split = $derived(splitAriaAttrs(attrs.rest));
 
 	$effect(() => {
@@ -105,9 +105,7 @@
 	<div
 		{...split.others}
 		class={['kit-dialog__content', classContent]}
-		data-elevation={elevationState.base}
-		data-elevation-hover={elevationState.hover}
-		data-elevation-active={elevationState.active}
+		{...elevationAttributes}
 		onclick={(event: MouseEvent) => event.stopPropagation()}
 	>
 		{@render children?.()}

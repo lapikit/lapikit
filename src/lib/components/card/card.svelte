@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { pressableAttrs, useComponentAttrs, useElevation, useIsInteractive } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, elevationAttrs, useIsInteractive } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import type { CardProps } from './card.types.ts';
 
@@ -33,7 +33,7 @@
 	let attrs = $derived(
 		useComponentAttrs('kit-card', { className, sClass, styleAttr, sStyle, color, active }, rest)
 	);
-	let elevationState = $derived(useElevation(elevation));
+	let elevationAttributes = $derived(elevationAttrs(elevation));
 	let hasOutline = $derived(variant === 'outline' || variant === 'surface');
 </script>
 
@@ -46,9 +46,7 @@
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
-	data-elevation={elevationState.base}
-	data-elevation-hover={elevationState.hover}
-	data-elevation-active={elevationState.active}
+	{...elevationAttributes}
 	data-interactive={isInteractive}
 	data-active={active}
 	data-disabled={isDisabled}
