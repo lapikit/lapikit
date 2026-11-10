@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ripple } from '$lib/animations';
-	import { useComponentAttrs, useIsInteractive } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, useIsInteractive } from '$lib/utils';
 	import { getListContext } from '../list.context.ts';
 	import type { ListItemProps } from '../list.types.ts';
 
@@ -40,6 +40,7 @@
 				: (is ?? (list?.item === 'li' ? 'li' : 'div'))
 	);
 	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
+	let pressable = $derived(pressableAttrs({ tag, href, disabled: !!disabled }));
 	let wrapperTag = $derived.by(() => {
 		if (list?.item === 'li') return tag === 'li' ? undefined : 'li';
 		if (list?.item === 'listitem') return tag === 'a' || tag === 'button' ? 'div' : undefined;
@@ -53,15 +54,11 @@
 		bind:this={ref}
 		class={attrs.class}
 		style={attrs.style}
-		href={href && !disabled ? href : undefined}
-		type={tag === 'button' ? 'button' : undefined}
-		disabled={tag === 'button' ? disabled : undefined}
-		tabindex={href && disabled ? -1 : undefined}
+		{...pressable}
 		role={tag === 'div' && list?.item === 'listitem' ? 'listitem' : undefined}
 		data-active={active}
 		data-disabled={disabled}
 		data-interactive={isInteractive}
-		aria-disabled={disabled || undefined}
 		use:ripple={{
 			component: 'list-item',
 			disabled: noRipple || disabled || !isInteractive

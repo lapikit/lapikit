@@ -3,7 +3,7 @@
 	 * Sheet component
 	 * @description A simple sheet component for experimentation for developers Lapikit. Please don't use it in production.
 	 */
-	import { useComponentAttrs, useElevation, useIsInteractive } from '$lib/utils';
+	import { pressableAttrs, useComponentAttrs, useElevation, useIsInteractive } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import type { SheetProps } from './sheet.types.ts';
 
@@ -38,10 +38,7 @@
 	// undefined: detected (a, button, onclick...), true: forced, false: no visual feedback (still clickable)
 	let isInteractive = $derived(interactive ?? useIsInteractive(rest, tag, ['a', 'button']));
 	let isDisabled = $derived(!!disabled);
-	let resolvedHref = $derived(tag === 'a' && !isDisabled ? href : undefined);
-	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isDisabled : undefined);
-	let resolvedTabIndex = $derived(tag === 'a' && isDisabled ? -1 : undefined);
+	let pressable = $derived(pressableAttrs({ tag, href, type, disabled: isDisabled }));
 </script>
 
 <svelte:element
@@ -49,10 +46,7 @@
 	bind:this={ref}
 	class={attrs.class}
 	style={attrs.style}
-	href={resolvedHref}
-	type={resolvedType}
-	disabled={resolvedDisabled}
-	tabindex={resolvedTabIndex}
+	{...pressable}
 	data-rounded={rounded}
 	data-density={density}
 	data-variant={variant}
@@ -62,7 +56,6 @@
 	data-active={active}
 	data-interactive={isInteractive}
 	data-disabled={isDisabled}
-	aria-disabled={isDisabled || undefined}
 	use:ripple={{
 		component: 'sheet',
 		disabled: noRipple || isDisabled || !isInteractive

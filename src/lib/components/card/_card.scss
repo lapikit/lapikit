@@ -38,25 +38,7 @@ button.kit-card {
  * variant
  * @link https://lapikit.dev/docs/components/card#variants
  */
-:where(.kit-card[data-variant='tonal']) {
-	@include color-variant(kit-card, tonal);
-}
-
-:where(.kit-card[data-variant='text']) {
-	@include color-variant(kit-card, text);
-}
-
-:where(.kit-card[data-variant='plain']) {
-	@include color-variant(kit-card, plain);
-}
-
-:where(.kit-card[data-variant='outline']) {
-	@include color-variant(kit-card, outline);
-}
-
-:where(.kit-card[data-variant='surface']) {
-	@include color-variant(kit-card, surface);
-}
+@include variants(kit-card, (tonal, text, plain, outline, surface));
 
 :where(.kit-card .outline) {
 	--outline-color: var(--kit-card-border);

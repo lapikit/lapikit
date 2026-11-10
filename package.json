@@ -44,17 +44,17 @@
 	"bin": {
 		"lapikit": "bin/index.js"
 	},
-	"svelte": "./dist/entry-bundler.js",
-	"types": "./dist/entry-bundler.d.ts",
+	"svelte": "./dist/preprocess/index.js",
+	"types": "./dist/preprocess/index.d.ts",
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./dist/entry-bundler.d.ts",
-			"svelte": "./dist/entry-bundler.js"
+			"types": "./dist/preprocess/index.d.ts",
+			"svelte": "./dist/preprocess/index.js"
 		},
 		"./preprocess": {
-			"types": "./dist/entry-bundler.d.ts",
-			"default": "./dist/entry-bundler.js"
+			"types": "./dist/preprocess/index.d.ts",
+			"default": "./dist/preprocess/index.js"
 		},
 		"./components": {
 			"types": "./dist/components/index.d.ts",
@@ -76,9 +76,13 @@
 			"svelte": "./dist/labs/*",
 			"default": "./dist/labs/*"
 		},
+		"./hooks": {
+			"types": "./dist/hooks/index.d.ts",
+			"default": "./dist/hooks/index.js"
+		},
 		"./actions": {
-			"types": "./dist/hooks/actions.d.ts",
-			"default": "./dist/hooks/actions.js"
+			"types": "./dist/hooks/index.d.ts",
+			"default": "./dist/hooks/index.js"
 		}
 	},
 	"engines": {

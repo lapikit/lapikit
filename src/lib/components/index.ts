@@ -6,8 +6,10 @@ export type {
 	ElevationProps,
 	ElevationState,
 	ElevationType,
+	OverlayPositionType,
 	RoundedType,
-	SizeType
+	SizeType,
+	VariantType
 } from '$lib/@types';
 export type {
 	AccordionProps,

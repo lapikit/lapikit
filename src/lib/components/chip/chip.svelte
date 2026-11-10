@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { hasPressHandler, pressableAttrs, useComponentAttrs, useElevation } from '$lib/utils';
 	import { ripple } from '$lib/animations';
 	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ChipProps } from './chip.types.ts';
@@ -49,9 +49,7 @@
 	let isReadonly = $derived(!!readonly);
 	let isLocked = $derived(isDisabled || isReadonly);
 	let focusableDisabled = $derived(isLocked && !!tooltip);
-	let hasPressHandler = $derived(
-		['onclick', 'onkeydown', 'onkeyup'].some((key) => typeof attrs.rest[key] === 'function')
-	);
+	let isPressable = $derived(hasPressHandler(attrs.rest));
 	let tag = $derived<'button' | 'a' | 'label' | 'div'>(
 		isInput
 			? type === 'checkbox' || type === 'radio'
@@ -59,17 +57,14 @@
 				: 'div'
 			: href || is === 'a'
 				? 'a'
-				: is === 'button' || hasPressHandler
+				: is === 'button' || isPressable
 					? 'button'
 					: 'div'
 	);
 	// undefined: detected (a, button, input, onclick...), true: forced, false: no visual feedback
-	let isInteractive = $derived((interactive ?? (tag !== 'div' || hasPressHandler)) && !isLocked);
-	let resolvedHref = $derived(tag === 'a' && !isLocked ? href : undefined);
-	let resolvedType = $derived(tag === 'button' ? (type ?? 'button') : undefined);
-	let resolvedDisabled = $derived(tag === 'button' ? isLocked && !focusableDisabled : undefined);
-	let resolvedTabIndex = $derived(
-		tag === 'a' && isLocked ? (focusableDisabled ? 0 : -1) : undefined
+	let isInteractive = $derived((interactive ?? (tag !== 'div' || isPressable)) && !isLocked);
+	let pressable = $derived(
+		pressableAttrs({ tag, href, type, disabled: isLocked, focusableDisabled })
 	);
 
 	// disabled with a tooltip: focusable, the click does nothing
@@ -85,10 +80,7 @@
 	bind:this={ref}
 	class={attrs.class}
 	style={attrs.style}
-	href={resolvedHref}
-	type={resolvedType}
-	disabled={resolvedDisabled}
-	tabindex={resolvedTabIndex}
+	{...pressable}
 	data-variant={variant}
 	data-size={size}
 	data-density={density}
@@ -105,7 +97,6 @@
 	data-loading={loading}
 	data-label-style={labelStyle}
 	aria-busy={loading || undefined}
-	aria-disabled={isLocked || undefined}
 	use:tooltipAction={tooltip}
 	use:ripple={{
 		component: 'chip',

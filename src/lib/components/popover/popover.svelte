@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { DEV } from 'esm-env';
-	import { clickOutside, floating, useComponentAttrs, useElevation } from '$lib/utils';
+	import {
+		clickOutside,
+		findTrigger,
+		floating,
+		onEscape,
+		useComponentAttrs,
+		useElevation
+	} from '$lib/utils';
 	import type { PopoverProps, PopoverTriggerProps } from './popover.types.ts';
 
 	let {
@@ -67,9 +74,7 @@
 
 	$effect(() => {
 		if (open && !triggerRef?.isConnected) {
-			triggerRef = document.querySelector<HTMLElement>(
-				`[aria-controls="${CSS.escape(popoverId)}"]`
-			);
+			triggerRef = findTrigger(popoverId);
 		}
 	});
 
@@ -83,16 +88,10 @@
 		return () => cancelAnimationFrame(frame);
 	});
 
-	$effect(() => {
-		if (!open) return;
-
-		const onKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') close(true);
-		};
-
-		document.addEventListener('keydown', onKeydown);
-		return () => document.removeEventListener('keydown', onKeydown);
-	});
+	onEscape(
+		() => open,
+		() => close(true)
+	);
 </script>
 
 {@render trigger?.(triggerProps)}

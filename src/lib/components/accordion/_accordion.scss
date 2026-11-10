@@ -1,6 +1,4 @@
-@use 'sass:list';
 @use '$lib/styles' as *;
-@use './variables' as *;
 
 // the color of the accordion, read by its items
 :where(.kit-accordion) {
@@ -77,24 +75,13 @@
  * size: read by the items
  * @link https://lapikit.dev/docs/components/accordion#size
  */
-@each $size, $values in $sizes {
-	:where(.kit-accordion[data-size='#{$size}']) {
-		--kit-accordion-item-h: #{list.nth($values, 1)};
-		--kit-accordion-item-p: #{list.nth($values, 2)};
-		--kit-accordion-item-gap: #{list.nth($values, 3)};
-		--kit-accordion-item-font: #{list.nth($values, 4)};
-	}
-}
+@include sizes(kit-accordion, $name: kit-accordion-item);
 
 /**
  * variant: applied on the items, (0,1,0) to win over the base of the item whatever the order of the styles
  * @link https://lapikit.dev/docs/components/accordion#variants
  */
-@each $variant in (tonal, outline, surface, text) {
-	:where(.kit-accordion[data-variant='#{$variant}']) :global(.kit-accordion-item) {
-		@include color-variant(kit-accordion-item, $variant);
-	}
-}
+@include variants(kit-accordion, (tonal, outline, surface, text), $item: kit-accordion-item);
 
 /**
  * rounded

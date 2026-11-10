@@ -30,25 +30,7 @@ button.kit-sheet {
 	text-align: inherit;
 }
 
-:where(.kit-sheet[data-variant='tonal']) {
-	@include color-variant(kit-sheet, tonal);
-}
-
-:where(.kit-sheet[data-variant='text']) {
-	@include color-variant(kit-sheet, text);
-}
-
-:where(.kit-sheet[data-variant='plain']) {
-	@include color-variant(kit-sheet, plain);
-}
-
-:where(.kit-sheet[data-variant='outline']) {
-	@include color-variant(kit-sheet, outline);
-}
-
-:where(.kit-sheet[data-variant='surface']) {
-	@include color-variant(kit-sheet, surface);
-}
+@include variants(kit-sheet, (tonal, text, plain, outline, surface));
 
 .kit-sheet:is([data-variant='outline'], [data-variant='surface']) {
 	border: var(--kit-outline-weight) solid var(--kit-sheet-border);

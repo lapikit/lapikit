@@ -1,19 +1,26 @@
 import type { Snippet } from 'svelte';
-import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type {
+	ColorProps,
+	DensityType,
+	ElevationProps,
+	KitProps,
+	RoundedType,
+	SizeType,
+	VariantType
+} from '$lib/@types';
 
-type AlertVariant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text';
 type AlertTone = 'default' | 'info' | 'success' | 'warning' | 'error';
 
-export interface AlertProps extends Component {
+export type AlertProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'div' | 'section' | 'aside' | 'article';
 	open?: boolean;
 	closable?: boolean;
 	closeLabel?: string;
 	multiline?: boolean;
-	variant?: AlertVariant;
+	variant?: VariantType;
 	size?: SizeType;
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	rounded?: RoundedType | 'full';
 	tone?: AlertTone;
 	color?: ColorProps;
@@ -21,4 +28,4 @@ export interface AlertProps extends Component {
 	append?: Snippet;
 	close?: Snippet;
 	elevation?: ElevationProps;
-}
+}>;

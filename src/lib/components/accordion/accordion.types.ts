@@ -1,26 +1,32 @@
-import type { ColorProps, Component, ElevationProps, RoundedType, SizeType } from '$lib/@types';
+import type {
+	ColorProps,
+	DensityType,
+	ElevationProps,
+	KitProps,
+	RoundedType,
+	SizeType,
+	VariantType
+} from '$lib/@types';
 import type { Snippet } from 'svelte';
-
-type AccordionVariant = 'filled' | 'tonal' | 'outline' | 'surface' | 'text';
 
 export type ModelAccordionItemProps = {
 	open: boolean;
 };
 
-export interface AccordionProps extends Component {
+export type AccordionProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'div';
 	text?: string;
 	color?: string | false;
 	rounded?: RoundedType | 'full';
 	size?: SizeType;
-	variant?: AccordionVariant;
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	variant?: VariantType;
+	density?: DensityType;
 	spacer?: boolean;
 	hideIcon?: boolean;
-}
+}>;
 
-export interface AccordionItemProps extends Component {
+export type AccordionItemProps = KitProps<{
 	ref?: HTMLElement | null;
 	is?: 'div';
 	index: number | string;
@@ -33,4 +39,4 @@ export interface AccordionItemProps extends Component {
 	indicator?: Snippet<[ModelAccordionItemProps]>;
 	activator?: Snippet;
 	elevation?: ElevationProps;
-}
+}>;

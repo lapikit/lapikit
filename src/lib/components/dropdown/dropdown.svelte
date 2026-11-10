@@ -3,7 +3,9 @@
 	import { DEV } from 'esm-env';
 	import {
 		clickOutside,
+		findTrigger,
 		floating,
+		onEscape,
 		useComponentAttrs,
 		useElevation,
 		type FloatingAnchor
@@ -165,21 +167,15 @@
 
 	$effect(() => {
 		if (open && !anchor) {
-			triggerRef = document.querySelector<HTMLElement>(`[aria-controls="${CSS.escape(menuId)}"]`);
+			triggerRef = findTrigger(menuId);
 			anchor = triggerRef;
 		}
 	});
 
-	$effect(() => {
-		if (!open) return;
-
-		const onKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape') close(true);
-		};
-
-		document.addEventListener('keydown', onKeydown);
-		return () => document.removeEventListener('keydown', onKeydown);
-	});
+	onEscape(
+		() => open,
+		() => close(true)
+	);
 
 	onDestroy(clearHoverTimeout);
 </script>

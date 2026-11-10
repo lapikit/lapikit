@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { collectDeclaredIdentifiers, componentName, liliCore } from '$lib/framework';
-import { lapikitImportsLabsRef, lapikitImportsRef } from '$lib/constants';
+import { collectDeclaredIdentifiers, componentName, liliCore } from '../lili';
+import { lapikitImportsLabsRef, lapikitImportsRef } from '../constants';
 
 const sheetImport = `import KitSheet from '${lapikitImportsLabsRef}/sheet/sheet.svelte';`;
 

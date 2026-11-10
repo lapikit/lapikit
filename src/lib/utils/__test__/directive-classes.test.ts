@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { directiveClasses } from '$lib/utils/components';
+import { directiveClasses } from '../components';
 
 describe('directiveClasses (s-class_xxx)', () => {
 	it('should return no class without directives', () => {

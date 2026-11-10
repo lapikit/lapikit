@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { PropValue, SStyleProp } from '$lib/@types';
-import { useStyles } from '$lib/utils/components';
+import { useStyles } from '../components';
 
 // s-style (object) and s-style_xxx (directives) of a component, as useComponentAttrs merges them
 const styles = (sStyle: SStyleProp, styleProps: Record<string, PropValue>) =>

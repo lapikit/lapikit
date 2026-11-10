@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { useComponentAttrs, useElevation } from '$lib/utils';
+	import { onEscape, useComponentAttrs, useElevation } from '$lib/utils';
 	import { isTopModal, popModal, pushModal } from './modal.svelte.ts';
 	import type { ModalProps } from './modal.types.ts';
 
@@ -49,21 +49,14 @@
 		return () => popModal(modalId);
 	});
 
-	$effect(() => {
-		if (!open || !closeWithEsc || persistent) return;
-
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === 'Escape' && isTopModal(modalId)) {
-				event.preventDefault();
-				open = false;
-			}
-		};
-
-		document.addEventListener('keydown', onKeyDown);
-		return () => {
-			document.removeEventListener('keydown', onKeyDown);
-		};
-	});
+	onEscape(
+		() => open && closeWithEsc && !persistent,
+		(event) => {
+			if (!isTopModal(modalId)) return;
+			event.preventDefault();
+			open = false;
+		}
+	);
 
 	function handleClose() {
 		if (!persistent) open = false;

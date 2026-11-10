@@ -1,4 +1,3 @@
-@use 'sass:list';
 @use '$lib/styles' as *;
 @use './variables' as *;
 
@@ -146,16 +145,9 @@ button.kit-chip {
  * size
  * @link https://lapikit.dev/docs/components/chip#size
  */
-@each $size, $values in $sizes {
-	:where(.kit-chip[data-size='#{$size}']) {
-		--kit-chip-h: #{list.nth($values, 1)};
-		--kit-chip-p: #{list.nth($values, 2)};
-		--kit-chip-gap: #{list.nth($values, 3)};
-		--kit-chip-font: #{list.nth($values, 4)};
-
-		:global(.kit-icon[data-size='default']) {
-			--kit-icon-current-size: var(--kit-icon-size-#{$size});
-		}
+@include sizes(kit-chip, $sizes) using ($size) {
+	:global(.kit-icon[data-size='default']) {
+		--kit-icon-current-size: var(--kit-icon-size-#{$size});
 	}
 }
 
@@ -163,11 +155,7 @@ button.kit-chip {
  * variant
  * @link https://lapikit.dev/docs/components/chip#variants
  */
-@each $variant in (tonal, outline, surface, text, plain) {
-	:where(.kit-chip[data-variant='#{$variant}']) {
-		@include color-variant(kit-chip, $variant);
-	}
-}
+@include variants(kit-chip, (tonal, outline, surface, text, plain));
 
 :where(.kit-chip .outline) {
 	--outline-color: var(--kit-chip-border);

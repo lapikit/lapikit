@@ -1,4 +1,5 @@
-import type { ColorProps, Component, ElevationProps, RoundedType } from '$lib/@types/index';
+import type { FloatingSide } from '$lib/utils/floating';
+import type { ColorProps, DensityType, ElevationProps, KitProps, RoundedType } from '$lib/@types';
 import type { Snippet } from 'svelte';
 
 /** The attributes to spread on the element that opens the menu */
@@ -20,17 +21,17 @@ export interface DropdownTriggerModel {
 	openAt: (event: MouseEvent) => void;
 }
 
-export interface DropdownProps extends Component {
+export type DropdownProps = KitProps<{
 	ref?: HTMLElement | null;
 	open?: boolean;
 	rounded?: RoundedType | 'full';
-	position?: 'top' | 'bottom' | 'left' | 'right';
+	position?: FloatingSide;
 	openOnHover?: boolean;
 	closeOnClick?: boolean;
 	color?: ColorProps;
-	density?: 'dense' | 'compact' | 'default' | 'comfortable' | 'spacious';
+	density?: DensityType;
 	trigger?: Snippet<[DropdownTriggerProps, DropdownTriggerModel]>;
 	elevation?: ElevationProps;
 	/** removed in 0.8.0: use the trigger snippet */
 	activator?: never;
-}
+}>;
