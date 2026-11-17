@@ -1,5 +1,7 @@
-export function capitalize(value: string, full: boolean): string {
+export function capitalize(value: string | null | undefined): string | undefined {
+	if (value == null) return undefined;
 	if (!value) return value;
-	if (full) return value.toUpperCase();
-	return value.charAt(0).toUpperCase() + value.slice(1);
+
+	const first = String.fromCodePoint(value.codePointAt(0)!);
+	return first.toUpperCase() + value.slice(first.length);
 }
