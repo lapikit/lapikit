@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { capitalize } from '../capitalize';
+import { upperFirst } from '../upperFirst';
 
-describe('capitalize', () => {
+describe('upperFirst', () => {
 	it.each([
 		['', ''],
 		['a', 'A'],
@@ -15,7 +15,7 @@ describe('capitalize', () => {
 		[' hello', ' hello'],
 		[null, undefined],
 		[undefined, undefined]
-	])('capitalize(%j) → %j', (input, expected) => {
-		expect(capitalize(input)).toBe(expected);
+	])('upperFirst(%j) → %j', (input, expected) => {
+		expect(upperFirst(input)).toBe(expected);
 	});
 });

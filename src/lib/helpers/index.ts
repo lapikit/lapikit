@@ -1,2 +1,2 @@
-export * from './capitalize';
-export * from './formatNumber';
+export * from './upperFirst';
+export * from './compactNumber';

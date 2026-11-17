@@ -1,4 +1,4 @@
-export function capitalize(value: string | null | undefined): string | undefined {
+export function upperFirst(value: string | null | undefined): string | undefined {
 	if (value == null) return undefined;
 	if (!value) return value;
 

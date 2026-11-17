@@ -4,7 +4,7 @@ const formatter = new Intl.NumberFormat('en', {
 	signDisplay: 'negative'
 });
 
-export function formatNumber(value: number | null | undefined): string | undefined {
+export function compactNumber(value: number | null | undefined): string | undefined {
 	if (value == null) return undefined;
 
 	return formatter
