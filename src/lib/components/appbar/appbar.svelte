@@ -17,6 +17,7 @@
 		color,
 		density = 'default',
 		elevation,
+		sticky = false,
 		...rest
 	}: AppbarProps = $props();
 
@@ -36,6 +37,7 @@
 	data-variant={variant}
 	data-density={density}
 	data-rounded={rounded}
+	data-sticky={sticky || undefined}
 	{...elevationAttributes}
 	{...attrs.rest}
 >

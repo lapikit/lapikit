@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Insider
+
+### Added
+
+- Hooks: the `ThemeAction`, `ThemeOptions` and `AccordionOptions` types are exported from `lapikit/hooks`, to type the return of `createTheme()` or the options of a hook.
+- `kit:appbar`: `--kit-appbar-px` and `--kit-appbar-py` set the horizontal and vertical padding separately. Both default to `--kit-appbar-p`, so the rendering does not change.
+- `kit:appbar`: new `sticky` prop, keeps the appbar at the top of its scroll container. The offset and the stacking order follow `--kit-appbar-top` (`0`) and `--kit-appbar-z-index` (`1000`).
+
 ## [0.8.5] - 2026-11-20
 
 ### Added
