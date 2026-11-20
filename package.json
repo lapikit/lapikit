@@ -1,6 +1,6 @@
 {
 	"name": "lapikit",
-	"version": "0.8.4",
+	"version": "0.8.5",
 	"license": "MIT",
 	"publishConfig": {
 		"access": "public"
@@ -80,9 +80,9 @@
 			"types": "./dist/hooks/index.d.ts",
 			"default": "./dist/hooks/index.js"
 		},
-		"./actions": {
-			"types": "./dist/hooks/index.d.ts",
-			"default": "./dist/hooks/index.js"
+		"./helpers": {
+			"types": "./dist/helpers/index.d.ts",
+			"default": "./dist/helpers/index.js"
 		}
 	},
 	"engines": {

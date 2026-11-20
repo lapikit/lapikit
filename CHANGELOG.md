@@ -3,9 +3,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.5] - 2026-11-20
+
+### Added
+
+- Helpers: new `upperFirst()`, uppercases the first character of a string and leaves the rest unchanged (`"hello world"` → `"Hello world"`).
+- Helpers: new `compactNumber()`, formats a number in compact notation with a unit suffix (`1234` → `"1.2k"`, `2500000` → `"2.5M"`).
+
+### Removed
+
+- `lapikit/actions`: the alias of `lapikit/hooks` is removed. Import `useAccordion`, `useTheme`, `createGlobalTheme`, `createTheme` and `themeScript` from `lapikit/hooks`.
+
 ## [0.8.4] - 2026-11-10
 
-### Updated
+### Changed
 
 - `kit:modal` convert component modal stored to use runes
 
