@@ -19,4 +19,5 @@ export type AppbarProps = KitProps<{
 	color?: ColorProps;
 	classContent?: ClassValue;
 	elevation?: ElevationProps;
+	sticky?: boolean;
 }>;

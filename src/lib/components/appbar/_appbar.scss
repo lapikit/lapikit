@@ -2,6 +2,11 @@
 
 :where(.kit-appbar) {
 	@include color(kit-appbar, var(--kit-color-surface-1), var(--kit-color-text));
+
+	--kit-appbar-px: var(--kit-appbar-p);
+	--kit-appbar-py: var(--kit-appbar-p);
+	--kit-appbar-top: 0;
+	--kit-appbar-z-index: 1000;
 }
 
 .kit-appbar {
@@ -12,7 +17,8 @@
 	box-sizing: border-box;
 	width: 100%;
 	min-height: calc(var(--kit-appbar-h) + var(--kit-appbar-density-offset) / 2);
-	padding: calc(var(--kit-appbar-p) + var(--kit-appbar-density-offset) / 2);
+	padding-block: calc(var(--kit-appbar-py) + var(--kit-appbar-density-offset) / 2);
+	padding-inline: calc(var(--kit-appbar-px) + var(--kit-appbar-density-offset) / 2);
 	overflow: hidden;
 	border-radius: var(--kit-appbar-radius);
 	background-color: var(--kit-appbar-bg);
@@ -29,6 +35,12 @@
 		gap: var(--kit-appbar-gap);
 		width: 100%;
 		margin: 0 auto;
+	}
+
+	&[data-sticky] {
+		position: sticky;
+		top: var(--kit-appbar-top);
+		z-index: var(--kit-appbar-z-index);
 	}
 }
 
