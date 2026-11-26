@@ -3,13 +3,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.7] - 2026-11-26
+
+### Added
+
+- Labs: new `kit:spinner`, a loading indicator.
+- `kit:spinner`: `size`, `thickness`, `color` and `label` props.
+- `kit:spinner`: pulses instead of rotating with reduced motion.
+- `kit:alert`: new `onclose` prop, called on close.
+
+### Fixed
+
+- Preprocessor: `<kit:*>` tags in HTML comments are ignored.
+- Preprocessor: `<kit:*>` tags in template expressions are ignored.
+- Preprocessor: a destructured component is no longer imported twice.
+
+### Changed
+
+- Preprocessor: the component list is built once, not per file.
+- `kit:btn` and `kit:chip`: `loading` shows `kit:spinner` instead of `...`.
+
 ## [0.8.6] - 2026-11-25
 
 ### Added
 
-- Hooks: the `ThemeAction`, `ThemeOptions` and `AccordionOptions` types are exported from `lapikit/hooks`, to type the return of `createTheme()` or the options of a hook.
-- `kit:appbar`: `--kit-appbar-px` and `--kit-appbar-py` set the horizontal and vertical padding separately. Both default to `--kit-appbar-p`, so the rendering does not change.
-- `kit:appbar`: new `sticky` prop, keeps the appbar at the top of its scroll container. The offset and the stacking order follow `--kit-appbar-top` (`0`) and `--kit-appbar-z-index` (`1000`).
+- Hooks: `ThemeAction`, `ThemeOptions` and `AccordionOptions` types exported from `lapikit/hooks`.
+- `kit:appbar`: `--kit-appbar-px` and `--kit-appbar-py` set the padding per axis.
+- `kit:appbar`: both default to `--kit-appbar-p`, the rendering does not change.
+- `kit:appbar`: new `sticky` prop, keeps the appbar at the top.
+- `kit:appbar`: `sticky` follows `--kit-appbar-top` (`0`) and `--kit-appbar-z-index` (`1000`).
 
 ## [0.8.5] - 2026-11-20
 

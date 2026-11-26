@@ -10,11 +10,33 @@ export const scanKitTags = (
 	const magic = new MagicString(content);
 	let changed = false;
 	let index = 0;
+	let nextBrace = -1;
 	const length = content.length;
 
 	while (index < length) {
 		const nextLt = content.indexOf('<', index);
 		if (nextLt === -1) break;
+
+		if (nextBrace !== Infinity && nextBrace < index) {
+			const found = content.indexOf('{', index);
+			nextBrace = found === -1 ? Infinity : found;
+		}
+
+		if (nextBrace < nextLt) {
+			const expressionEnd = findClosing(content, nextBrace + 1, '}');
+			if (expressionEnd === -1) break;
+
+			index = expressionEnd + 1;
+			continue;
+		}
+
+		if (content.startsWith('<!--', nextLt)) {
+			const commentEnd = content.indexOf('-->', nextLt + 4);
+			if (commentEnd === -1) break;
+
+			index = commentEnd + 3;
+			continue;
+		}
 
 		const ch = content[nextLt + 1];
 		const isClosing = ch === '/';
@@ -28,7 +50,7 @@ export const scanKitTags = (
 				continue;
 			}
 
-			const openEnd = findTagEnd(content, nameEnd);
+			const openEnd = findClosing(content, nameEnd, '>');
 			if (openEnd === -1) break;
 
 			const closeTag = `</${tagName}>`;
@@ -81,7 +103,7 @@ export const scanKitTags = (
 			continue;
 		}
 
-		const tagEnd = findTagEnd(content, nameEnd);
+		const tagEnd = findClosing(content, nameEnd, '>');
 		if (tagEnd === -1) break;
 
 		if (isKnown) {
@@ -105,7 +127,7 @@ export const scanKitTags = (
 	};
 };
 
-const findTagEnd = (content: string, start: number): number => {
+const findClosing = (content: string, start: number, closing: '>' | '}'): number => {
 	let inSingle = false;
 	let inDouble = false;
 	let inTemplate = false;
@@ -145,6 +167,10 @@ const findTagEnd = (content: string, start: number): number => {
 			continue;
 		}
 
+		if (braceDepth === 0 && ch === closing) {
+			return i;
+		}
+
 		if (ch === '{') {
 			braceDepth++;
 			continue;
@@ -153,10 +179,6 @@ const findTagEnd = (content: string, start: number): number => {
 		if (ch === '}' && braceDepth > 0) {
 			braceDepth--;
 			continue;
-		}
-
-		if (braceDepth === 0 && ch === '>') {
-			return i;
 		}
 	}
 

@@ -46,45 +46,59 @@ export function collectDeclaredIdentifiers(content: string): Set<string> {
 		for (const [, name] of script.matchAll(declarationRegex)) {
 			declared.add(name);
 		}
+
+		const destructuringRegex = /\b(?:const|let|var)\s*(?:\{([^}]*)\}|\[([^\]]*)\])/g;
+		for (const [, objectPattern, arrayPattern] of script.matchAll(destructuringRegex)) {
+			for (const element of (objectPattern ?? arrayPattern).split(',')) {
+				const binding = element.split('=')[0].split(':').pop();
+				const name = binding?.trim().replace(/^\.\.\./, '');
+				if (name && /^[\w$]+$/.test(name)) declared.add(name);
+			}
+		}
 	}
 
 	return declared;
 }
 
+function buildComponentInfo(options?: LapikitPreprocessOptions): Map<string, ComponentInfo> {
+	const componentInfo = new Map<string, ComponentInfo>();
+
+	for (const [shortName, path] of Object.entries(lapikitComponentPaths)) {
+		componentInfo.set(shortName, {
+			name: componentName(shortName),
+			ref: `${lapikitImportsRef}/${path}`,
+			direct: true
+		});
+	}
+
+	for (const [shortName, path] of Object.entries(lapikitLabsComponentPaths)) {
+		componentInfo.set(shortName, {
+			name: componentName(shortName),
+			ref: `${lapikitImportsLabsRef}/${path}`,
+			direct: true
+		});
+	}
+
+	options?.plugins?.forEach((pluginKey) => {
+		const plugin = lapikitPlugins[pluginKey as keyof typeof lapikitPlugins];
+		plugin?.components.forEach((comp) => {
+			componentInfo.set(comp, { name: componentName(comp), ref: plugin.ref });
+		});
+	});
+
+	return componentInfo;
+}
+
 export function liliCore(options?: LapikitPreprocessOptions) {
+	const componentInfo = buildComponentInfo(options);
+	const directNames = new Set<string>();
+	componentInfo.forEach((info) => {
+		if (info.direct) directNames.add(info.name);
+	});
+
 	return {
 		markup({ content, filename }: { content: string; filename?: string }) {
 			if (!content.includes('<kit:')) return;
-
-			const componentInfo = new Map<string, ComponentInfo>();
-
-			for (const [shortName, path] of Object.entries(lapikitComponentPaths)) {
-				componentInfo.set(shortName, {
-					name: componentName(shortName),
-					ref: `${lapikitImportsRef}/${path}`,
-					direct: true
-				});
-			}
-
-			for (const [shortName, path] of Object.entries(lapikitLabsComponentPaths)) {
-				componentInfo.set(shortName, {
-					name: componentName(shortName),
-					ref: `${lapikitImportsLabsRef}/${path}`,
-					direct: true
-				});
-			}
-
-			// plugins
-			if (options?.plugins) {
-				options.plugins.forEach((pluginKey) => {
-					const plugin = lapikitPlugins[pluginKey as keyof typeof lapikitPlugins];
-					if (plugin) {
-						plugin.components.forEach((comp) => {
-							componentInfo.set(comp, { name: componentName(comp), ref: plugin.ref });
-						});
-					}
-				});
-			}
 
 			const scanResult = scanKitTags(content, componentInfo);
 
@@ -98,11 +112,6 @@ export function liliCore(options?: LapikitPreprocessOptions) {
 			declared.forEach((name) => importedComponents.delete(name));
 
 			if (importedComponents.size > 0) {
-				const directNames = new Set<string>();
-				componentInfo.forEach((info) => {
-					if (info.direct) directNames.add(info.name);
-				});
-
 				const directImports: string[] = [];
 				const importsByRef = new Map<string, string[]>();
 				importedComponents.forEach((ref, component) => {

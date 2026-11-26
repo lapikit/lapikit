@@ -13,6 +13,7 @@
 		open = $bindable(true),
 		closable,
 		closeLabel = 'Close',
+		onclose,
 		multiline,
 		size = 'md',
 		variant = 'filled',
@@ -77,7 +78,10 @@
 				class="kit-alert__close"
 				type="button"
 				aria-label={closeLabel}
-				onclick={() => (open = false)}
+				onclick={() => {
+					open = false;
+					onclose?.();
+				}}
 			>
 				{#if close}
 					{@render close()}
