@@ -96,6 +96,67 @@ describe('liliCore', () => {
 		expect(result?.code).not.toContain('<script>');
 	});
 
+	it('ignores kit tags inside html comments', () => {
+		const preprocess = liliCore();
+
+		expect(preprocess.markup({ content: '<!-- <kit:btn /> -->\n<p>text</p>' })).toBeUndefined();
+
+		const result = preprocess.markup({
+			content: '<!-- <kit:chip /> -->\n<kit:btn>ok</kit:btn>'
+		});
+
+		expect(result?.code).toContain('<!-- <kit:chip /> -->');
+		expect(result?.code).toContain('<KitBtn>ok</KitBtn>');
+		expect(result?.code).not.toContain('KitChip');
+	});
+
+	it('ignores kit tags inside template expressions', () => {
+		const preprocess = liliCore();
+
+		expect(preprocess.markup({ content: '<p>{"<kit:btn>"}</p>' })).toBeUndefined();
+	});
+
+	it('converts kit tags inside blocks and snippets', () => {
+		const preprocess = liliCore();
+		const input = `{#if a > b && c}\n<kit:btn onclick={() => { x = '}'; }}>a</kit:btn>\n{/if}\n{#snippet s()}<kit:chip />{/snippet}`;
+
+		const result = preprocess.markup({ content: input });
+
+		expect(result?.code).toContain(`<KitBtn onclick={() => { x = '}'; }}>a</KitBtn>`);
+		expect(result?.code).toContain('{#snippet s()}<KitChip />{/snippet}');
+		expect(result?.code).not.toContain('<kit:');
+	});
+
+	it('keeps apostrophes in text and attributes', () => {
+		const preprocess = liliCore();
+		const input = `<p>it's {count}</p><kit:btn title="it's">b</kit:btn>`;
+
+		const result = preprocess.markup({ content: input });
+
+		expect(result?.code).toContain(`<p>it's {count}</p><KitBtn title="it's">b</KitBtn>`);
+	});
+
+	it('detects destructured identifiers', () => {
+		const declared = collectDeclaredIdentifiers(
+			`<script>const { a: KitBtn, b = 1, ...rest } = x; let [KitChip, , y] = z;</script>`
+		);
+
+		for (const name of ['KitBtn', 'b', 'rest', 'KitChip', 'y']) {
+			expect(declared.has(name)).toBe(true);
+		}
+		expect(declared.has('a')).toBe(false);
+	});
+
+	it('does not import a destructured component again', () => {
+		const preprocess = liliCore();
+		const input = `<script>\n\tconst { KitBtn } = components;\n</script>\n\n<kit:btn />`;
+
+		const result = preprocess.markup({ content: input });
+
+		expect(result?.code).toContain('<KitBtn />');
+		expect(result?.code).not.toContain('import KitBtn');
+	});
+
 	it('detects declared identifiers in imports and declarations', () => {
 		const declared = collectDeclaredIdentifiers(
 			`<script lang="ts">
