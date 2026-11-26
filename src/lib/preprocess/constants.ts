@@ -33,7 +33,8 @@ export const lapikitComponentPaths: Readonly<Record<string, string>> = {
 };
 
 export const lapikitLabsComponentPaths: Readonly<Record<string, string>> = {
-	sheet: 'sheet/sheet.svelte'
+	sheet: 'sheet/sheet.svelte',
+	spinner: 'spinner/spinner.svelte'
 };
 
 export const lapikitPlugins = {

@@ -5,22 +5,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Insiders
 
+### Added
+
+- Labs: new `kit:spinner`, a loading indicator.
+- `kit:spinner`: `size`, `thickness`, `color` and `label` props.
+- `kit:spinner`: pulses instead of rotating with reduced motion.
+- `kit:alert`: new `onclose` prop, called on close.
+
 ### Fixed
 
-- Preprocessor: a `<kit:*>` tag inside an HTML comment (`<!-- <kit:btn /> -->`) or a template expression (`{"<kit:btn>"}`) is left as it is, it no longer adds an import.
-- Preprocessor: a component declared by destructuring (`const { KitBtn } = components`) is no longer imported a second time.
+- Preprocessor: `<kit:*>` tags in HTML comments are ignored.
+- Preprocessor: `<kit:*>` tags in template expressions are ignored.
+- Preprocessor: a destructured component is no longer imported twice.
 
 ### Changed
 
-- Preprocessor: the list of components is built once per preprocessor instead of once per file.
+- Preprocessor: the component list is built once, not per file.
+- `kit:btn` and `kit:chip`: `loading` shows `kit:spinner` instead of `...`.
 
 ## [0.8.6] - 2026-11-25
 
 ### Added
 
-- Hooks: the `ThemeAction`, `ThemeOptions` and `AccordionOptions` types are exported from `lapikit/hooks`, to type the return of `createTheme()` or the options of a hook.
-- `kit:appbar`: `--kit-appbar-px` and `--kit-appbar-py` set the horizontal and vertical padding separately. Both default to `--kit-appbar-p`, so the rendering does not change.
-- `kit:appbar`: new `sticky` prop, keeps the appbar at the top of its scroll container. The offset and the stacking order follow `--kit-appbar-top` (`0`) and `--kit-appbar-z-index` (`1000`).
+- Hooks: `ThemeAction`, `ThemeOptions` and `AccordionOptions` types exported from `lapikit/hooks`.
+- `kit:appbar`: `--kit-appbar-px` and `--kit-appbar-py` set the padding per axis.
+- `kit:appbar`: both default to `--kit-appbar-p`, the rendering does not change.
+- `kit:appbar`: new `sticky` prop, keeps the appbar at the top.
+- `kit:appbar`: `sticky` follows `--kit-appbar-top` (`0`) and `--kit-appbar-z-index` (`1000`).
 
 ## [0.8.5] - 2026-11-20
 

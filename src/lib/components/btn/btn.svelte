@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { pressableAttrs, useComponentAttrs, elevationAttrs } from '$lib/utils';
 	import { ripple } from '$lib/animations';
+	import KitSpinner from '$lib/labs/spinner/spinner.svelte';
 	import { tooltip as tooltipAction } from '../tooltip/tooltip-action.svelte.ts';
 	import type { ButtonProps } from './btn.types.ts';
 
@@ -131,7 +132,7 @@
 			{#if load}
 				{@render load()}
 			{:else}
-				...
+				<KitSpinner />
 			{/if}
 		</span>
 	{/if}

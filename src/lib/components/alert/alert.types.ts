@@ -17,6 +17,7 @@ export type AlertProps = KitProps<{
 	open?: boolean;
 	closable?: boolean;
 	closeLabel?: string;
+	onclose?: () => void;
 	multiline?: boolean;
 	variant?: VariantType;
 	size?: SizeType;

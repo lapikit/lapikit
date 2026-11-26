@@ -1,0 +1,36 @@
+:where(.kit-spinner) {
+	--kit-spinner-size: 1em;
+	--kit-spinner-thickness: 0.125em;
+	--kit-spinner-duration: 0.75s;
+}
+
+.kit-spinner {
+	display: inline-block;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: var(--kit-spinner-size);
+	height: var(--kit-spinner-size);
+	border: var(--kit-spinner-thickness) solid
+		var(--kit-spinner-text-color, var(--kit-spinner-color, currentColor));
+	border-inline-end-color: transparent;
+	border-radius: 50%;
+	vertical-align: middle;
+	animation: kit-spinner-rotate var(--kit-spinner-duration) linear infinite;
+
+	@media (prefers-reduced-motion: reduce) {
+		border-inline-end-color: inherit;
+		animation: kit-spinner-pulse calc(var(--kit-spinner-duration) * 2) ease-in-out infinite;
+	}
+}
+
+@keyframes kit-spinner-rotate {
+	to {
+		rotate: 1turn;
+	}
+}
+
+@keyframes kit-spinner-pulse {
+	50% {
+		opacity: 0.35;
+	}
+}
