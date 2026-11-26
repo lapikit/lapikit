@@ -17,4 +17,5 @@ export type ThemeAction = {
 	action: Action<HTMLElement, ThemeOptions | undefined>;
 	set: (name: string) => void;
 	readonly active: string;
+	readonly resolved: string;
 };
