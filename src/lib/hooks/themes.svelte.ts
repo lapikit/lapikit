@@ -1,5 +1,6 @@
 import type { ThemeOptions, ThemeAction } from '$lib/@types';
 import type { Action } from 'svelte/action';
+import { MediaQuery } from 'svelte/reactivity';
 
 // states
 const isBrowser = typeof window !== 'undefined';
@@ -7,6 +8,13 @@ const isBrowser = typeof window !== 'undefined';
 // presets
 const default_theme = 'light';
 const default_storage_key = '@lapikit/theme';
+
+const prefersDark = new MediaQuery('(prefers-color-scheme: dark)', false);
+
+function resolveTheme(name: string): string {
+	if (name !== 'system') return name;
+	return prefersDark.current ? 'dark' : 'light';
+}
 
 // localStorage can throw (private browsing, blocked storage): the theme still applies, without being kept
 function readStorage(key: string): string | null {
@@ -73,6 +81,9 @@ function generateGlobalTheme() {
 		set,
 		get active() {
 			return active;
+		},
+		get resolved() {
+			return resolveTheme(active);
 		}
 	};
 }
@@ -87,6 +98,9 @@ export function createGlobalTheme(params?: ThemeOptions) {
 	return {
 		get active() {
 			return refGlobalTheme.active;
+		},
+		get resolved() {
+			return refGlobalTheme.resolved;
 		}
 	};
 }
@@ -150,6 +164,9 @@ export function createTheme(): ThemeAction {
 		set,
 		get active() {
 			return active;
+		},
+		get resolved() {
+			return resolveTheme(active);
 		}
 	};
 }

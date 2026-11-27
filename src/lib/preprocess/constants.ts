@@ -33,6 +33,7 @@ export const lapikitComponentPaths: Readonly<Record<string, string>> = {
 };
 
 export const lapikitLabsComponentPaths: Readonly<Record<string, string>> = {
+	progress: 'progress/progress.svelte',
 	sheet: 'sheet/sheet.svelte',
 	spinner: 'spinner/spinner.svelte'
 };

@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.8] - 2026-11-27
+
+### Added
+
+- Hooks: new `resolved` getter on `createGlobalTheme()` and `createTheme()`.
+- Hooks: `resolved` gives `light` or `dark` when the theme is `system`.
+- Hooks: `resolved` follows the OS preference live.
+- Labs: new `kit:progress`, a linear progress bar.
+- `kit:progress`: without `value`, the bar is indeterminate.
+- `kit:progress`: `value`, `max`, `label`, `color`, `thickness` and `rounded` props.
+- `kit:progress`: pulses instead of sliding with reduced motion.
+- `kit:spinner`: new `value` and `max` props, for a circular progress.
+
+### Fixed
+
+- `kit:spinner`: the ring keeps its color with reduced motion.
+
 ## [0.8.7] - 2026-11-26
 
 ### Added

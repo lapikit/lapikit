@@ -1,0 +1,65 @@
+@use '$lib/styles' as *;
+
+:where(.kit-progress) {
+	--kit-progress-thickness: 4px;
+	--kit-progress-value: 0%;
+	--kit-progress-duration: 1.4s;
+	--kit-progress-fill: var(--kit-progress-color, var(--kit-color-accent));
+	--kit-progress-track: color-mix(in srgb, var(--kit-progress-fill) 18%, transparent);
+}
+
+.kit-progress {
+	position: relative;
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	height: var(--kit-progress-thickness);
+	overflow: hidden;
+	background-color: var(--kit-progress-track);
+	border-radius: var(--kit-progress-radius);
+
+	&__bar {
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: 0;
+		width: var(--kit-progress-value);
+		background-color: var(--kit-progress-fill);
+		border-radius: inherit;
+		transition: width var(--kit-animation-component) ease;
+	}
+
+	&[data-indeterminate='true'] &__bar {
+		width: 40%;
+		transition: none;
+		animation: kit-progress-slide var(--kit-progress-duration) ease-in-out infinite;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		&__bar {
+			transition: none;
+		}
+
+		&[data-indeterminate='true'] &__bar {
+			width: 100%;
+			animation: kit-progress-pulse var(--kit-progress-duration) ease-in-out infinite;
+		}
+	}
+}
+
+@keyframes kit-progress-slide {
+	from {
+		translate: -100% 0;
+	}
+
+	to {
+		translate: 250% 0;
+	}
+}
+
+@keyframes kit-progress-pulse {
+	50% {
+		opacity: 0.4;
+	}
+}
+
+@include rounded(kit-progress, (0, xs, sm, md, lg, xl, full));
