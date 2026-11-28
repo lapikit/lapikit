@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { compactNumber } from '../compactNumber';
 
+const withSpaces = (value: string | undefined) => value?.replace(/\s/g, ' ');
+
 describe('compactNumber', () => {
 	describe('numbers below 1000', () => {
 		it.each([
@@ -128,6 +130,78 @@ describe('compactNumber', () => {
 			[undefined, undefined]
 		])('compactNumber(%j) → %j', (input, expected) => {
 			expect(compactNumber(input)).toBe(expected);
+		});
+	});
+
+	describe('locale option', () => {
+		it('formats in English by default', () => {
+			expect(compactNumber(1234)).toBe(compactNumber(1234, { locale: 'en' }));
+		});
+
+		it.each([
+			[1234, '1,2 k'],
+			[2_500_000, '2,5 M'],
+			[1_200_000_000, '1,2 Md'],
+			[-1500, '-1,5 k'],
+			[999, '999']
+		])('compactNumber(%j, { locale: "fr" }) → %j', (input, expected) => {
+			expect(withSpaces(compactNumber(input, { locale: 'fr' }))).toBe(expected);
+		});
+
+		it('follows the rules of each language', () => {
+			expect(compactNumber(1234, { locale: 'de' })).toBe('1234');
+			expect(withSpaces(compactNumber(2_500_000, { locale: 'de' }))).toBe('2,5 Mio.');
+		});
+
+		it('uses a lowercase k for every English locale', () => {
+			expect(compactNumber(1234, { locale: 'en-US' })).toBe('1.2k');
+			expect(compactNumber(1234, { locale: 'en-GB' })).toBe('1.2k');
+		});
+
+		it('accepts a list of locales', () => {
+			expect(withSpaces(compactNumber(1234, { locale: ['fr-CA', 'fr'] }))).toBe('1,2 k');
+		});
+
+		it('never shows -0', () => {
+			expect(compactNumber(-0, { locale: 'fr' })).toBe('0');
+		});
+
+		it('returns undefined for nullish values', () => {
+			expect(compactNumber(null, { locale: 'fr' })).toBeUndefined();
+			expect(compactNumber(undefined, { locale: 'fr' })).toBeUndefined();
+		});
+
+		it('throws on an invalid locale', () => {
+			expect(() => compactNumber(1234, { locale: 'xx_YY' })).toThrow(RangeError);
+		});
+	});
+
+	describe('maximumFractionDigits option', () => {
+		it.each([
+			[1_234_567, 0, '1M'],
+			[1_234_567, 1, '1.2M'],
+			[1_234_567, 2, '1.23M'],
+			[1234, 3, '1.234k']
+		])('compactNumber(%j, { maximumFractionDigits: %j }) → %j', (input, digits, expected) => {
+			expect(compactNumber(input, { maximumFractionDigits: digits })).toBe(expected);
+		});
+
+		it('drops trailing zeros', () => {
+			expect(compactNumber(1000, { maximumFractionDigits: 2 })).toBe('1k');
+			expect(compactNumber(1500, { maximumFractionDigits: 2 })).toBe('1.5k');
+		});
+
+		it('combines with the locale option', () => {
+			expect(withSpaces(compactNumber(1_234_567, { locale: 'fr', maximumFractionDigits: 2 }))).toBe(
+				'1,23 M'
+			);
+		});
+
+		it('keeps one formatter per set of options', () => {
+			expect(compactNumber(1_234_567, { maximumFractionDigits: 2 })).toBe('1.23M');
+			expect(compactNumber(1_234_567)).toBe('1.2M');
+			expect(withSpaces(compactNumber(1_234_567, { locale: 'fr' }))).toBe('1,2 M');
+			expect(compactNumber(1_234_567, { maximumFractionDigits: 2 })).toBe('1.23M');
 		});
 	});
 });
